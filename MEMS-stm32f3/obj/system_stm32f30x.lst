@@ -1,0 +1,845 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"system_stm32f30x.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	SystemCoreClock
+  20              		.section	.data.SystemCoreClock,"aw",%progbits
+  21              		.align	2
+  24              	SystemCoreClock:
+  25 0000 00A24A04 		.word	72000000
+  26              		.global	AHBPrescTable
+  27              		.section	.data.AHBPrescTable,"aw",%progbits
+  28              		.align	2
+  31              	AHBPrescTable:
+  32 0000 00       		.byte	0
+  33 0001 00       		.byte	0
+  34 0002 00       		.byte	0
+  35 0003 00       		.byte	0
+  36 0004 00       		.byte	0
+  37 0005 00       		.byte	0
+  38 0006 00       		.byte	0
+  39 0007 00       		.byte	0
+  40 0008 01       		.byte	1
+  41 0009 02       		.byte	2
+  42 000a 03       		.byte	3
+  43 000b 04       		.byte	4
+  44 000c 06       		.byte	6
+  45 000d 07       		.byte	7
+  46 000e 08       		.byte	8
+  47 000f 09       		.byte	9
+  48              		.section	.text.SystemInit,"ax",%progbits
+  49              		.align	2
+  50              		.global	SystemInit
+  51              		.thumb
+  52              		.thumb_func
+  54              	SystemInit:
+  55              	.LFB110:
+  56              		.file 1 "src/OSAL/system_stm32f30x.c"
+   1:src/OSAL/system_stm32f30x.c **** /**
+   2:src/OSAL/system_stm32f30x.c ****   ******************************************************************************
+   3:src/OSAL/system_stm32f30x.c ****   * @file    system_stm32f30x.c
+   4:src/OSAL/system_stm32f30x.c ****   * @author  MCD Application Team
+   5:src/OSAL/system_stm32f30x.c ****   * @version V1.1.0
+   6:src/OSAL/system_stm32f30x.c ****   * @date    20-September-2012
+   7:src/OSAL/system_stm32f30x.c ****   * @brief   CMSIS Cortex-M4 Device Peripheral Access Layer System Source File.
+   8:src/OSAL/system_stm32f30x.c ****   *          This file contains the system clock configuration for STM32F30x devices,
+   9:src/OSAL/system_stm32f30x.c ****   *          and is customized for use with STM32F3-DISCOVERY Kit. 
+  10:src/OSAL/system_stm32f30x.c ****   *          The STM32F30x is configured to run at 72 MHz, following the three  
+  11:src/OSAL/system_stm32f30x.c ****   *          configuration below:
+  12:src/OSAL/system_stm32f30x.c ****   *            - PLL_SOURCE_HSI                 : HSI (~8MHz) used to clock the PLL, and
+  13:src/OSAL/system_stm32f30x.c ****   *                                               the PLL is used as system clock source.  
+  14:src/OSAL/system_stm32f30x.c ****   *            - PLL_SOURCE_HSE                 : HSE (8MHz) used to clock the PLL, and 
+  15:src/OSAL/system_stm32f30x.c ****   *                                               the PLL is used as system clock source.
+  16:src/OSAL/system_stm32f30x.c ****   *            - PLL_SOURCE_HSE_BYPASS (default): HSE bypassed with an external clock 
+  17:src/OSAL/system_stm32f30x.c ****   *                                              (8MHz, coming from ST-Link) used to clock
+  18:src/OSAL/system_stm32f30x.c ****   *                                              the PLL, and the PLL is used as system
+  19:src/OSAL/system_stm32f30x.c ****   *                                              clock source.  
+  20:src/OSAL/system_stm32f30x.c ****   *
+  21:src/OSAL/system_stm32f30x.c ****   *  
+  22:src/OSAL/system_stm32f30x.c ****   * 1.  This file provides two functions and one global variable to be called from 
+  23:src/OSAL/system_stm32f30x.c ****   *     user application:
+  24:src/OSAL/system_stm32f30x.c ****   *      - SystemInit(): Setups the system clock (System clock source, PLL Multiplier
+  25:src/OSAL/system_stm32f30x.c ****   *                      and Divider factors, AHB/APBx prescalers and Flash settings),
+  26:src/OSAL/system_stm32f30x.c ****   *                      depending on the configuration selected (see above).
+  27:src/OSAL/system_stm32f30x.c ****   *                      This function is called at startup just after reset and 
+  28:src/OSAL/system_stm32f30x.c ****   *                      before branch to main program. This call is made inside
+  29:src/OSAL/system_stm32f30x.c ****   *                      the "startup_stm32f30x.s" file.
+  30:src/OSAL/system_stm32f30x.c ****   *
+  31:src/OSAL/system_stm32f30x.c ****   *      - SystemCoreClock variable: Contains the core clock (HCLK), it can be used
+  32:src/OSAL/system_stm32f30x.c ****   *                                  by the user application to setup the SysTick 
+  33:src/OSAL/system_stm32f30x.c ****   *                                  timer or configure other parameters.
+  34:src/OSAL/system_stm32f30x.c ****   *
+  35:src/OSAL/system_stm32f30x.c ****   *      - SystemCoreClockUpdate(): Updates the variable SystemCoreClock and must
+  36:src/OSAL/system_stm32f30x.c ****   *                                 be called whenever the core clock is changed
+  37:src/OSAL/system_stm32f30x.c ****   *                                 during program execution.
+  38:src/OSAL/system_stm32f30x.c ****   *
+  39:src/OSAL/system_stm32f30x.c ****   * 2. After each device reset the HSI (8 MHz Range) is used as system clock source.
+  40:src/OSAL/system_stm32f30x.c ****   *    Then SystemInit() function is called, in "startup_stm32f30x.s" file, to
+  41:src/OSAL/system_stm32f30x.c ****   *    configure the system clock before to branch to main program.
+  42:src/OSAL/system_stm32f30x.c ****   *
+  43:src/OSAL/system_stm32f30x.c ****   * 3. If the system clock source selected by user fails to startup, the SystemInit()
+  44:src/OSAL/system_stm32f30x.c ****   *    function will do nothing and HSI still used as system clock source. User can 
+  45:src/OSAL/system_stm32f30x.c ****   *    add some code to deal with this issue inside the SetSysClock() function.
+  46:src/OSAL/system_stm32f30x.c ****   *
+  47:src/OSAL/system_stm32f30x.c ****   * 4. The default value of HSE crystal is set to 8MHz, refer to "HSE_VALUE" defined
+  48:src/OSAL/system_stm32f30x.c ****   *    in "stm32f30x.h" file. When HSE is used as system clock source, directly or
+  49:src/OSAL/system_stm32f30x.c ****   *    through PLL, and you are using different crystal you have to adapt the HSE
+  50:src/OSAL/system_stm32f30x.c ****   *    value to your own configuration.
+  51:src/OSAL/system_stm32f30x.c ****   *
+  52:src/OSAL/system_stm32f30x.c ****   ******************************************************************************
+  53:src/OSAL/system_stm32f30x.c ****   * @attention
+  54:src/OSAL/system_stm32f30x.c ****   *
+  55:src/OSAL/system_stm32f30x.c ****   * <h2><center>&copy; COPYRIGHT 2012 STMicroelectronics</center></h2>
+  56:src/OSAL/system_stm32f30x.c ****   *
+  57:src/OSAL/system_stm32f30x.c ****   * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+  58:src/OSAL/system_stm32f30x.c ****   * You may not use this file except in compliance with the License.
+  59:src/OSAL/system_stm32f30x.c ****   * You may obtain a copy of the License at:
+  60:src/OSAL/system_stm32f30x.c ****   *
+  61:src/OSAL/system_stm32f30x.c ****   *        http://www.st.com/software_license_agreement_liberty_v2
+  62:src/OSAL/system_stm32f30x.c ****   *
+  63:src/OSAL/system_stm32f30x.c ****   * Unless required by applicable law or agreed to in writing, software 
+  64:src/OSAL/system_stm32f30x.c ****   * distributed under the License is distributed on an "AS IS" BASIS, 
+  65:src/OSAL/system_stm32f30x.c ****   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  66:src/OSAL/system_stm32f30x.c ****   * See the License for the specific language governing permissions and
+  67:src/OSAL/system_stm32f30x.c ****   * limitations under the License.
+  68:src/OSAL/system_stm32f30x.c ****   *
+  69:src/OSAL/system_stm32f30x.c ****   ******************************************************************************
+  70:src/OSAL/system_stm32f30x.c ****   */
+  71:src/OSAL/system_stm32f30x.c **** 
+  72:src/OSAL/system_stm32f30x.c **** /** @addtogroup CMSIS
+  73:src/OSAL/system_stm32f30x.c ****   * @{
+  74:src/OSAL/system_stm32f30x.c ****   */
+  75:src/OSAL/system_stm32f30x.c **** 
+  76:src/OSAL/system_stm32f30x.c **** /** @addtogroup stm32f30x_system
+  77:src/OSAL/system_stm32f30x.c ****   * @{
+  78:src/OSAL/system_stm32f30x.c ****   */  
+  79:src/OSAL/system_stm32f30x.c ****   
+  80:src/OSAL/system_stm32f30x.c **** /** @addtogroup STM32F30x_System_Private_Includes
+  81:src/OSAL/system_stm32f30x.c ****   * @{
+  82:src/OSAL/system_stm32f30x.c ****   */
+  83:src/OSAL/system_stm32f30x.c **** 
+  84:src/OSAL/system_stm32f30x.c **** #include "stm32f30x.h"
+  85:src/OSAL/system_stm32f30x.c **** 
+  86:src/OSAL/system_stm32f30x.c **** /**
+  87:src/OSAL/system_stm32f30x.c ****   * @}
+  88:src/OSAL/system_stm32f30x.c ****   */
+  89:src/OSAL/system_stm32f30x.c **** 
+  90:src/OSAL/system_stm32f30x.c **** /** @addtogroup STM32F30x_System_Private_TypesDefinitions
+  91:src/OSAL/system_stm32f30x.c ****   * @{
+  92:src/OSAL/system_stm32f30x.c ****   */
+  93:src/OSAL/system_stm32f30x.c **** 
+  94:src/OSAL/system_stm32f30x.c **** /**
+  95:src/OSAL/system_stm32f30x.c ****   * @}
+  96:src/OSAL/system_stm32f30x.c ****   */
+  97:src/OSAL/system_stm32f30x.c **** 
+  98:src/OSAL/system_stm32f30x.c **** /** @addtogroup STM32F30x_System_Private_Defines
+  99:src/OSAL/system_stm32f30x.c ****   * @{
+ 100:src/OSAL/system_stm32f30x.c ****   */
+ 101:src/OSAL/system_stm32f30x.c **** /*!< Uncomment the following line if you need to relocate your vector Table in
+ 102:src/OSAL/system_stm32f30x.c ****      Internal SRAM. */ 
+ 103:src/OSAL/system_stm32f30x.c **** /* #define VECT_TAB_SRAM */
+ 104:src/OSAL/system_stm32f30x.c **** #define VECT_TAB_OFFSET  0x0 /*!< Vector Table base offset field. 
+ 105:src/OSAL/system_stm32f30x.c ****                                   This value must be a multiple of 0x200. */  
+ 106:src/OSAL/system_stm32f30x.c ****                                   
+ 107:src/OSAL/system_stm32f30x.c **** /* Select the PLL clock source */
+ 108:src/OSAL/system_stm32f30x.c **** 
+ 109:src/OSAL/system_stm32f30x.c **** //#define PLL_SOURCE_HSI        // HSI (~8MHz) used to clock the PLL, and the PLL is used as system
+ 110:src/OSAL/system_stm32f30x.c **** //#define PLL_SOURCE_HSE        // HSE (8MHz) used to clock the PLL, and the PLL is used as system 
+ 111:src/OSAL/system_stm32f30x.c **** #define PLL_SOURCE_HSE_BYPASS // HSE bypassed with an external clock (8MHz, coming from ST-Link) us
+ 112:src/OSAL/system_stm32f30x.c ****                               // the PLL, and the PLL is used as system clock source
+ 113:src/OSAL/system_stm32f30x.c ****                                                                 
+ 114:src/OSAL/system_stm32f30x.c **** /**
+ 115:src/OSAL/system_stm32f30x.c ****   * @}
+ 116:src/OSAL/system_stm32f30x.c ****   */
+ 117:src/OSAL/system_stm32f30x.c **** 
+ 118:src/OSAL/system_stm32f30x.c **** /** @addtogroup STM32F30x_System_Private_Macros
+ 119:src/OSAL/system_stm32f30x.c ****   * @{
+ 120:src/OSAL/system_stm32f30x.c ****   */
+ 121:src/OSAL/system_stm32f30x.c **** 
+ 122:src/OSAL/system_stm32f30x.c **** /**
+ 123:src/OSAL/system_stm32f30x.c ****   * @}
+ 124:src/OSAL/system_stm32f30x.c ****   */
+ 125:src/OSAL/system_stm32f30x.c **** 
+ 126:src/OSAL/system_stm32f30x.c **** /** @addtogroup STM32F30x_System_Private_Variables
+ 127:src/OSAL/system_stm32f30x.c ****   * @{
+ 128:src/OSAL/system_stm32f30x.c ****   */
+ 129:src/OSAL/system_stm32f30x.c **** 
+ 130:src/OSAL/system_stm32f30x.c ****   uint32_t SystemCoreClock = 72000000;
+ 131:src/OSAL/system_stm32f30x.c **** 
+ 132:src/OSAL/system_stm32f30x.c ****   __I uint8_t AHBPrescTable[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
+ 133:src/OSAL/system_stm32f30x.c **** 
+ 134:src/OSAL/system_stm32f30x.c **** /**
+ 135:src/OSAL/system_stm32f30x.c ****   * @}
+ 136:src/OSAL/system_stm32f30x.c ****   */
+ 137:src/OSAL/system_stm32f30x.c **** 
+ 138:src/OSAL/system_stm32f30x.c **** /** @addtogroup STM32F30x_System_Private_FunctionPrototypes
+ 139:src/OSAL/system_stm32f30x.c ****   * @{
+ 140:src/OSAL/system_stm32f30x.c ****   */
+ 141:src/OSAL/system_stm32f30x.c **** 
+ 142:src/OSAL/system_stm32f30x.c **** static void SetSysClock(void);
+ 143:src/OSAL/system_stm32f30x.c **** 
+ 144:src/OSAL/system_stm32f30x.c **** /**
+ 145:src/OSAL/system_stm32f30x.c ****   * @}
+ 146:src/OSAL/system_stm32f30x.c ****   */
+ 147:src/OSAL/system_stm32f30x.c **** 
+ 148:src/OSAL/system_stm32f30x.c **** /** @addtogroup STM32F30x_System_Private_Functions
+ 149:src/OSAL/system_stm32f30x.c ****   * @{
+ 150:src/OSAL/system_stm32f30x.c ****   */
+ 151:src/OSAL/system_stm32f30x.c **** 
+ 152:src/OSAL/system_stm32f30x.c **** /**
+ 153:src/OSAL/system_stm32f30x.c ****   * @brief  Setup the microcontroller system
+ 154:src/OSAL/system_stm32f30x.c ****   *         Initialize the Embedded Flash Interface, the PLL and update the 
+ 155:src/OSAL/system_stm32f30x.c ****   *         SystemFrequency variable.
+ 156:src/OSAL/system_stm32f30x.c ****   * @param  None
+ 157:src/OSAL/system_stm32f30x.c ****   * @retval None
+ 158:src/OSAL/system_stm32f30x.c ****   */
+ 159:src/OSAL/system_stm32f30x.c **** void SystemInit(void)
+ 160:src/OSAL/system_stm32f30x.c **** {
+  57              		.loc 1 160 0
+  58              		.cfi_startproc
+  59              		@ args = 0, pretend = 0, frame = 0
+  60              		@ frame_needed = 1, uses_anonymous_args = 0
+  61 0000 80B5     		push	{r7, lr}
+  62              	.LCFI0:
+  63              		.cfi_def_cfa_offset 8
+  64              		.cfi_offset 7, -8
+  65              		.cfi_offset 14, -4
+  66 0002 00AF     		add	r7, sp, #0
+  67              	.LCFI1:
+  68              		.cfi_def_cfa_register 7
+ 161:src/OSAL/system_stm32f30x.c ****   /* FPU settings ------------------------------------------------------------*/
+ 162:src/OSAL/system_stm32f30x.c ****   #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
+ 163:src/OSAL/system_stm32f30x.c ****     SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
+  69              		.loc 1 163 0
+  70 0004 1F4B     		ldr	r3, .L2
+  71 0006 1F4A     		ldr	r2, .L2
+  72 0008 D2F88820 		ldr	r2, [r2, #136]
+  73 000c 42F47002 		orr	r2, r2, #15728640
+  74 0010 C3F88820 		str	r2, [r3, #136]
+ 164:src/OSAL/system_stm32f30x.c ****   #endif
+ 165:src/OSAL/system_stm32f30x.c **** 
+ 166:src/OSAL/system_stm32f30x.c ****   /* Reset the RCC clock configuration to the default reset state ------------*/
+ 167:src/OSAL/system_stm32f30x.c ****   /* Set HSION bit */
+ 168:src/OSAL/system_stm32f30x.c ****   RCC->CR |= (uint32_t)0x00000001;
+  75              		.loc 1 168 0
+  76 0014 1C4B     		ldr	r3, .L2+4
+  77 0016 1C4A     		ldr	r2, .L2+4
+  78 0018 1268     		ldr	r2, [r2, #0]
+  79 001a 42F00102 		orr	r2, r2, #1
+  80 001e 1A60     		str	r2, [r3, #0]
+ 169:src/OSAL/system_stm32f30x.c **** 
+ 170:src/OSAL/system_stm32f30x.c ****   /* Reset CFGR register */
+ 171:src/OSAL/system_stm32f30x.c ****   RCC->CFGR &= 0xF87FC00C;
+  81              		.loc 1 171 0
+  82 0020 194A     		ldr	r2, .L2+4
+  83 0022 194B     		ldr	r3, .L2+4
+  84 0024 5968     		ldr	r1, [r3, #4]
+  85 0026 194B     		ldr	r3, .L2+8
+  86 0028 0B40     		ands	r3, r3, r1
+  87 002a 5360     		str	r3, [r2, #4]
+ 172:src/OSAL/system_stm32f30x.c **** 
+ 173:src/OSAL/system_stm32f30x.c ****   /* Reset HSEON, CSSON and PLLON bits */
+ 174:src/OSAL/system_stm32f30x.c ****   RCC->CR &= (uint32_t)0xFEF6FFFF;
+  88              		.loc 1 174 0
+  89 002c 164A     		ldr	r2, .L2+4
+  90 002e 164B     		ldr	r3, .L2+4
+  91 0030 1B68     		ldr	r3, [r3, #0]
+  92 0032 23F08473 		bic	r3, r3, #17301504
+  93 0036 23F48033 		bic	r3, r3, #65536
+  94 003a 1360     		str	r3, [r2, #0]
+ 175:src/OSAL/system_stm32f30x.c **** 
+ 176:src/OSAL/system_stm32f30x.c ****   /* Reset HSEBYP bit */
+ 177:src/OSAL/system_stm32f30x.c ****   RCC->CR &= (uint32_t)0xFFFBFFFF;
+  95              		.loc 1 177 0
+  96 003c 124B     		ldr	r3, .L2+4
+  97 003e 124A     		ldr	r2, .L2+4
+  98 0040 1268     		ldr	r2, [r2, #0]
+  99 0042 22F48022 		bic	r2, r2, #262144
+ 100 0046 1A60     		str	r2, [r3, #0]
+ 178:src/OSAL/system_stm32f30x.c **** 
+ 179:src/OSAL/system_stm32f30x.c ****   /* Reset PLLSRC, PLLXTPRE, PLLMUL and USBPRE bits */
+ 180:src/OSAL/system_stm32f30x.c ****   RCC->CFGR &= (uint32_t)0xFF80FFFF;
+ 101              		.loc 1 180 0
+ 102 0048 0F4B     		ldr	r3, .L2+4
+ 103 004a 0F4A     		ldr	r2, .L2+4
+ 104 004c 5268     		ldr	r2, [r2, #4]
+ 105 004e 22F4FE02 		bic	r2, r2, #8323072
+ 106 0052 5A60     		str	r2, [r3, #4]
+ 181:src/OSAL/system_stm32f30x.c **** 
+ 182:src/OSAL/system_stm32f30x.c ****   /* Reset PREDIV1[3:0] bits */
+ 183:src/OSAL/system_stm32f30x.c ****   RCC->CFGR2 &= (uint32_t)0xFFFFFFF0;
+ 107              		.loc 1 183 0
+ 108 0054 0C4B     		ldr	r3, .L2+4
+ 109 0056 0C4A     		ldr	r2, .L2+4
+ 110 0058 D26A     		ldr	r2, [r2, #44]
+ 111 005a 22F00F02 		bic	r2, r2, #15
+ 112 005e DA62     		str	r2, [r3, #44]
+ 184:src/OSAL/system_stm32f30x.c **** 
+ 185:src/OSAL/system_stm32f30x.c ****   /* Reset USARTSW[1:0], I2CSW and TIMs bits */
+ 186:src/OSAL/system_stm32f30x.c ****   RCC->CFGR3 &= (uint32_t)0xFF00FCCC;
+ 113              		.loc 1 186 0
+ 114 0060 094A     		ldr	r2, .L2+4
+ 115 0062 094B     		ldr	r3, .L2+4
+ 116 0064 196B     		ldr	r1, [r3, #48]
+ 117 0066 0A4B     		ldr	r3, .L2+12
+ 118 0068 0B40     		ands	r3, r3, r1
+ 119 006a 1363     		str	r3, [r2, #48]
+ 187:src/OSAL/system_stm32f30x.c ****   
+ 188:src/OSAL/system_stm32f30x.c ****   /* Disable all interrupts */
+ 189:src/OSAL/system_stm32f30x.c ****   RCC->CIR = 0x00000000;
+ 120              		.loc 1 189 0
+ 121 006c 064B     		ldr	r3, .L2+4
+ 122 006e 4FF00002 		mov	r2, #0
+ 123 0072 9A60     		str	r2, [r3, #8]
+ 190:src/OSAL/system_stm32f30x.c **** 
+ 191:src/OSAL/system_stm32f30x.c ****   /* Configure the System clock source, PLL Multiplier and Divider factors, 
+ 192:src/OSAL/system_stm32f30x.c ****      AHB/APBx prescalers and Flash settings ----------------------------------*/
+ 193:src/OSAL/system_stm32f30x.c ****   SetSysClock();
+ 124              		.loc 1 193 0
+ 125 0074 FFF7FEFF 		bl	SetSysClock
+ 194:src/OSAL/system_stm32f30x.c ****   
+ 195:src/OSAL/system_stm32f30x.c **** #ifdef VECT_TAB_SRAM
+ 196:src/OSAL/system_stm32f30x.c ****   SCB->VTOR = SRAM_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal SRAM. */
+ 197:src/OSAL/system_stm32f30x.c **** #else
+ 198:src/OSAL/system_stm32f30x.c ****   SCB->VTOR = FLASH_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal FLASH. */
+ 126              		.loc 1 198 0
+ 127 0078 024B     		ldr	r3, .L2
+ 128 007a 4FF00062 		mov	r2, #134217728
+ 129 007e 9A60     		str	r2, [r3, #8]
+ 199:src/OSAL/system_stm32f30x.c **** #endif  
+ 200:src/OSAL/system_stm32f30x.c **** }
+ 130              		.loc 1 200 0
+ 131 0080 80BD     		pop	{r7, pc}
+ 132              	.L3:
+ 133 0082 00BF     		.align	2
+ 134              	.L2:
+ 135 0084 00ED00E0 		.word	-536810240
+ 136 0088 00100240 		.word	1073876992
+ 137 008c 0CC07FF8 		.word	-125845492
+ 138 0090 CCFC00FF 		.word	-16712500
+ 139              		.cfi_endproc
+ 140              	.LFE110:
+ 142              		.section	.text.SystemCoreClockUpdate,"ax",%progbits
+ 143              		.align	2
+ 144              		.global	SystemCoreClockUpdate
+ 145              		.thumb
+ 146              		.thumb_func
+ 148              	SystemCoreClockUpdate:
+ 149              	.LFB111:
+ 201:src/OSAL/system_stm32f30x.c **** 
+ 202:src/OSAL/system_stm32f30x.c **** /**
+ 203:src/OSAL/system_stm32f30x.c ****    * @brief  Update SystemCoreClock variable according to Clock Register Values.
+ 204:src/OSAL/system_stm32f30x.c ****   *         The SystemCoreClock variable contains the core clock (HCLK), it can
+ 205:src/OSAL/system_stm32f30x.c ****   *         be used by the user application to setup the SysTick timer or configure
+ 206:src/OSAL/system_stm32f30x.c ****   *         other parameters.
+ 207:src/OSAL/system_stm32f30x.c ****   *           
+ 208:src/OSAL/system_stm32f30x.c ****   * @note   Each time the core clock (HCLK) changes, this function must be called
+ 209:src/OSAL/system_stm32f30x.c ****   *         to update SystemCoreClock variable value. Otherwise, any configuration
+ 210:src/OSAL/system_stm32f30x.c ****   *         based on this variable will be incorrect.         
+ 211:src/OSAL/system_stm32f30x.c ****   *     
+ 212:src/OSAL/system_stm32f30x.c ****   * @note   - The system frequency computed by this function is not the real 
+ 213:src/OSAL/system_stm32f30x.c ****   *           frequency in the chip. It is calculated based on the predefined 
+ 214:src/OSAL/system_stm32f30x.c ****   *           constant and the selected clock source:
+ 215:src/OSAL/system_stm32f30x.c ****   *             
+ 216:src/OSAL/system_stm32f30x.c ****   *           - If SYSCLK source is HSI, SystemCoreClock will contain the HSI_VALUE(*)
+ 217:src/OSAL/system_stm32f30x.c ****   *                                              
+ 218:src/OSAL/system_stm32f30x.c ****   *           - If SYSCLK source is HSE, SystemCoreClock will contain the HSE_VALUE(**)
+ 219:src/OSAL/system_stm32f30x.c ****   *                          
+ 220:src/OSAL/system_stm32f30x.c ****   *           - If SYSCLK source is PLL, SystemCoreClock will contain the HSE_VALUE(**) 
+ 221:src/OSAL/system_stm32f30x.c ****   *             or HSI_VALUE(*) multiplied/divided by the PLL factors.
+ 222:src/OSAL/system_stm32f30x.c ****   *         
+ 223:src/OSAL/system_stm32f30x.c ****   *         (*) HSI_VALUE is a constant defined in stm32f30x.h file (default value
+ 224:src/OSAL/system_stm32f30x.c ****   *             8 MHz) but the real value may vary depending on the variations
+ 225:src/OSAL/system_stm32f30x.c ****   *             in voltage and temperature.   
+ 226:src/OSAL/system_stm32f30x.c ****   *    
+ 227:src/OSAL/system_stm32f30x.c ****   *         (**) HSE_VALUE is a constant defined in stm32f30x.h file (default value
+ 228:src/OSAL/system_stm32f30x.c ****   *              8 MHz), user has to ensure that HSE_VALUE is same as the real
+ 229:src/OSAL/system_stm32f30x.c ****   *              frequency of the crystal used. Otherwise, this function may
+ 230:src/OSAL/system_stm32f30x.c ****   *              have wrong result.
+ 231:src/OSAL/system_stm32f30x.c ****   *                
+ 232:src/OSAL/system_stm32f30x.c ****   *         - The result of this function could be not correct when using fractional
+ 233:src/OSAL/system_stm32f30x.c ****   *           value for HSE crystal.
+ 234:src/OSAL/system_stm32f30x.c ****   *     
+ 235:src/OSAL/system_stm32f30x.c ****   * @param  None
+ 236:src/OSAL/system_stm32f30x.c ****   * @retval None
+ 237:src/OSAL/system_stm32f30x.c ****   */
+ 238:src/OSAL/system_stm32f30x.c **** void SystemCoreClockUpdate (void)
+ 239:src/OSAL/system_stm32f30x.c **** {
+ 150              		.loc 1 239 0
+ 151              		.cfi_startproc
+ 152              		@ args = 0, pretend = 0, frame = 16
+ 153              		@ frame_needed = 1, uses_anonymous_args = 0
+ 154              		@ link register save eliminated.
+ 155 0000 80B4     		push	{r7}
+ 156              	.LCFI2:
+ 157              		.cfi_def_cfa_offset 4
+ 158              		.cfi_offset 7, -4
+ 159 0002 85B0     		sub	sp, sp, #20
+ 160              	.LCFI3:
+ 161              		.cfi_def_cfa_offset 24
+ 162 0004 00AF     		add	r7, sp, #0
+ 163              	.LCFI4:
+ 164              		.cfi_def_cfa_register 7
+ 240:src/OSAL/system_stm32f30x.c ****   uint32_t tmp = 0, pllmull = 0, pllsource = 0, prediv1factor = 0;
+ 165              		.loc 1 240 0
+ 166 0006 4FF00003 		mov	r3, #0
+ 167 000a FB60     		str	r3, [r7, #12]
+ 168 000c 4FF00003 		mov	r3, #0
+ 169 0010 BB60     		str	r3, [r7, #8]
+ 170 0012 4FF00003 		mov	r3, #0
+ 171 0016 7B60     		str	r3, [r7, #4]
+ 172 0018 4FF00003 		mov	r3, #0
+ 173 001c 3B60     		str	r3, [r7, #0]
+ 241:src/OSAL/system_stm32f30x.c **** 
+ 242:src/OSAL/system_stm32f30x.c ****   /* Get SYSCLK source -------------------------------------------------------*/
+ 243:src/OSAL/system_stm32f30x.c ****   tmp = RCC->CFGR & RCC_CFGR_SWS;
+ 174              		.loc 1 243 0
+ 175 001e 2C4B     		ldr	r3, .L13
+ 176 0020 5B68     		ldr	r3, [r3, #4]
+ 177 0022 03F00C03 		and	r3, r3, #12
+ 178 0026 FB60     		str	r3, [r7, #12]
+ 244:src/OSAL/system_stm32f30x.c ****   
+ 245:src/OSAL/system_stm32f30x.c ****   switch (tmp)
+ 179              		.loc 1 245 0
+ 180 0028 FB68     		ldr	r3, [r7, #12]
+ 181 002a 042B     		cmp	r3, #4
+ 182 002c 07D0     		beq	.L7
+ 183 002e 082B     		cmp	r3, #8
+ 184 0030 09D0     		beq	.L8
+ 185 0032 002B     		cmp	r3, #0
+ 186 0034 32D1     		bne	.L12
+ 187              	.L6:
+ 246:src/OSAL/system_stm32f30x.c ****   {
+ 247:src/OSAL/system_stm32f30x.c ****     case 0x00:  /* HSI used as system clock */
+ 248:src/OSAL/system_stm32f30x.c ****       SystemCoreClock = HSI_VALUE;
+ 188              		.loc 1 248 0
+ 189 0036 274B     		ldr	r3, .L13+4
+ 190 0038 274A     		ldr	r2, .L13+8
+ 191 003a 1A60     		str	r2, [r3, #0]
+ 249:src/OSAL/system_stm32f30x.c ****       break;
+ 192              		.loc 1 249 0
+ 193 003c 32E0     		b	.L9
+ 194              	.L7:
+ 250:src/OSAL/system_stm32f30x.c ****     case 0x04:  /* HSE used as system clock */
+ 251:src/OSAL/system_stm32f30x.c ****       SystemCoreClock = HSE_VALUE;
+ 195              		.loc 1 251 0
+ 196 003e 254B     		ldr	r3, .L13+4
+ 197 0040 254A     		ldr	r2, .L13+8
+ 198 0042 1A60     		str	r2, [r3, #0]
+ 252:src/OSAL/system_stm32f30x.c ****       break;
+ 199              		.loc 1 252 0
+ 200 0044 2EE0     		b	.L9
+ 201              	.L8:
+ 253:src/OSAL/system_stm32f30x.c ****     case 0x08:  /* PLL used as system clock */
+ 254:src/OSAL/system_stm32f30x.c ****       /* Get PLL clock source and multiplication factor ----------------------*/
+ 255:src/OSAL/system_stm32f30x.c ****       pllmull = RCC->CFGR & RCC_CFGR_PLLMULL;
+ 202              		.loc 1 255 0
+ 203 0046 224B     		ldr	r3, .L13
+ 204 0048 5B68     		ldr	r3, [r3, #4]
+ 205 004a 03F47013 		and	r3, r3, #3932160
+ 206 004e BB60     		str	r3, [r7, #8]
+ 256:src/OSAL/system_stm32f30x.c ****       pllsource = RCC->CFGR & RCC_CFGR_PLLSRC;
+ 207              		.loc 1 256 0
+ 208 0050 1F4B     		ldr	r3, .L13
+ 209 0052 5B68     		ldr	r3, [r3, #4]
+ 210 0054 03F48033 		and	r3, r3, #65536
+ 211 0058 7B60     		str	r3, [r7, #4]
+ 257:src/OSAL/system_stm32f30x.c ****       pllmull = ( pllmull >> 18) + 2;
+ 212              		.loc 1 257 0
+ 213 005a BB68     		ldr	r3, [r7, #8]
+ 214 005c 4FEA9343 		lsr	r3, r3, #18
+ 215 0060 03F10203 		add	r3, r3, #2
+ 216 0064 BB60     		str	r3, [r7, #8]
+ 258:src/OSAL/system_stm32f30x.c ****       
+ 259:src/OSAL/system_stm32f30x.c ****       if (pllsource == 0x00)
+ 217              		.loc 1 259 0
+ 218 0066 7B68     		ldr	r3, [r7, #4]
+ 219 0068 002B     		cmp	r3, #0
+ 220 006a 06D1     		bne	.L10
+ 260:src/OSAL/system_stm32f30x.c ****       {
+ 261:src/OSAL/system_stm32f30x.c ****         /* HSI oscillator clock divided by 2 selected as PLL clock entry */
+ 262:src/OSAL/system_stm32f30x.c ****         SystemCoreClock = (HSI_VALUE >> 1) * pllmull;
+ 221              		.loc 1 262 0
+ 222 006c BB68     		ldr	r3, [r7, #8]
+ 223 006e 1B4A     		ldr	r2, .L13+12
+ 224 0070 02FB03F2 		mul	r2, r2, r3
+ 225 0074 174B     		ldr	r3, .L13+4
+ 226 0076 1A60     		str	r2, [r3, #0]
+ 263:src/OSAL/system_stm32f30x.c ****       }
+ 264:src/OSAL/system_stm32f30x.c ****       else
+ 265:src/OSAL/system_stm32f30x.c ****       {
+ 266:src/OSAL/system_stm32f30x.c ****         prediv1factor = (RCC->CFGR2 & RCC_CFGR2_PREDIV1) + 1;
+ 267:src/OSAL/system_stm32f30x.c ****         /* HSE oscillator clock selected as PREDIV1 clock entry */
+ 268:src/OSAL/system_stm32f30x.c ****         SystemCoreClock = (HSE_VALUE / prediv1factor) * pllmull; 
+ 269:src/OSAL/system_stm32f30x.c ****       }      
+ 270:src/OSAL/system_stm32f30x.c ****       break;
+ 227              		.loc 1 270 0
+ 228 0078 14E0     		b	.L9
+ 229              	.L10:
+ 266:src/OSAL/system_stm32f30x.c ****         prediv1factor = (RCC->CFGR2 & RCC_CFGR2_PREDIV1) + 1;
+ 230              		.loc 1 266 0
+ 231 007a 154B     		ldr	r3, .L13
+ 232 007c DB6A     		ldr	r3, [r3, #44]
+ 233 007e 03F00F03 		and	r3, r3, #15
+ 234 0082 03F10103 		add	r3, r3, #1
+ 235 0086 3B60     		str	r3, [r7, #0]
+ 268:src/OSAL/system_stm32f30x.c ****         SystemCoreClock = (HSE_VALUE / prediv1factor) * pllmull; 
+ 236              		.loc 1 268 0
+ 237 0088 134A     		ldr	r2, .L13+8
+ 238 008a 3B68     		ldr	r3, [r7, #0]
+ 239 008c B2FBF3F3 		udiv	r3, r2, r3
+ 240 0090 BA68     		ldr	r2, [r7, #8]
+ 241 0092 02FB03F2 		mul	r2, r2, r3
+ 242 0096 0F4B     		ldr	r3, .L13+4
+ 243 0098 1A60     		str	r2, [r3, #0]
+ 244              		.loc 1 270 0
+ 245 009a 03E0     		b	.L9
+ 246              	.L12:
+ 271:src/OSAL/system_stm32f30x.c ****     default: /* HSI used as system clock */
+ 272:src/OSAL/system_stm32f30x.c ****       SystemCoreClock = HSI_VALUE;
+ 247              		.loc 1 272 0
+ 248 009c 0D4B     		ldr	r3, .L13+4
+ 249 009e 0E4A     		ldr	r2, .L13+8
+ 250 00a0 1A60     		str	r2, [r3, #0]
+ 273:src/OSAL/system_stm32f30x.c ****       break;
+ 251              		.loc 1 273 0
+ 252 00a2 00BF     		nop
+ 253              	.L9:
+ 274:src/OSAL/system_stm32f30x.c ****   }
+ 275:src/OSAL/system_stm32f30x.c ****   /* Compute HCLK clock frequency ----------------*/
+ 276:src/OSAL/system_stm32f30x.c ****   /* Get HCLK prescaler */
+ 277:src/OSAL/system_stm32f30x.c ****   tmp = AHBPrescTable[((RCC->CFGR & RCC_CFGR_HPRE) >> 4)];
+ 254              		.loc 1 277 0
+ 255 00a4 0A4B     		ldr	r3, .L13
+ 256 00a6 5B68     		ldr	r3, [r3, #4]
+ 257 00a8 03F0F003 		and	r3, r3, #240
+ 258 00ac 4FEA1313 		lsr	r3, r3, #4
+ 259 00b0 0B4A     		ldr	r2, .L13+16
+ 260 00b2 D35C     		ldrb	r3, [r2, r3]
+ 261 00b4 DBB2     		uxtb	r3, r3
+ 262 00b6 FB60     		str	r3, [r7, #12]
+ 278:src/OSAL/system_stm32f30x.c ****   /* HCLK clock frequency */
+ 279:src/OSAL/system_stm32f30x.c ****   SystemCoreClock >>= tmp;  
+ 263              		.loc 1 279 0
+ 264 00b8 064B     		ldr	r3, .L13+4
+ 265 00ba 1A68     		ldr	r2, [r3, #0]
+ 266 00bc FB68     		ldr	r3, [r7, #12]
+ 267 00be 22FA03F2 		lsr	r2, r2, r3
+ 268 00c2 044B     		ldr	r3, .L13+4
+ 269 00c4 1A60     		str	r2, [r3, #0]
+ 280:src/OSAL/system_stm32f30x.c **** }
+ 270              		.loc 1 280 0
+ 271 00c6 07F11407 		add	r7, r7, #20
+ 272 00ca BD46     		mov	sp, r7
+ 273 00cc 80BC     		pop	{r7}
+ 274 00ce 7047     		bx	lr
+ 275              	.L14:
+ 276              		.align	2
+ 277              	.L13:
+ 278 00d0 00100240 		.word	1073876992
+ 279 00d4 00000000 		.word	SystemCoreClock
+ 280 00d8 00127A00 		.word	8000000
+ 281 00dc 00093D00 		.word	4000000
+ 282 00e0 00000000 		.word	AHBPrescTable
+ 283              		.cfi_endproc
+ 284              	.LFE111:
+ 286              		.section	.text.SetSysClock,"ax",%progbits
+ 287              		.align	2
+ 288              		.thumb
+ 289              		.thumb_func
+ 291              	SetSysClock:
+ 292              	.LFB112:
+ 281:src/OSAL/system_stm32f30x.c **** 
+ 282:src/OSAL/system_stm32f30x.c **** /**
+ 283:src/OSAL/system_stm32f30x.c ****   * @brief  Configures the System clock source, PLL Multiplier and Divider factors, 
+ 284:src/OSAL/system_stm32f30x.c ****   *         AHB/APBx prescalers and Flash settings
+ 285:src/OSAL/system_stm32f30x.c ****   * @Note   This function should be called only once the RCC clock configuration  
+ 286:src/OSAL/system_stm32f30x.c ****   *         is reset to the default reset state (done in SystemInit() function).   
+ 287:src/OSAL/system_stm32f30x.c ****   * @param  None
+ 288:src/OSAL/system_stm32f30x.c ****   * @retval None
+ 289:src/OSAL/system_stm32f30x.c ****   */
+ 290:src/OSAL/system_stm32f30x.c **** static void SetSysClock(void)
+ 291:src/OSAL/system_stm32f30x.c **** {
+ 293              		.loc 1 291 0
+ 294              		.cfi_startproc
+ 295              		@ args = 0, pretend = 0, frame = 8
+ 296              		@ frame_needed = 1, uses_anonymous_args = 0
+ 297              		@ link register save eliminated.
+ 298 0000 80B4     		push	{r7}
+ 299              	.LCFI5:
+ 300              		.cfi_def_cfa_offset 4
+ 301              		.cfi_offset 7, -4
+ 302 0002 83B0     		sub	sp, sp, #12
+ 303              	.LCFI6:
+ 304              		.cfi_def_cfa_offset 16
+ 305 0004 00AF     		add	r7, sp, #0
+ 306              	.LCFI7:
+ 307              		.cfi_def_cfa_register 7
+ 292:src/OSAL/system_stm32f30x.c ****   __IO uint32_t StartUpCounter = 0, HSEStatus = 0;
+ 308              		.loc 1 292 0
+ 309 0006 4FF00003 		mov	r3, #0
+ 310 000a 7B60     		str	r3, [r7, #4]
+ 311 000c 4FF00003 		mov	r3, #0
+ 312 0010 3B60     		str	r3, [r7, #0]
+ 293:src/OSAL/system_stm32f30x.c ****   
+ 294:src/OSAL/system_stm32f30x.c ****   /* SYSCLK, HCLK, PCLK2 and PCLK1 configuration ---------------------------*/    
+ 295:src/OSAL/system_stm32f30x.c **** #if defined (PLL_SOURCE_HSI)
+ 296:src/OSAL/system_stm32f30x.c ****   /* At this stage the HSI is already enabled */
+ 297:src/OSAL/system_stm32f30x.c **** 
+ 298:src/OSAL/system_stm32f30x.c ****   /* Enable Prefetch Buffer and set Flash Latency */
+ 299:src/OSAL/system_stm32f30x.c ****   FLASH->ACR = FLASH_ACR_PRFTBE | FLASH_ACR_LATENCY_1;
+ 300:src/OSAL/system_stm32f30x.c ****  
+ 301:src/OSAL/system_stm32f30x.c ****   /* HCLK = SYSCLK */
+ 302:src/OSAL/system_stm32f30x.c ****   RCC->CFGR |= (uint32_t)RCC_CFGR_HPRE_DIV1;
+ 303:src/OSAL/system_stm32f30x.c ****       
+ 304:src/OSAL/system_stm32f30x.c ****   /* PCLK = HCLK */
+ 305:src/OSAL/system_stm32f30x.c ****   RCC->CFGR |= (uint32_t)RCC_CFGR_PPRE1_DIV2 | (uint32_t)RCC_CFGR_PPRE2_DIV1;
+ 306:src/OSAL/system_stm32f30x.c **** 
+ 307:src/OSAL/system_stm32f30x.c ****   /* PLL configuration */
+ 308:src/OSAL/system_stm32f30x.c ****   RCC->CFGR &= (uint32_t)((uint32_t)~(RCC_CFGR_PLLSRC | RCC_CFGR_PLLXTPRE | RCC_CFGR_PLLMULL));
+ 309:src/OSAL/system_stm32f30x.c ****   RCC->CFGR |= (uint32_t)(RCC_CFGR_PLLSRC_HSI_Div2 | RCC_CFGR_PLLXTPRE_PREDIV1 | RCC_CFGR_PLLMULL16
+ 310:src/OSAL/system_stm32f30x.c ****             
+ 311:src/OSAL/system_stm32f30x.c ****   /* Enable PLL */
+ 312:src/OSAL/system_stm32f30x.c ****   RCC->CR |= RCC_CR_PLLON;
+ 313:src/OSAL/system_stm32f30x.c **** 
+ 314:src/OSAL/system_stm32f30x.c ****   /* Wait till PLL is ready */
+ 315:src/OSAL/system_stm32f30x.c ****   while((RCC->CR & RCC_CR_PLLRDY) == 0)
+ 316:src/OSAL/system_stm32f30x.c ****   {
+ 317:src/OSAL/system_stm32f30x.c ****   }
+ 318:src/OSAL/system_stm32f30x.c **** 
+ 319:src/OSAL/system_stm32f30x.c ****   /* Select PLL as system clock source */
+ 320:src/OSAL/system_stm32f30x.c ****   RCC->CFGR &= (uint32_t)((uint32_t)~(RCC_CFGR_SW));
+ 321:src/OSAL/system_stm32f30x.c ****   RCC->CFGR |= (uint32_t)RCC_CFGR_SW_PLL;    
+ 322:src/OSAL/system_stm32f30x.c **** 
+ 323:src/OSAL/system_stm32f30x.c ****   /* Wait till PLL is used as system clock source */
+ 324:src/OSAL/system_stm32f30x.c ****   while ((RCC->CFGR & (uint32_t)RCC_CFGR_SWS) != (uint32_t)RCC_CFGR_SWS_PLL)
+ 325:src/OSAL/system_stm32f30x.c ****   {
+ 326:src/OSAL/system_stm32f30x.c ****   }  
+ 327:src/OSAL/system_stm32f30x.c **** #else
+ 328:src/OSAL/system_stm32f30x.c ****  #if defined (PLL_SOURCE_HSE)
+ 329:src/OSAL/system_stm32f30x.c ****   /* Enable HSE */    
+ 330:src/OSAL/system_stm32f30x.c ****   RCC->CR |= ((uint32_t)RCC_CR_HSEON);
+ 331:src/OSAL/system_stm32f30x.c ****  #elif defined (PLL_SOURCE_HSE_BYPASS)
+ 332:src/OSAL/system_stm32f30x.c ****   /* HSE oscillator bypassed with external clock */    
+ 333:src/OSAL/system_stm32f30x.c ****   RCC->CR |= (uint32_t)(RCC_CR_HSEON | RCC_CR_HSEBYP);
+ 313              		.loc 1 333 0
+ 314 0012 344B     		ldr	r3, .L23
+ 315 0014 334A     		ldr	r2, .L23
+ 316 0016 1268     		ldr	r2, [r2, #0]
+ 317 0018 42F4A022 		orr	r2, r2, #327680
+ 318 001c 1A60     		str	r2, [r3, #0]
+ 319              	.L17:
+ 334:src/OSAL/system_stm32f30x.c ****  #endif /* PLL_SOURCE_HSE */
+ 335:src/OSAL/system_stm32f30x.c ****    
+ 336:src/OSAL/system_stm32f30x.c ****   /* Wait till HSE is ready and if Time out is reached exit */
+ 337:src/OSAL/system_stm32f30x.c ****   do
+ 338:src/OSAL/system_stm32f30x.c ****   {
+ 339:src/OSAL/system_stm32f30x.c ****     HSEStatus = RCC->CR & RCC_CR_HSERDY;
+ 320              		.loc 1 339 0 discriminator 1
+ 321 001e 314B     		ldr	r3, .L23
+ 322 0020 1B68     		ldr	r3, [r3, #0]
+ 323 0022 03F40033 		and	r3, r3, #131072
+ 324 0026 3B60     		str	r3, [r7, #0]
+ 340:src/OSAL/system_stm32f30x.c ****     StartUpCounter++;  
+ 325              		.loc 1 340 0 discriminator 1
+ 326 0028 7B68     		ldr	r3, [r7, #4]
+ 327 002a 03F10103 		add	r3, r3, #1
+ 328 002e 7B60     		str	r3, [r7, #4]
+ 341:src/OSAL/system_stm32f30x.c ****   } while((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
+ 329              		.loc 1 341 0 discriminator 1
+ 330 0030 3B68     		ldr	r3, [r7, #0]
+ 331 0032 002B     		cmp	r3, #0
+ 332 0034 03D1     		bne	.L16
+ 333 0036 7B68     		ldr	r3, [r7, #4]
+ 334 0038 B3F5A06F 		cmp	r3, #1280
+ 335 003c EFD1     		bne	.L17
+ 336              	.L16:
+ 342:src/OSAL/system_stm32f30x.c **** 
+ 343:src/OSAL/system_stm32f30x.c ****   if ((RCC->CR & RCC_CR_HSERDY) != RESET)
+ 337              		.loc 1 343 0
+ 338 003e 294B     		ldr	r3, .L23
+ 339 0040 1B68     		ldr	r3, [r3, #0]
+ 340 0042 03F40033 		and	r3, r3, #131072
+ 341 0046 002B     		cmp	r3, #0
+ 342 0048 03D0     		beq	.L18
+ 344:src/OSAL/system_stm32f30x.c ****   {
+ 345:src/OSAL/system_stm32f30x.c ****     HSEStatus = (uint32_t)0x01;
+ 343              		.loc 1 345 0
+ 344 004a 4FF00103 		mov	r3, #1
+ 345 004e 3B60     		str	r3, [r7, #0]
+ 346 0050 02E0     		b	.L19
+ 347              	.L18:
+ 346:src/OSAL/system_stm32f30x.c ****   }
+ 347:src/OSAL/system_stm32f30x.c ****   else
+ 348:src/OSAL/system_stm32f30x.c ****   {
+ 349:src/OSAL/system_stm32f30x.c ****     HSEStatus = (uint32_t)0x00;
+ 348              		.loc 1 349 0
+ 349 0052 4FF00003 		mov	r3, #0
+ 350 0056 3B60     		str	r3, [r7, #0]
+ 351              	.L19:
+ 350:src/OSAL/system_stm32f30x.c ****   }  
+ 351:src/OSAL/system_stm32f30x.c **** 
+ 352:src/OSAL/system_stm32f30x.c ****   if (HSEStatus == (uint32_t)0x01)
+ 352              		.loc 1 352 0
+ 353 0058 3B68     		ldr	r3, [r7, #0]
+ 354 005a 012B     		cmp	r3, #1
+ 355 005c 3DD1     		bne	.L15
+ 353:src/OSAL/system_stm32f30x.c ****   {
+ 354:src/OSAL/system_stm32f30x.c ****     /* Enable Prefetch Buffer and set Flash Latency */
+ 355:src/OSAL/system_stm32f30x.c ****     FLASH->ACR = FLASH_ACR_PRFTBE | FLASH_ACR_LATENCY_1;
+ 356              		.loc 1 355 0
+ 357 005e 224B     		ldr	r3, .L23+4
+ 358 0060 4FF01202 		mov	r2, #18
+ 359 0064 1A60     		str	r2, [r3, #0]
+ 356:src/OSAL/system_stm32f30x.c ****  
+ 357:src/OSAL/system_stm32f30x.c ****     /* HCLK = SYSCLK */
+ 358:src/OSAL/system_stm32f30x.c ****     RCC->CFGR |= (uint32_t)RCC_CFGR_HPRE_DIV1;
+ 360              		.loc 1 358 0
+ 361 0066 1F4B     		ldr	r3, .L23
+ 362 0068 1E4A     		ldr	r2, .L23
+ 363 006a 5268     		ldr	r2, [r2, #4]
+ 364 006c 5A60     		str	r2, [r3, #4]
+ 359:src/OSAL/system_stm32f30x.c ****       
+ 360:src/OSAL/system_stm32f30x.c ****     /* PCLK2 = HCLK */
+ 361:src/OSAL/system_stm32f30x.c ****     RCC->CFGR |= (uint32_t)RCC_CFGR_PPRE2_DIV1;
+ 365              		.loc 1 361 0
+ 366 006e 1D4B     		ldr	r3, .L23
+ 367 0070 1C4A     		ldr	r2, .L23
+ 368 0072 5268     		ldr	r2, [r2, #4]
+ 369 0074 5A60     		str	r2, [r3, #4]
+ 362:src/OSAL/system_stm32f30x.c ****     
+ 363:src/OSAL/system_stm32f30x.c ****     /* PCLK1 = HCLK */
+ 364:src/OSAL/system_stm32f30x.c ****     RCC->CFGR |= (uint32_t)RCC_CFGR_PPRE1_DIV2;
+ 370              		.loc 1 364 0
+ 371 0076 1B4B     		ldr	r3, .L23
+ 372 0078 1A4A     		ldr	r2, .L23
+ 373 007a 5268     		ldr	r2, [r2, #4]
+ 374 007c 42F48062 		orr	r2, r2, #1024
+ 375 0080 5A60     		str	r2, [r3, #4]
+ 365:src/OSAL/system_stm32f30x.c ****     
+ 366:src/OSAL/system_stm32f30x.c ****    
+ 367:src/OSAL/system_stm32f30x.c ****     /*  PLL configuration: PLLCLK = HSE * 9 = 72 MHz */
+ 368:src/OSAL/system_stm32f30x.c ****     RCC->CFGR &= (uint32_t)((uint32_t)~(RCC_CFGR_PLLSRC | RCC_CFGR_PLLXTPRE |
+ 376              		.loc 1 368 0
+ 377 0082 184B     		ldr	r3, .L23
+ 378 0084 174A     		ldr	r2, .L23
+ 379 0086 5268     		ldr	r2, [r2, #4]
+ 380 0088 22F47C12 		bic	r2, r2, #4128768
+ 381 008c 5A60     		str	r2, [r3, #4]
+ 369:src/OSAL/system_stm32f30x.c ****                                         RCC_CFGR_PLLMULL));
+ 370:src/OSAL/system_stm32f30x.c ****     RCC->CFGR |= (uint32_t)(RCC_CFGR_PLLSRC_PREDIV1 | RCC_CFGR_PLLMULL9);
+ 382              		.loc 1 370 0
+ 383 008e 154B     		ldr	r3, .L23
+ 384 0090 144A     		ldr	r2, .L23
+ 385 0092 5268     		ldr	r2, [r2, #4]
+ 386 0094 42F4E812 		orr	r2, r2, #1900544
+ 387 0098 5A60     		str	r2, [r3, #4]
+ 371:src/OSAL/system_stm32f30x.c ****     /* Enable PLL */
+ 372:src/OSAL/system_stm32f30x.c ****     RCC->CR |= RCC_CR_PLLON;
+ 388              		.loc 1 372 0
+ 389 009a 124B     		ldr	r3, .L23
+ 390 009c 114A     		ldr	r2, .L23
+ 391 009e 1268     		ldr	r2, [r2, #0]
+ 392 00a0 42F08072 		orr	r2, r2, #16777216
+ 393 00a4 1A60     		str	r2, [r3, #0]
+ 373:src/OSAL/system_stm32f30x.c **** 
+ 374:src/OSAL/system_stm32f30x.c ****     /* Wait till PLL is ready */
+ 375:src/OSAL/system_stm32f30x.c ****     while((RCC->CR & RCC_CR_PLLRDY) == 0)
+ 394              		.loc 1 375 0
+ 395 00a6 00BF     		nop
+ 396              	.L21:
+ 397              		.loc 1 375 0 is_stmt 0 discriminator 1
+ 398 00a8 0E4B     		ldr	r3, .L23
+ 399 00aa 1B68     		ldr	r3, [r3, #0]
+ 400 00ac 03F00073 		and	r3, r3, #33554432
+ 401 00b0 002B     		cmp	r3, #0
+ 402 00b2 F9D0     		beq	.L21
+ 376:src/OSAL/system_stm32f30x.c ****     {
+ 377:src/OSAL/system_stm32f30x.c ****     }
+ 378:src/OSAL/system_stm32f30x.c **** 
+ 379:src/OSAL/system_stm32f30x.c ****     /* Select PLL as system clock source */
+ 380:src/OSAL/system_stm32f30x.c ****     RCC->CFGR &= (uint32_t)((uint32_t)~(RCC_CFGR_SW));
+ 403              		.loc 1 380 0 is_stmt 1
+ 404 00b4 0B4B     		ldr	r3, .L23
+ 405 00b6 0B4A     		ldr	r2, .L23
+ 406 00b8 5268     		ldr	r2, [r2, #4]
+ 407 00ba 22F00302 		bic	r2, r2, #3
+ 408 00be 5A60     		str	r2, [r3, #4]
+ 381:src/OSAL/system_stm32f30x.c ****     RCC->CFGR |= (uint32_t)RCC_CFGR_SW_PLL;    
+ 409              		.loc 1 381 0
+ 410 00c0 084B     		ldr	r3, .L23
+ 411 00c2 084A     		ldr	r2, .L23
+ 412 00c4 5268     		ldr	r2, [r2, #4]
+ 413 00c6 42F00202 		orr	r2, r2, #2
+ 414 00ca 5A60     		str	r2, [r3, #4]
+ 382:src/OSAL/system_stm32f30x.c **** 
+ 383:src/OSAL/system_stm32f30x.c ****     /* Wait till PLL is used as system clock source */
+ 384:src/OSAL/system_stm32f30x.c ****     while ((RCC->CFGR & (uint32_t)RCC_CFGR_SWS) != (uint32_t)RCC_CFGR_SWS_PLL)
+ 415              		.loc 1 384 0
+ 416 00cc 00BF     		nop
+ 417              	.L22:
+ 418              		.loc 1 384 0 is_stmt 0 discriminator 1
+ 419 00ce 054B     		ldr	r3, .L23
+ 420 00d0 5B68     		ldr	r3, [r3, #4]
+ 421 00d2 03F00C03 		and	r3, r3, #12
+ 422 00d6 082B     		cmp	r3, #8
+ 423 00d8 F9D1     		bne	.L22
+ 424              	.L15:
+ 385:src/OSAL/system_stm32f30x.c ****     {
+ 386:src/OSAL/system_stm32f30x.c ****     }
+ 387:src/OSAL/system_stm32f30x.c ****   }
+ 388:src/OSAL/system_stm32f30x.c ****   else
+ 389:src/OSAL/system_stm32f30x.c ****   { /* If HSE fails to start-up, the application will have wrong clock 
+ 390:src/OSAL/system_stm32f30x.c ****          configuration. User can add here some code to deal with this error */
+ 391:src/OSAL/system_stm32f30x.c ****   } 
+ 392:src/OSAL/system_stm32f30x.c **** #endif /* PLL_SOURCE_HSI */  
+ 393:src/OSAL/system_stm32f30x.c **** }
+ 425              		.loc 1 393 0 is_stmt 1
+ 426 00da 07F10C07 		add	r7, r7, #12
+ 427 00de BD46     		mov	sp, r7
+ 428 00e0 80BC     		pop	{r7}
+ 429 00e2 7047     		bx	lr
+ 430              	.L24:
+ 431              		.align	2
+ 432              	.L23:
+ 433 00e4 00100240 		.word	1073876992
+ 434 00e8 00200240 		.word	1073881088
+ 435              		.cfi_endproc
+ 436              	.LFE112:
+ 438              		.text
+ 439              	.Letext0:
+ 440              		.file 2 "/home/chaitannya/CodeSourcery/bin/../lib/gcc/arm-none-eabi/4.7.3/../../../../arm-none-eab
+ 441              		.file 3 "inc/core_cm4.h"
+ 442              		.file 4 "inc/stm32f30x.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 system_stm32f30x.c
+     /tmp/ccjT0yQ0.s:24     .data.SystemCoreClock:00000000 SystemCoreClock
+     /tmp/ccjT0yQ0.s:21     .data.SystemCoreClock:00000000 $d
+     /tmp/ccjT0yQ0.s:31     .data.AHBPrescTable:00000000 AHBPrescTable
+     /tmp/ccjT0yQ0.s:28     .data.AHBPrescTable:00000000 $d
+     /tmp/ccjT0yQ0.s:49     .text.SystemInit:00000000 $t
+     /tmp/ccjT0yQ0.s:54     .text.SystemInit:00000000 SystemInit
+     /tmp/ccjT0yQ0.s:291    .text.SetSysClock:00000000 SetSysClock
+     /tmp/ccjT0yQ0.s:135    .text.SystemInit:00000084 $d
+     /tmp/ccjT0yQ0.s:143    .text.SystemCoreClockUpdate:00000000 $t
+     /tmp/ccjT0yQ0.s:148    .text.SystemCoreClockUpdate:00000000 SystemCoreClockUpdate
+     /tmp/ccjT0yQ0.s:278    .text.SystemCoreClockUpdate:000000d0 $d
+     /tmp/ccjT0yQ0.s:287    .text.SetSysClock:00000000 $t
+     /tmp/ccjT0yQ0.s:433    .text.SetSysClock:000000e4 $d
+                     .debug_frame:00000010 $d
+
+NO UNDEFINED SYMBOLS
