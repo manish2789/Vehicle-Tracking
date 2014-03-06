@@ -827,19 +827,19 @@
  442              		.file 4 "inc/stm32f30x.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 system_stm32f30x.c
-     /tmp/ccjT0yQ0.s:24     .data.SystemCoreClock:00000000 SystemCoreClock
-     /tmp/ccjT0yQ0.s:21     .data.SystemCoreClock:00000000 $d
-     /tmp/ccjT0yQ0.s:31     .data.AHBPrescTable:00000000 AHBPrescTable
-     /tmp/ccjT0yQ0.s:28     .data.AHBPrescTable:00000000 $d
-     /tmp/ccjT0yQ0.s:49     .text.SystemInit:00000000 $t
-     /tmp/ccjT0yQ0.s:54     .text.SystemInit:00000000 SystemInit
-     /tmp/ccjT0yQ0.s:291    .text.SetSysClock:00000000 SetSysClock
-     /tmp/ccjT0yQ0.s:135    .text.SystemInit:00000084 $d
-     /tmp/ccjT0yQ0.s:143    .text.SystemCoreClockUpdate:00000000 $t
-     /tmp/ccjT0yQ0.s:148    .text.SystemCoreClockUpdate:00000000 SystemCoreClockUpdate
-     /tmp/ccjT0yQ0.s:278    .text.SystemCoreClockUpdate:000000d0 $d
-     /tmp/ccjT0yQ0.s:287    .text.SetSysClock:00000000 $t
-     /tmp/ccjT0yQ0.s:433    .text.SetSysClock:000000e4 $d
+     /tmp/ccLHeWjf.s:24     .data.SystemCoreClock:00000000 SystemCoreClock
+     /tmp/ccLHeWjf.s:21     .data.SystemCoreClock:00000000 $d
+     /tmp/ccLHeWjf.s:31     .data.AHBPrescTable:00000000 AHBPrescTable
+     /tmp/ccLHeWjf.s:28     .data.AHBPrescTable:00000000 $d
+     /tmp/ccLHeWjf.s:49     .text.SystemInit:00000000 $t
+     /tmp/ccLHeWjf.s:54     .text.SystemInit:00000000 SystemInit
+     /tmp/ccLHeWjf.s:291    .text.SetSysClock:00000000 SetSysClock
+     /tmp/ccLHeWjf.s:135    .text.SystemInit:00000084 $d
+     /tmp/ccLHeWjf.s:143    .text.SystemCoreClockUpdate:00000000 $t
+     /tmp/ccLHeWjf.s:148    .text.SystemCoreClockUpdate:00000000 SystemCoreClockUpdate
+     /tmp/ccLHeWjf.s:278    .text.SystemCoreClockUpdate:000000d0 $d
+     /tmp/ccLHeWjf.s:287    .text.SetSysClock:00000000 $t
+     /tmp/ccLHeWjf.s:433    .text.SetSysClock:000000e4 $d
                      .debug_frame:00000010 $d
 
 NO UNDEFINED SYMBOLS

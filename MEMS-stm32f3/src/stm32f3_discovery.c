@@ -29,11 +29,18 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f3_discovery.h"
 #include "stm32f30x.h"
-#include<stm32f30x_rcc.h>
-#include<stm32f30x_gpio.h>
-#include<stm32f30x_exti.h>
-#include<stm32f30x_misc.h>
-#include<stm32f30x_syscfg.h>
+//#include<stm32f30x_rcc.h>
+//#include<stm32f30x_gpio.h>
+//#include<stm32f30x_exti.h>
+//#include<stm32f30x_misc.h>
+//#include<stm32f30x_syscfg.h>
+#include </home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_rcc.h>
+#include </home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_gpio.h>
+#include </home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_misc.h>
+#include </home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_spi.h>
+#include </home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_i2c.h>
+#include </home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_exti.h>
+#include </home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_syscfg.h>
 
 /** @addtogroup Utilities
   * @{

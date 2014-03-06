@@ -28,6 +28,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "usb_lib.h"
+#include </home/manish/VTS/MEMS-stm32f3/libs/STM32_USB-FS-Device_Driver/inc/usb_core.h>
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/

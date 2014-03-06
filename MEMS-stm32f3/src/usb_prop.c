@@ -32,6 +32,7 @@
 #include "usb_desc.h"
 #include "usb_pwr.h"
 #include "hw_config.h"
+#include </home/manish/VTS/MEMS-stm32f3/libs/STM32_USB-FS-Device_Driver/inc/usb_core.h>
 
 /** @addtogroup STM32F3-Discovery_Demo
   * @{

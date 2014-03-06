@@ -148,7 +148,7 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   TimingDelay_Decrement();
-  USBConnectTimeOut--;
+  //USBConnectTimeOut--;
   DataReady ++;
 }
 
@@ -187,24 +187,24 @@ void EXTI0_IRQHandler(void)
 }
 
 #if defined (USB_INT_DEFAULT)
-void USB_LP_CAN1_RX0_IRQHandler(void)
+//void USB_LP_CAN1_RX0_IRQHandler(void)
 #elif defined (USB_INT_REMAP)
-void USB_LP_IRQHandler(void)
+//void USB_LP_IRQHandler(void)
 #endif
-{
-   USB_Istr();
-}
+//{
+  // USB_Istr();
+//}
 
 #if defined (USB_INT_DEFAULT)
-void USBWakeUp_IRQHandler(void)
+//void USBWakeUp_IRQHandler(void)
 #elif defined (USB_INT_REMAP)
-void USBWakeUp_RMP_IRQHandler(void)
+//void USBWakeUp_RMP_IRQHandler(void)
 #endif
-{
+//{
   /* Initiate external resume sequence (1 step) */
-  Resume(RESUME_EXTERNAL);  
-  EXTI_ClearITPendingBit(EXTI_Line18);
-}
+  //Resume(RESUME_EXTERNAL);  
+  //EXTI_ClearITPendingBit(EXTI_Line18);
+//}
 /**
   * @brief  This function handles PPP interrupt request.
   * @param  None

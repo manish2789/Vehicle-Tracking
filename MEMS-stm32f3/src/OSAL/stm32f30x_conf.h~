@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    ADC_Example/stm32f30x_conf.h 
+  * @file    stm32f30x_conf.h 
   * @author  MCD Application Team
   * @version V1.1.0
   * @date    20-September-2012
@@ -31,7 +31,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 /* Comment the line below to disable peripheral header file inclusion */
-#include "stm32f30x_adc.h"
+/*#include "stm32f30x_adc.h"
 #include "stm32f30x_can.h"
 #include "stm32f30x_crc.h"
 #include "stm32f30x_comp.h"
@@ -52,14 +52,16 @@
 #include "stm32f30x_tim.h"
 #include "stm32f30x_usart.h"
 #include "stm32f30x_wwdg.h"
-#include "stm32f30x_misc.h"  /* High level functions for NVIC and SysTick (add-on to CMSIS functions) */
+#include "stm32f30x_misc.h"*/  /* High level functions for NVIC and SysTick (add-on to CMSIS functions) */
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Uncomment the line below to expanse the "assert_param" macro in the 
    Standard Peripheral Library drivers code */
-/*#define USE_FULL_ASSERT    1*/
+// #define USE_FULL_ASSERT    1 
+ //#define USE_STDPERIPH_DRIVER 
 
+#define USE_FULL_ASSERT
 /* Exported macro ------------------------------------------------------------*/
 #ifdef  USE_FULL_ASSERT
 

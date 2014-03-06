@@ -31,6 +31,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f30x.h"
+
+#include </home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_exti.h>
 #include "stm32f3_discovery.h"
 #include <stdio.h>
 #include "stm32f3_discovery_lsm303dlhc.h"

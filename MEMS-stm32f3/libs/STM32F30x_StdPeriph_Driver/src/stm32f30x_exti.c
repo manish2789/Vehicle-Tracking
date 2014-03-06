@@ -156,10 +156,10 @@ void EXTI_Init(EXTI_InitTypeDef* EXTI_InitStruct)
   uint32_t tmp = 0;
 
   /* Check the parameters */
-  assert_param(IS_EXTI_MODE(EXTI_InitStruct->EXTI_Mode));
-  assert_param(IS_EXTI_TRIGGER(EXTI_InitStruct->EXTI_Trigger));
-  assert_param(IS_EXTI_LINE_ALL(EXTI_InitStruct->EXTI_Line));
-  assert_param(IS_FUNCTIONAL_STATE(EXTI_InitStruct->EXTI_LineCmd));
+  //assert_param(IS_EXTI_MODE(EXTI_InitStruct->EXTI_Mode));
+  //assert_param(IS_EXTI_TRIGGER(EXTI_InitStruct->EXTI_Trigger));
+  //assert_param(IS_EXTI_LINE_ALL(EXTI_InitStruct->EXTI_Line));
+  //assert_param(IS_FUNCTIONAL_STATE(EXTI_InitStruct->EXTI_LineCmd));
 
   tmp = (uint32_t)EXTI_BASE;
       
@@ -228,7 +228,7 @@ void EXTI_StructInit(EXTI_InitTypeDef* EXTI_InitStruct)
 void EXTI_GenerateSWInterrupt(uint32_t EXTI_Line)
 {
   /* Check the parameters */
-  assert_param(IS_EXTI_LINE_EXT(EXTI_Line));
+  //assert_param(IS_EXTI_LINE_EXT(EXTI_Line));
 
   *(__IO uint32_t *) (((uint32_t) &(EXTI->SWIER)) + ((EXTI_Line) >> 5 ) * 0x20) |= (uint32_t)(1 << (EXTI_Line & 0x1F));
 
@@ -264,7 +264,7 @@ FlagStatus EXTI_GetFlagStatus(uint32_t EXTI_Line)
   FlagStatus bitstatus = RESET;
   
   /* Check the parameters */
-  assert_param(IS_GET_EXTI_LINE(EXTI_Line));
+  //assert_param(IS_GET_EXTI_LINE(EXTI_Line));
    
   if ((*(__IO uint32_t *) (((uint32_t) &(EXTI->PR)) + ((EXTI_Line) >> 5 ) * 0x20)& (uint32_t)(1 << (EXTI_Line & 0x1F))) != (uint32_t)RESET)
   {
@@ -286,7 +286,7 @@ FlagStatus EXTI_GetFlagStatus(uint32_t EXTI_Line)
 void EXTI_ClearFlag(uint32_t EXTI_Line)
 {
   /* Check the parameters */
-  assert_param(IS_EXTI_LINE_EXT(EXTI_Line));
+  //assert_param(IS_EXTI_LINE_EXT(EXTI_Line));
 
   *(__IO uint32_t *) (((uint32_t) &(EXTI->PR)) + ((EXTI_Line) >> 5 ) * 0x20) = (1 << (EXTI_Line & 0x1F));  
 }
@@ -303,7 +303,7 @@ ITStatus EXTI_GetITStatus(uint32_t EXTI_Line)
   uint32_t enablestatus = 0;
   
   /* Check the parameters */
-  assert_param(IS_GET_EXTI_LINE(EXTI_Line));
+  //assert_param(IS_GET_EXTI_LINE(EXTI_Line));
   
   enablestatus =  *(__IO uint32_t *) (((uint32_t) &(EXTI->IMR)) + ((EXTI_Line) >> 5 ) * 0x20) & (uint32_t)(1 << (EXTI_Line & 0x1F));
  
@@ -328,7 +328,7 @@ ITStatus EXTI_GetITStatus(uint32_t EXTI_Line)
 void EXTI_ClearITPendingBit(uint32_t EXTI_Line)
 {
   /* Check the parameters */
-  assert_param(IS_EXTI_LINE_EXT(EXTI_Line));
+  //assert_param(IS_EXTI_LINE_EXT(EXTI_Line));
   
   *(__IO uint32_t *) (((uint32_t) &(EXTI->PR)) + ((EXTI_Line) >> 5 ) * 0x20) = (1 << (EXTI_Line & 0x1F));
 }

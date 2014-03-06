@@ -190,7 +190,7 @@
 void SPI_I2S_DeInit(SPI_TypeDef* SPIx)
 {
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH(SPIx));
+  ////assert_param(IS_SPI_ALL_PERIPH(SPIx));
 
   if (SPIx == SPI1)
   {
@@ -259,18 +259,18 @@ void SPI_Init(SPI_TypeDef* SPIx, SPI_InitTypeDef* SPI_InitStruct)
   uint16_t tmpreg = 0;
 
   /* check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH(SPIx));
+  ////assert_param(IS_SPI_ALL_PERIPH(SPIx));
 
   /* Check the SPI parameters */
-  assert_param(IS_SPI_DIRECTION_MODE(SPI_InitStruct->SPI_Direction));
-  assert_param(IS_SPI_MODE(SPI_InitStruct->SPI_Mode));
-  assert_param(IS_SPI_DATA_SIZE(SPI_InitStruct->SPI_DataSize));
-  assert_param(IS_SPI_CPOL(SPI_InitStruct->SPI_CPOL));
-  assert_param(IS_SPI_CPHA(SPI_InitStruct->SPI_CPHA));
-  assert_param(IS_SPI_NSS(SPI_InitStruct->SPI_NSS));
-  assert_param(IS_SPI_BAUDRATE_PRESCALER(SPI_InitStruct->SPI_BaudRatePrescaler));
-  assert_param(IS_SPI_FIRST_BIT(SPI_InitStruct->SPI_FirstBit));
-  assert_param(IS_SPI_CRC_POLYNOMIAL(SPI_InitStruct->SPI_CRCPolynomial));
+ // //assert_param(IS_SPI_DIRECTION_MODE(SPI_InitStruct->SPI_Direction));
+  ////assert_param(IS_SPI_MODE(SPI_InitStruct->SPI_Mode));
+  ////assert_param(IS_SPI_DATA_SIZE(SPI_InitStruct->SPI_DataSize));
+  ////assert_param(IS_SPI_CPOL(SPI_InitStruct->SPI_CPOL));
+  ////assert_param(IS_SPI_CPHA(SPI_InitStruct->SPI_CPHA));
+  ////assert_param(IS_SPI_NSS(SPI_InitStruct->SPI_NSS));
+  ////assert_param(IS_SPI_BAUDRATE_PRESCALER(SPI_InitStruct->SPI_BaudRatePrescaler));
+  ////assert_param(IS_SPI_FIRST_BIT(SPI_InitStruct->SPI_FirstBit));
+  ////assert_param(IS_SPI_CRC_POLYNOMIAL(SPI_InitStruct->SPI_CRCPolynomial));
 
   /* Configuring the SPI in master mode */
   if(SPI_InitStruct->SPI_Mode == SPI_Mode_Master)
@@ -396,13 +396,13 @@ void I2S_Init(SPI_TypeDef* SPIx, I2S_InitTypeDef* I2S_InitStruct)
   uint32_t sourceclock = 0;
 
   /* Check the I2S parameters */
-  assert_param(IS_SPI_23_PERIPH(SPIx));
-  assert_param(IS_I2S_MODE(I2S_InitStruct->I2S_Mode));
-  assert_param(IS_I2S_STANDARD(I2S_InitStruct->I2S_Standard));
-  assert_param(IS_I2S_DATA_FORMAT(I2S_InitStruct->I2S_DataFormat));
-  assert_param(IS_I2S_MCLK_OUTPUT(I2S_InitStruct->I2S_MCLKOutput));
-  assert_param(IS_I2S_AUDIO_FREQ(I2S_InitStruct->I2S_AudioFreq));
-  assert_param(IS_I2S_CPOL(I2S_InitStruct->I2S_CPOL));  
+  ////assert_param(IS_SPI_23_PERIPH(SPIx));
+  ////assert_param(IS_I2S_MODE(I2S_InitStruct->I2S_Mode));
+  ////assert_param(IS_I2S_STANDARD(I2S_InitStruct->I2S_Standard));
+  ////assert_param(IS_I2S_DATA_FORMAT(I2S_InitStruct->I2S_DataFormat));
+  ////assert_param(IS_I2S_MCLK_OUTPUT(I2S_InitStruct->I2S_MCLKOutput));
+  ////assert_param(IS_I2S_AUDIO_FREQ(I2S_InitStruct->I2S_AudioFreq));
+  ////assert_param(IS_I2S_CPOL(I2S_InitStruct->I2S_CPOL));  
 
 /*----------------------- SPIx I2SCFGR & I2SPR Configuration -----------------*/
   /* Clear I2SMOD, I2SE, I2SCFG, PCMSYNC, I2SSTD, CKPOL, DATLEN and CHLEN bits */
@@ -494,8 +494,8 @@ void I2S_Init(SPI_TypeDef* SPIx, I2S_InitTypeDef* I2S_InitStruct)
 void SPI_Cmd(SPI_TypeDef* SPIx, FunctionalState NewState)
 {
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH(SPIx));
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
+  ////assert_param(IS_SPI_ALL_PERIPH(SPIx));
+  ////assert_param(IS_FUNCTIONAL_STATE(NewState));
 
   if (NewState != DISABLE)
   {
@@ -524,8 +524,8 @@ void SPI_Cmd(SPI_TypeDef* SPIx, FunctionalState NewState)
 void SPI_TIModeCmd(SPI_TypeDef* SPIx, FunctionalState NewState)
 {
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH(SPIx));
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
+  ////assert_param(IS_SPI_ALL_PERIPH(SPIx));
+  ////assert_param(IS_FUNCTIONAL_STATE(NewState));
 
   if (NewState != DISABLE)
   {
@@ -550,8 +550,8 @@ void SPI_TIModeCmd(SPI_TypeDef* SPIx, FunctionalState NewState)
 void I2S_Cmd(SPI_TypeDef* SPIx, FunctionalState NewState)
 {
   /* Check the parameters */
-  assert_param(IS_SPI_23_PERIPH_EXT(SPIx));
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
+  ////assert_param(IS_SPI_23_PERIPH_EXT(SPIx));
+  ////assert_param(IS_FUNCTIONAL_STATE(NewState));
   if (NewState != DISABLE)
   {
     /* Enable the selected SPI peripheral in I2S mode */
@@ -589,8 +589,8 @@ void SPI_DataSizeConfig(SPI_TypeDef* SPIx, uint16_t SPI_DataSize)
   uint16_t tmpreg = 0;
   
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH(SPIx));
-  assert_param(IS_SPI_DATA_SIZE(SPI_DataSize));
+  ////assert_param(IS_SPI_ALL_PERIPH(SPIx));
+  ////assert_param(IS_SPI_DATA_SIZE(SPI_DataSize));
   /* Read the CR2 register */
   tmpreg = SPIx->CR2;
   /* Clear DS[3:0] bits */
@@ -614,8 +614,8 @@ void SPI_DataSizeConfig(SPI_TypeDef* SPIx, uint16_t SPI_DataSize)
 void SPI_RxFIFOThresholdConfig(SPI_TypeDef* SPIx, uint16_t SPI_RxFIFOThreshold)
 {
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH(SPIx));
-  assert_param(IS_SPI_RX_FIFO_THRESHOLD(SPI_RxFIFOThreshold));
+  ////assert_param(IS_SPI_ALL_PERIPH(SPIx));
+  ////assert_param(IS_SPI_RX_FIFO_THRESHOLD(SPI_RxFIFOThreshold));
 
   /* Clear FRXTH bit */
   SPIx->CR2 &= (uint16_t)~((uint16_t)SPI_CR2_FRXTH);
@@ -636,8 +636,8 @@ void SPI_RxFIFOThresholdConfig(SPI_TypeDef* SPIx, uint16_t SPI_RxFIFOThreshold)
 void SPI_BiDirectionalLineConfig(SPI_TypeDef* SPIx, uint16_t SPI_Direction)
 {
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH(SPIx));
-  assert_param(IS_SPI_DIRECTION(SPI_Direction));
+  ////assert_param(IS_SPI_ALL_PERIPH(SPIx));
+  ////assert_param(IS_SPI_DIRECTION(SPI_Direction));
   if (SPI_Direction == SPI_Direction_Tx)
   {
     /* Set the Tx only mode */
@@ -664,8 +664,8 @@ void SPI_BiDirectionalLineConfig(SPI_TypeDef* SPIx, uint16_t SPI_Direction)
 void SPI_NSSInternalSoftwareConfig(SPI_TypeDef* SPIx, uint16_t SPI_NSSInternalSoft)
 {
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH(SPIx));
-  assert_param(IS_SPI_NSS_INTERNAL(SPI_NSSInternalSoft));
+  ////assert_param(IS_SPI_ALL_PERIPH(SPIx));
+  ////assert_param(IS_SPI_NSS_INTERNAL(SPI_NSSInternalSoft));
 
   if (SPI_NSSInternalSoft != SPI_NSSInternalSoft_Reset)
   {
@@ -703,11 +703,11 @@ void I2S_FullDuplexConfig(SPI_TypeDef* I2Sxext, I2S_InitTypeDef* I2S_InitStruct)
   uint16_t tmpreg = 0, tmp = 0;
   
   /* Check the I2S parameters */
-  assert_param(IS_I2S_EXT_PERIPH(I2Sxext));
-  assert_param(IS_I2S_MODE(I2S_InitStruct->I2S_Mode));
-  assert_param(IS_I2S_STANDARD(I2S_InitStruct->I2S_Standard));
-  assert_param(IS_I2S_DATA_FORMAT(I2S_InitStruct->I2S_DataFormat));
-  assert_param(IS_I2S_CPOL(I2S_InitStruct->I2S_CPOL));  
+  ////assert_param(IS_I2S_EXT_PERIPH(I2Sxext));
+  ////assert_param(IS_I2S_MODE(I2S_InitStruct->I2S_Mode));
+  ////assert_param(IS_I2S_STANDARD(I2S_InitStruct->I2S_Standard));
+  ////assert_param(IS_I2S_DATA_FORMAT(I2S_InitStruct->I2S_DataFormat));
+  ////assert_param(IS_I2S_CPOL(I2S_InitStruct->I2S_CPOL));  
 
 /*----------------------- SPIx I2SCFGR & I2SPR Configuration -----------------*/
   /* Clear I2SMOD, I2SE, I2SCFG, PCMSYNC, I2SSTD, CKPOL, DATLEN and CHLEN bits */
@@ -752,8 +752,8 @@ void I2S_FullDuplexConfig(SPI_TypeDef* I2Sxext, I2S_InitTypeDef* I2S_InitStruct)
 void SPI_SSOutputCmd(SPI_TypeDef* SPIx, FunctionalState NewState)
 {
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH(SPIx));
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
+  ////assert_param(IS_SPI_ALL_PERIPH(SPIx));
+  ////assert_param(IS_FUNCTIONAL_STATE(NewState));
   if (NewState != DISABLE)
   {
     /* Enable the selected SPI SS output */
@@ -781,8 +781,8 @@ void SPI_SSOutputCmd(SPI_TypeDef* SPIx, FunctionalState NewState)
 void SPI_NSSPulseModeCmd(SPI_TypeDef* SPIx, FunctionalState NewState)
 {
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH(SPIx));
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
+  ////assert_param(IS_SPI_ALL_PERIPH(SPIx));
+  ////assert_param(IS_FUNCTIONAL_STATE(NewState));
 
   if (NewState != DISABLE)
   {
@@ -832,7 +832,7 @@ void SPI_SendData8(SPI_TypeDef* SPIx, uint8_t Data)
   uint32_t spixbase = 0x00;
 
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH(SPIx));
+  ////assert_param(IS_SPI_ALL_PERIPH(SPIx));
 
   spixbase = (uint32_t)SPIx; 
   spixbase += 0x0C;
@@ -850,7 +850,7 @@ void SPI_SendData8(SPI_TypeDef* SPIx, uint8_t Data)
 void SPI_I2S_SendData16(SPI_TypeDef* SPIx, uint16_t Data)
 {
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH_EXT(SPIx));
+  ////assert_param(IS_SPI_ALL_PERIPH_EXT(SPIx));
   
   SPIx->DR = (uint16_t)Data;
 }
@@ -865,7 +865,7 @@ uint8_t SPI_ReceiveData8(SPI_TypeDef* SPIx)
   uint32_t spixbase = 0x00;
   
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH_EXT(SPIx));
+  ////assert_param(IS_SPI_ALL_PERIPH_EXT(SPIx));
   
   spixbase = (uint32_t)SPIx; 
   spixbase += 0x0C;
@@ -882,7 +882,7 @@ uint8_t SPI_ReceiveData8(SPI_TypeDef* SPIx)
 uint16_t SPI_I2S_ReceiveData16(SPI_TypeDef* SPIx)
 {  
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH_EXT(SPIx));
+  //assert_param(IS_SPI_ALL_PERIPH_EXT(SPIx));
   
   return SPIx->DR;
 }
@@ -964,8 +964,8 @@ uint16_t SPI_I2S_ReceiveData16(SPI_TypeDef* SPIx)
 void SPI_CRCLengthConfig(SPI_TypeDef* SPIx, uint16_t SPI_CRCLength)
 {
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH(SPIx));
-  assert_param(IS_SPI_CRC_LENGTH(SPI_CRCLength));
+  //assert_param(IS_SPI_ALL_PERIPH(SPIx));
+  //assert_param(IS_SPI_CRC_LENGTH(SPI_CRCLength));
 
   /* Clear CRCL bit */
   SPIx->CR1 &= (uint16_t)~((uint16_t)SPI_CR1_CRCL);
@@ -984,8 +984,8 @@ void SPI_CRCLengthConfig(SPI_TypeDef* SPIx, uint16_t SPI_CRCLength)
 void SPI_CalculateCRC(SPI_TypeDef* SPIx, FunctionalState NewState)
 {
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH(SPIx));
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
+  //assert_param(IS_SPI_ALL_PERIPH(SPIx));
+  //assert_param(IS_FUNCTIONAL_STATE(NewState));
 
   if (NewState != DISABLE)
   {
@@ -1007,7 +1007,7 @@ void SPI_CalculateCRC(SPI_TypeDef* SPIx, FunctionalState NewState)
 void SPI_TransmitCRC(SPI_TypeDef* SPIx)
 {
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH(SPIx));
+  //assert_param(IS_SPI_ALL_PERIPH(SPIx));
 
   /* Enable the selected SPI CRC transmission */
   SPIx->CR1 |= SPI_CR1_CRCNEXT;
@@ -1026,8 +1026,8 @@ uint16_t SPI_GetCRC(SPI_TypeDef* SPIx, uint8_t SPI_CRC)
 {
   uint16_t crcreg = 0;
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH(SPIx));
-  assert_param(IS_SPI_CRC(SPI_CRC));
+  //assert_param(IS_SPI_ALL_PERIPH(SPIx));
+  //assert_param(IS_SPI_CRC(SPI_CRC));
 
   if (SPI_CRC != SPI_CRC_Rx)
   {
@@ -1051,7 +1051,7 @@ uint16_t SPI_GetCRC(SPI_TypeDef* SPIx, uint8_t SPI_CRC)
 uint16_t SPI_GetCRCPolynomial(SPI_TypeDef* SPIx)
 {
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH(SPIx));
+  //assert_param(IS_SPI_ALL_PERIPH(SPIx));
 
   /* Return the CRC polynomial register */
   return SPIx->CRCPR;
@@ -1088,9 +1088,9 @@ uint16_t SPI_GetCRCPolynomial(SPI_TypeDef* SPIx)
 void SPI_I2S_DMACmd(SPI_TypeDef* SPIx, uint16_t SPI_I2S_DMAReq, FunctionalState NewState)
 {
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH_EXT(SPIx));
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
-  assert_param(IS_SPI_I2S_DMA_REQ(SPI_I2S_DMAReq));
+  //assert_param(IS_SPI_ALL_PERIPH_EXT(SPIx));
+  //assert_param(IS_FUNCTIONAL_STATE(NewState));
+  //assert_param(IS_SPI_I2S_DMA_REQ(SPI_I2S_DMAReq));
 
   if (NewState != DISABLE)
   {
@@ -1125,8 +1125,8 @@ void SPI_I2S_DMACmd(SPI_TypeDef* SPIx, uint16_t SPI_I2S_DMAReq, FunctionalState 
 void SPI_LastDMATransferCmd(SPI_TypeDef* SPIx, uint16_t SPI_LastDMATransfer)
 {
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH(SPIx));
-  assert_param(IS_SPI_LAST_DMA_TRANSFER(SPI_LastDMATransfer));
+  //assert_param(IS_SPI_ALL_PERIPH(SPIx));
+  //assert_param(IS_SPI_LAST_DMA_TRANSFER(SPI_LastDMATransfer));
 
   /* Clear LDMA_TX and LDMA_RX bits */
   SPIx->CR2 &= CR2_LDMA_MASK;
@@ -1226,9 +1226,9 @@ void SPI_I2S_ITConfig(SPI_TypeDef* SPIx, uint8_t SPI_I2S_IT, FunctionalState New
   uint16_t itpos = 0, itmask = 0 ;
 
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH_EXT(SPIx));
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
-  assert_param(IS_SPI_I2S_CONFIG_IT(SPI_I2S_IT));
+  //assert_param(IS_SPI_ALL_PERIPH_EXT(SPIx));
+  //assert_param(IS_FUNCTIONAL_STATE(NewState));
+  //assert_param(IS_SPI_I2S_CONFIG_IT(SPI_I2S_IT));
 
   /* Get the SPI IT index */
   itpos = SPI_I2S_IT >> 4;
@@ -1299,8 +1299,8 @@ FlagStatus SPI_I2S_GetFlagStatus(SPI_TypeDef* SPIx, uint16_t SPI_I2S_FLAG)
 {
   FlagStatus bitstatus = RESET;
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH_EXT(SPIx));
-  assert_param(IS_SPI_I2S_GET_FLAG(SPI_I2S_FLAG));
+  //assert_param(IS_SPI_ALL_PERIPH_EXT(SPIx));
+  //assert_param(IS_SPI_I2S_GET_FLAG(SPI_I2S_FLAG));
 
   /* Check the status of the specified SPI flag */
   if ((SPIx->SR & SPI_I2S_FLAG) != (uint16_t)RESET)
@@ -1334,8 +1334,8 @@ FlagStatus SPI_I2S_GetFlagStatus(SPI_TypeDef* SPIx, uint16_t SPI_I2S_FLAG)
 void SPI_I2S_ClearFlag(SPI_TypeDef* SPIx, uint16_t SPI_I2S_FLAG)
 {
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH_EXT(SPIx));
-  assert_param(IS_SPI_CLEAR_FLAG(SPI_I2S_FLAG));
+  //assert_param(IS_SPI_ALL_PERIPH_EXT(SPIx));
+  //assert_param(IS_SPI_CLEAR_FLAG(SPI_I2S_FLAG));
 
   /* Clear the selected SPI CRC Error (CRCERR) flag */
   SPIx->SR = (uint16_t)~SPI_I2S_FLAG;
@@ -1361,8 +1361,8 @@ ITStatus SPI_I2S_GetITStatus(SPI_TypeDef* SPIx, uint8_t SPI_I2S_IT)
   uint16_t itpos = 0, itmask = 0, enablestatus = 0;
 
   /* Check the parameters */
-  assert_param(IS_SPI_ALL_PERIPH_EXT(SPIx));
-  assert_param(IS_SPI_I2S_GET_IT(SPI_I2S_IT));
+  //assert_param(IS_SPI_ALL_PERIPH_EXT(SPIx));
+  //assert_param(IS_SPI_I2S_GET_IT(SPI_I2S_IT));
 
   /* Get the SPI_I2S_IT index */
   itpos = 0x01 << (SPI_I2S_IT & 0x0F);

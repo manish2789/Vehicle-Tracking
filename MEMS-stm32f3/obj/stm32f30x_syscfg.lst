@@ -1,0 +1,1256 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"stm32f30x_syscfg.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.SYSCFG_DeInit,"ax",%progbits
+  20              		.align	2
+  21              		.global	SYSCFG_DeInit
+  22              		.thumb
+  23              		.thumb_func
+  25              	SYSCFG_DeInit:
+  26              	.LFB110:
+  27              		.file 1 "libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c"
+   1:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /**
+   2:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   ******************************************************************************
+   3:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @file    stm32f30x_syscfg.c
+   4:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @author  MCD Application Team
+   5:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @version V1.0.1
+   6:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @date    23-October-2012
+   7:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @brief   This file provides firmware functions to manage the following 
+   8:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *          functionalities of the SYSCFG peripheral:
+   9:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *           + Remapping the memory mapped at 0x00000000  
+  10:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *           + Remapping the DMA channels
+  11:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *           + Enabling I2C fast mode plus driving capability for I2C plus
+  12:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *           + Remapping USB interrupt line    
+  13:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *           + Configuring the EXTI lines connection to the GPIO port
+  14:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *           + Configuring the CLASSB requirements
+  15:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *   
+  16:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   @verbatim
+  17:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   
+  18:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****  ===============================================================================
+  19:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****                       ##### How to use this driver #####
+  20:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****  ===============================================================================
+  21:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     [..] The SYSCFG registers can be accessed only when the SYSCFG 
+  22:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****          interface APB clock is enabled.
+  23:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     [..] To enable SYSCFG APB clock use:
+  24:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****          RCC_APBPeriphClockCmd(RCC_APBPeriph_SYSCFG, ENABLE);
+  25:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   
+  26:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   @endverbatim
+  27:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   
+  28:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   ******************************************************************************
+  29:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @attention
+  30:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *
+  31:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * <h2><center>&copy; COPYRIGHT 2012 STMicroelectronics</center></h2>
+  32:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *
+  33:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+  34:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * You may not use this file except in compliance with the License.
+  35:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * You may obtain a copy of the License at:
+  36:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *
+  37:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *        http://www.st.com/software_license_agreement_liberty_v2
+  38:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *
+  39:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * Unless required by applicable law or agreed to in writing, software 
+  40:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * distributed under the License is distributed on an "AS IS" BASIS, 
+  41:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  42:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * See the License for the specific language governing permissions and
+  43:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * limitations under the License.
+  44:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *
+  45:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   ******************************************************************************
+  46:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */
+  47:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+  48:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /* Includes ------------------------------------------------------------------*/
+  49:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** #include "stm32f30x_syscfg.h"
+  50:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+  51:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /** @addtogroup STM32F30x_StdPeriph_Driver
+  52:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @{
+  53:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */
+  54:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+  55:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /** @defgroup SYSCFG 
+  56:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @brief SYSCFG driver modules
+  57:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @{
+  58:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */ 
+  59:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+  60:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /* Private typedef -----------------------------------------------------------*/
+  61:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /* Private define ------------------------------------------------------------*/
+  62:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /* Reset value od SYSCFG_CFGR1 register */
+  63:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** #define CFGR1_CLEAR_MASK            ((uint32_t)0x7C000000)
+  64:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+  65:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /* ------------ SYSCFG registers bit address in the alias region -------------*/
+  66:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** #define SYSCFG_OFFSET                (SYSCFG_BASE - PERIPH_BASE)
+  67:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+  68:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /* --- CFGR1 Register ---*/
+  69:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /* Alias word address of USB_IT_RMP bit */
+  70:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** #define CFGR1_OFFSET                 (SYSCFG_OFFSET + 0x00)
+  71:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** #define USBITRMP_BitNumber            0x05
+  72:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** #define CFGR1_USBITRMP_BB            (PERIPH_BB_BASE + (CFGR1_OFFSET * 32) + (USBITRMP_BitNumber * 
+  73:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+  74:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /* --- CFGR2 Register ---*/
+  75:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /* Alias word address of BYP_ADDR_PAR bit */
+  76:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** #define CFGR2_OFFSET                 (SYSCFG_OFFSET + 0x18)
+  77:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** #define BYPADDRPAR_BitNumber          0x04
+  78:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** #define CFGR1_BYPADDRPAR_BB          (PERIPH_BB_BASE + (CFGR2_OFFSET * 32) + (BYPADDRPAR_BitNumber 
+  79:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+  80:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /* Private macro -------------------------------------------------------------*/
+  81:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /* Private variables ---------------------------------------------------------*/
+  82:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /* Private function prototypes -----------------------------------------------*/
+  83:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /* Private functions ---------------------------------------------------------*/
+  84:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+  85:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /** @defgroup SYSCFG_Private_Functions
+  86:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @{
+  87:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */ 
+  88:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+  89:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /** @defgroup SYSCFG_Group1 SYSCFG Initialization and Configuration functions
+  90:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****  *  @brief   SYSCFG Initialization and Configuration functions 
+  91:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****  *
+  92:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** @verbatim
+  93:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****  ===============================================================================
+  94:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****          ##### SYSCFG Initialization and Configuration functions #####
+  95:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****  ===============================================================================
+  96:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+  97:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** @endverbatim
+  98:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @{
+  99:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */
+ 100:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 101:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /**
+ 102:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @brief  Deinitializes the SYSCFG registers to their default reset values.
+ 103:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  None
+ 104:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @retval None
+ 105:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @note   MEM_MODE bits are not affected by APB reset.
+ 106:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *         MEM_MODE bits took the value from the user option bytes.
+ 107:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */
+ 108:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** void SYSCFG_DeInit(void)
+ 109:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** {
+  28              		.loc 1 109 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 1, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  33 0000 80B4     		push	{r7}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 4
+  36              		.cfi_offset 7, -4
+  37 0002 00AF     		add	r7, sp, #0
+  38              	.LCFI1:
+  39              		.cfi_def_cfa_register 7
+ 110:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Reset SYSCFG_CFGR1 register to reset value without affecting MEM_MODE bits */
+ 111:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   SYSCFG->CFGR1 &= SYSCFG_CFGR1_MEM_MODE;
+  40              		.loc 1 111 0
+  41 0004 134B     		ldr	r3, .L2
+  42 0006 134A     		ldr	r2, .L2
+  43 0008 1268     		ldr	r2, [r2, #0]
+  44 000a 02F00302 		and	r2, r2, #3
+  45 000e 1A60     		str	r2, [r3, #0]
+ 112:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Set FPU Interrupt Enable bits to default value */
+ 113:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   SYSCFG->CFGR1 |= 0x7C000000;
+  46              		.loc 1 113 0
+  47 0010 104B     		ldr	r3, .L2
+  48 0012 104A     		ldr	r2, .L2
+  49 0014 1268     		ldr	r2, [r2, #0]
+  50 0016 42F0F842 		orr	r2, r2, #2080374784
+  51 001a 1A60     		str	r2, [r3, #0]
+ 114:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Reset RAM Write protection bits to default value */
+ 115:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   SYSCFG->RCR = 0x00000000;
+  52              		.loc 1 115 0
+  53 001c 0D4B     		ldr	r3, .L2
+  54 001e 4FF00002 		mov	r2, #0
+  55 0022 5A60     		str	r2, [r3, #4]
+ 116:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Set EXTICRx registers to reset value */
+ 117:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   SYSCFG->EXTICR[0] = 0;
+  56              		.loc 1 117 0
+  57 0024 0B4B     		ldr	r3, .L2
+  58 0026 4FF00002 		mov	r2, #0
+  59 002a 9A60     		str	r2, [r3, #8]
+ 118:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   SYSCFG->EXTICR[1] = 0;
+  60              		.loc 1 118 0
+  61 002c 094B     		ldr	r3, .L2
+  62 002e 4FF00002 		mov	r2, #0
+  63 0032 DA60     		str	r2, [r3, #12]
+ 119:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   SYSCFG->EXTICR[2] = 0;
+  64              		.loc 1 119 0
+  65 0034 074B     		ldr	r3, .L2
+  66 0036 4FF00002 		mov	r2, #0
+  67 003a 1A61     		str	r2, [r3, #16]
+ 120:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   SYSCFG->EXTICR[3] = 0;
+  68              		.loc 1 120 0
+  69 003c 054B     		ldr	r3, .L2
+  70 003e 4FF00002 		mov	r2, #0
+  71 0042 5A61     		str	r2, [r3, #20]
+ 121:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Set CFGR2 register to reset value */
+ 122:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   SYSCFG->CFGR2 = 0;
+  72              		.loc 1 122 0
+  73 0044 034B     		ldr	r3, .L2
+  74 0046 4FF00002 		mov	r2, #0
+  75 004a 9A61     		str	r2, [r3, #24]
+ 123:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** }
+  76              		.loc 1 123 0
+  77 004c BD46     		mov	sp, r7
+  78 004e 80BC     		pop	{r7}
+  79 0050 7047     		bx	lr
+  80              	.L3:
+  81 0052 00BF     		.align	2
+  82              	.L2:
+  83 0054 00000140 		.word	1073807360
+  84              		.cfi_endproc
+  85              	.LFE110:
+  87              		.section	.text.SYSCFG_MemoryRemapConfig,"ax",%progbits
+  88              		.align	2
+  89              		.global	SYSCFG_MemoryRemapConfig
+  90              		.thumb
+  91              		.thumb_func
+  93              	SYSCFG_MemoryRemapConfig:
+  94              	.LFB111:
+ 124:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 125:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /**
+ 126:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @brief  Configures the memory mapping at address 0x00000000.
+ 127:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  SYSCFG_MemoryRemap: selects the memory remapping.
+ 128:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *   This parameter can be one of the following values:
+ 129:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_MemoryRemap_Flash: Main Flash memory mapped at 0x00000000  
+ 130:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_MemoryRemap_SystemMemory: System Flash memory mapped at 0x00000000
+ 131:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_MemoryRemap_SRAM: Embedded SRAM mapped at 0x00000000
+ 132:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @retval None
+ 133:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */
+ 134:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** void SYSCFG_MemoryRemapConfig(uint32_t SYSCFG_MemoryRemap)
+ 135:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** {
+  95              		.loc 1 135 0
+  96              		.cfi_startproc
+  97              		@ args = 0, pretend = 0, frame = 16
+  98              		@ frame_needed = 1, uses_anonymous_args = 0
+  99              		@ link register save eliminated.
+ 100 0000 80B4     		push	{r7}
+ 101              	.LCFI2:
+ 102              		.cfi_def_cfa_offset 4
+ 103              		.cfi_offset 7, -4
+ 104 0002 85B0     		sub	sp, sp, #20
+ 105              	.LCFI3:
+ 106              		.cfi_def_cfa_offset 24
+ 107 0004 00AF     		add	r7, sp, #0
+ 108              	.LCFI4:
+ 109              		.cfi_def_cfa_register 7
+ 110 0006 7860     		str	r0, [r7, #4]
+ 136:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   uint32_t tmpcfgr1 = 0;
+ 111              		.loc 1 136 0
+ 112 0008 4FF00003 		mov	r3, #0
+ 113 000c FB60     		str	r3, [r7, #12]
+ 137:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 138:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Check the parameter */
+ 139:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   //assert_param(IS_SYSCFG_MEMORY_REMAP(SYSCFG_MemoryRemap));
+ 140:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 141:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Get CFGR1 register value */
+ 142:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   tmpcfgr1 = SYSCFG->CFGR1;
+ 114              		.loc 1 142 0
+ 115 000e 094B     		ldr	r3, .L5
+ 116 0010 1B68     		ldr	r3, [r3, #0]
+ 117 0012 FB60     		str	r3, [r7, #12]
+ 143:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 144:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Clear MEM_MODE bits */
+ 145:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   tmpcfgr1 &= (uint32_t) (~SYSCFG_CFGR1_MEM_MODE);
+ 118              		.loc 1 145 0
+ 119 0014 FB68     		ldr	r3, [r7, #12]
+ 120 0016 23F00303 		bic	r3, r3, #3
+ 121 001a FB60     		str	r3, [r7, #12]
+ 146:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 147:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Set the new MEM_MODE bits value */
+ 148:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   tmpcfgr1 |= (uint32_t) SYSCFG_MemoryRemap;
+ 122              		.loc 1 148 0
+ 123 001c FA68     		ldr	r2, [r7, #12]
+ 124 001e 7B68     		ldr	r3, [r7, #4]
+ 125 0020 1343     		orrs	r3, r3, r2
+ 126 0022 FB60     		str	r3, [r7, #12]
+ 149:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 150:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Set CFGR1 register with the new memory remap configuration */
+ 151:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   SYSCFG->CFGR1 = tmpcfgr1;
+ 127              		.loc 1 151 0
+ 128 0024 034B     		ldr	r3, .L5
+ 129 0026 FA68     		ldr	r2, [r7, #12]
+ 130 0028 1A60     		str	r2, [r3, #0]
+ 152:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** }
+ 131              		.loc 1 152 0
+ 132 002a 07F11407 		add	r7, r7, #20
+ 133 002e BD46     		mov	sp, r7
+ 134 0030 80BC     		pop	{r7}
+ 135 0032 7047     		bx	lr
+ 136              	.L6:
+ 137              		.align	2
+ 138              	.L5:
+ 139 0034 00000140 		.word	1073807360
+ 140              		.cfi_endproc
+ 141              	.LFE111:
+ 143              		.section	.text.SYSCFG_DMAChannelRemapConfig,"ax",%progbits
+ 144              		.align	2
+ 145              		.global	SYSCFG_DMAChannelRemapConfig
+ 146              		.thumb
+ 147              		.thumb_func
+ 149              	SYSCFG_DMAChannelRemapConfig:
+ 150              	.LFB112:
+ 153:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 154:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /**
+ 155:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @brief  Configures the DMA channels remapping.
+ 156:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  SYSCFG_DMARemap: selects the DMA channels remap.
+ 157:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *   This parameter can be one of the following values:
+ 158:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_DMARemap_TIM17: Remap TIM17 DMA requests from DMA1 channel1 to channel2
+ 159:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_DMARemap_TIM16: Remap TIM16 DMA requests from DMA1 channel3 to channel4
+ 160:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_DMARemap_TIM6DAC1: Remap TIM6/DAC1 DMA requests from DMA2 channel 3 to DMA1 cha
+ 161:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_DMARemap_TIM7DAC2: Remap TIM7/DAC2 DMA requests from DMA2 channel 4 to DMA1 cha
+ 162:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_DMARemap_ADC2ADC4: Remap ADC2 and ADC4 DMA requests from DMA2 channel1/channel3
+ 163:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  NewState: new state of the DMA channel remapping. 
+ 164:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *         This parameter can be: Enable or Disable.
+ 165:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @note   When enabled, DMA channel of the selected peripheral is remapped
+ 166:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @note   When disabled, Default DMA channel is mapped to the selected peripheral
+ 167:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @note
+ 168:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *           By default TIM17 DMA requests is mapped to channel 1
+ 169:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *           use SYSCFG_DMAChannelRemapConfig(SYSCFG_DMARemap_TIM17, Enable)
+ 170:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *           to remap TIM17 DMA requests to DMA1 channel 2
+ 171:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *           use SYSCFG_DMAChannelRemapConfig(SYSCFG_DMARemap_TIM17, Disable)
+ 172:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *           to map TIM17 DMA requests to DMA1 channel 1 (default mapping)
+ 173:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @retval None
+ 174:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */
+ 175:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** void SYSCFG_DMAChannelRemapConfig(uint32_t SYSCFG_DMARemap, FunctionalState NewState)
+ 176:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** {
+ 151              		.loc 1 176 0
+ 152              		.cfi_startproc
+ 153              		@ args = 0, pretend = 0, frame = 8
+ 154              		@ frame_needed = 1, uses_anonymous_args = 0
+ 155              		@ link register save eliminated.
+ 156 0000 80B4     		push	{r7}
+ 157              	.LCFI5:
+ 158              		.cfi_def_cfa_offset 4
+ 159              		.cfi_offset 7, -4
+ 160 0002 83B0     		sub	sp, sp, #12
+ 161              	.LCFI6:
+ 162              		.cfi_def_cfa_offset 16
+ 163 0004 00AF     		add	r7, sp, #0
+ 164              	.LCFI7:
+ 165              		.cfi_def_cfa_register 7
+ 166 0006 7860     		str	r0, [r7, #4]
+ 167 0008 0B46     		mov	r3, r1
+ 168 000a FB70     		strb	r3, [r7, #3]
+ 177:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Check the parameters */
+ 178:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   //assert_param(IS_SYSCFG_DMA_REMAP(SYSCFG_DMARemap));
+ 179:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   //assert_param(IS_FUNCTIONAL_STATE(NewState));
+ 180:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 181:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   if (NewState != DISABLE)
+ 169              		.loc 1 181 0
+ 170 000c FB78     		ldrb	r3, [r7, #3]	@ zero_extendqisi2
+ 171 000e 002B     		cmp	r3, #0
+ 172 0010 06D0     		beq	.L8
+ 182:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   {
+ 183:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     /* Remap the DMA channel */
+ 184:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     SYSCFG->CFGR1 |= (uint32_t)SYSCFG_DMARemap;
+ 173              		.loc 1 184 0
+ 174 0012 0A4B     		ldr	r3, .L10
+ 175 0014 094A     		ldr	r2, .L10
+ 176 0016 1168     		ldr	r1, [r2, #0]
+ 177 0018 7A68     		ldr	r2, [r7, #4]
+ 178 001a 0A43     		orrs	r2, r2, r1
+ 179 001c 1A60     		str	r2, [r3, #0]
+ 180 001e 07E0     		b	.L7
+ 181              	.L8:
+ 185:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   }
+ 186:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   else
+ 187:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   {
+ 188:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     /* use the default DMA channel mapping */
+ 189:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     SYSCFG->CFGR1 &= (uint32_t)(~SYSCFG_DMARemap);
+ 182              		.loc 1 189 0
+ 183 0020 064B     		ldr	r3, .L10
+ 184 0022 064A     		ldr	r2, .L10
+ 185 0024 1168     		ldr	r1, [r2, #0]
+ 186 0026 7A68     		ldr	r2, [r7, #4]
+ 187 0028 6FEA0202 		mvn	r2, r2
+ 188 002c 0A40     		ands	r2, r2, r1
+ 189 002e 1A60     		str	r2, [r3, #0]
+ 190              	.L7:
+ 190:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   }
+ 191:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** }
+ 191              		.loc 1 191 0
+ 192 0030 07F10C07 		add	r7, r7, #12
+ 193 0034 BD46     		mov	sp, r7
+ 194 0036 80BC     		pop	{r7}
+ 195 0038 7047     		bx	lr
+ 196              	.L11:
+ 197 003a 00BF     		.align	2
+ 198              	.L10:
+ 199 003c 00000140 		.word	1073807360
+ 200              		.cfi_endproc
+ 201              	.LFE112:
+ 203              		.section	.text.SYSCFG_TriggerRemapConfig,"ax",%progbits
+ 204              		.align	2
+ 205              		.global	SYSCFG_TriggerRemapConfig
+ 206              		.thumb
+ 207              		.thumb_func
+ 209              	SYSCFG_TriggerRemapConfig:
+ 210              	.LFB113:
+ 192:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 193:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /**
+ 194:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @brief  Configures the remapping capabilities of DAC/TIM triggers.
+ 195:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  SYSCFG_TriggerRemap: selects the trigger to be remapped.
+ 196:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *   This parameter can be one of the following values:
+ 197:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_TriggerRemap_DACTIM3: Remap DAC trigger from TIM8 to TIM3
+ 198:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_TriggerRemap_TIM1TIM17: Remap TIM1 ITR3 from TIM4 TRGO to TIM17 OC
+ 199:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  NewState: new state of the trigger mapping. 
+ 200:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *         This parameter can be: ENABLE or DISABLE.
+ 201:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @note   ENABLE:  Enable fast mode plus driving capability for selected pin
+ 202:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @note   DISABLE: Disable fast mode plus driving capability for selected pin
+ 203:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @retval None
+ 204:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */
+ 205:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** void SYSCFG_TriggerRemapConfig(uint32_t SYSCFG_TriggerRemap, FunctionalState NewState)
+ 206:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** {
+ 211              		.loc 1 206 0
+ 212              		.cfi_startproc
+ 213              		@ args = 0, pretend = 0, frame = 8
+ 214              		@ frame_needed = 1, uses_anonymous_args = 0
+ 215              		@ link register save eliminated.
+ 216 0000 80B4     		push	{r7}
+ 217              	.LCFI8:
+ 218              		.cfi_def_cfa_offset 4
+ 219              		.cfi_offset 7, -4
+ 220 0002 83B0     		sub	sp, sp, #12
+ 221              	.LCFI9:
+ 222              		.cfi_def_cfa_offset 16
+ 223 0004 00AF     		add	r7, sp, #0
+ 224              	.LCFI10:
+ 225              		.cfi_def_cfa_register 7
+ 226 0006 7860     		str	r0, [r7, #4]
+ 227 0008 0B46     		mov	r3, r1
+ 228 000a FB70     		strb	r3, [r7, #3]
+ 207:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Check the parameters */
+ 208:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   //assert_param(IS_SYSCFG_TRIGGER_REMAP(SYSCFG_TriggerRemap));
+ 209:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   //assert_param(IS_FUNCTIONAL_STATE(NewState));
+ 210:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 211:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   if (NewState != DISABLE)
+ 229              		.loc 1 211 0
+ 230 000c FB78     		ldrb	r3, [r7, #3]	@ zero_extendqisi2
+ 231 000e 002B     		cmp	r3, #0
+ 232 0010 06D0     		beq	.L13
+ 212:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   {
+ 213:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     /* Remap the trigger */
+ 214:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     SYSCFG->CFGR1 |= (uint32_t)SYSCFG_TriggerRemap;
+ 233              		.loc 1 214 0
+ 234 0012 0A4B     		ldr	r3, .L15
+ 235 0014 094A     		ldr	r2, .L15
+ 236 0016 1168     		ldr	r1, [r2, #0]
+ 237 0018 7A68     		ldr	r2, [r7, #4]
+ 238 001a 0A43     		orrs	r2, r2, r1
+ 239 001c 1A60     		str	r2, [r3, #0]
+ 240 001e 07E0     		b	.L12
+ 241              	.L13:
+ 215:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   }
+ 216:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   else
+ 217:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   {
+ 218:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     /* Use the default trigger mapping */
+ 219:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     SYSCFG->CFGR1 &= (uint32_t)(~SYSCFG_TriggerRemap);
+ 242              		.loc 1 219 0
+ 243 0020 064B     		ldr	r3, .L15
+ 244 0022 064A     		ldr	r2, .L15
+ 245 0024 1168     		ldr	r1, [r2, #0]
+ 246 0026 7A68     		ldr	r2, [r7, #4]
+ 247 0028 6FEA0202 		mvn	r2, r2
+ 248 002c 0A40     		ands	r2, r2, r1
+ 249 002e 1A60     		str	r2, [r3, #0]
+ 250              	.L12:
+ 220:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   }
+ 221:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** }
+ 251              		.loc 1 221 0
+ 252 0030 07F10C07 		add	r7, r7, #12
+ 253 0034 BD46     		mov	sp, r7
+ 254 0036 80BC     		pop	{r7}
+ 255 0038 7047     		bx	lr
+ 256              	.L16:
+ 257 003a 00BF     		.align	2
+ 258              	.L15:
+ 259 003c 00000140 		.word	1073807360
+ 260              		.cfi_endproc
+ 261              	.LFE113:
+ 263              		.section	.text.SYSCFG_EncoderRemapConfig,"ax",%progbits
+ 264              		.align	2
+ 265              		.global	SYSCFG_EncoderRemapConfig
+ 266              		.thumb
+ 267              		.thumb_func
+ 269              	SYSCFG_EncoderRemapConfig:
+ 270              	.LFB114:
+ 222:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 223:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /**
+ 224:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @brief  Configures the remapping capabilities of encoder mode.
+ 225:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @ note This feature implement the so-called M/T method for measuring speed
+ 226:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *        and position using quadrature encoders.  
+ 227:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  SYSCFG_EncoderRemap: selects the remap option for encoder mode.
+ 228:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *   This parameter can be one of the following values:
+ 229:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_EncoderRemap_No: No remap
+ 230:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_EncoderRemap_TIM2: Timer 2 IC1 and IC2 connected to TIM15 IC1 and IC2
+ 231:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_EncoderRemap_TIM3: Timer 3 IC1 and IC2 connected to TIM15 IC1 and IC2
+ 232:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_EncoderRemap_TIM4: Timer 4 IC1 and IC2 connected to TIM15 IC1 and IC2
+ 233:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @retval None
+ 234:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */
+ 235:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** void SYSCFG_EncoderRemapConfig(uint32_t SYSCFG_EncoderRemap)
+ 236:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** {
+ 271              		.loc 1 236 0
+ 272              		.cfi_startproc
+ 273              		@ args = 0, pretend = 0, frame = 8
+ 274              		@ frame_needed = 1, uses_anonymous_args = 0
+ 275              		@ link register save eliminated.
+ 276 0000 80B4     		push	{r7}
+ 277              	.LCFI11:
+ 278              		.cfi_def_cfa_offset 4
+ 279              		.cfi_offset 7, -4
+ 280 0002 83B0     		sub	sp, sp, #12
+ 281              	.LCFI12:
+ 282              		.cfi_def_cfa_offset 16
+ 283 0004 00AF     		add	r7, sp, #0
+ 284              	.LCFI13:
+ 285              		.cfi_def_cfa_register 7
+ 286 0006 7860     		str	r0, [r7, #4]
+ 237:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Check the parameter */
+ 238:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   //assert_param(IS_SYSCFG_ENCODER_REMAP(SYSCFG_EncoderRemap));
+ 239:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 240:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Reset the encoder mode remapping bits */
+ 241:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   SYSCFG->CFGR1 &= (uint32_t)(~SYSCFG_CFGR1_ENCODER_MODE);
+ 287              		.loc 1 241 0
+ 288 0008 084B     		ldr	r3, .L18
+ 289 000a 084A     		ldr	r2, .L18
+ 290 000c 1268     		ldr	r2, [r2, #0]
+ 291 000e 22F44002 		bic	r2, r2, #12582912
+ 292 0012 1A60     		str	r2, [r3, #0]
+ 242:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 243:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Set the selected configuration */
+ 244:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   SYSCFG->CFGR1 |= (uint32_t)(SYSCFG_EncoderRemap);
+ 293              		.loc 1 244 0
+ 294 0014 054B     		ldr	r3, .L18
+ 295 0016 054A     		ldr	r2, .L18
+ 296 0018 1168     		ldr	r1, [r2, #0]
+ 297 001a 7A68     		ldr	r2, [r7, #4]
+ 298 001c 0A43     		orrs	r2, r2, r1
+ 299 001e 1A60     		str	r2, [r3, #0]
+ 245:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** }
+ 300              		.loc 1 245 0
+ 301 0020 07F10C07 		add	r7, r7, #12
+ 302 0024 BD46     		mov	sp, r7
+ 303 0026 80BC     		pop	{r7}
+ 304 0028 7047     		bx	lr
+ 305              	.L19:
+ 306 002a 00BF     		.align	2
+ 307              	.L18:
+ 308 002c 00000140 		.word	1073807360
+ 309              		.cfi_endproc
+ 310              	.LFE114:
+ 312              		.section	.text.SYSCFG_USBInterruptLineRemapCmd,"ax",%progbits
+ 313              		.align	2
+ 314              		.global	SYSCFG_USBInterruptLineRemapCmd
+ 315              		.thumb
+ 316              		.thumb_func
+ 318              	SYSCFG_USBInterruptLineRemapCmd:
+ 319              	.LFB115:
+ 246:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 247:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /**
+ 248:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @brief  Remaps the USB interrupt lines.
+ 249:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  NewState: new state of the mapping of USB interrupt lines. 
+ 250:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *         This parameter can be:
+ 251:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  ENABLE: Remap the USB interrupt line as following:
+ 252:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *         @arg  USB Device High Priority (USB_HP) interrupt mapped to line 74.
+ 253:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *         @arg  USB Device Low Priority (USB_LP) interrupt mapped to line 75.
+ 254:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *         @arg  USB Wakeup Interrupt (USB_WKUP) interrupt mapped to line 76.
+ 255:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  DISABLE: Use the default USB interrupt line:
+ 256:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *         @arg  USB Device High Priority (USB_HP) interrupt mapped to line 19.
+ 257:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *         @arg  USB Device Low Priority (USB_LP) interrupt mapped to line 20.
+ 258:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *         @arg  USB Wakeup Interrupt (USB_WKUP) interrupt mapped to line 42.
+ 259:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @retval None
+ 260:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */
+ 261:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** void SYSCFG_USBInterruptLineRemapCmd(FunctionalState NewState)
+ 262:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** {
+ 320              		.loc 1 262 0
+ 321              		.cfi_startproc
+ 322              		@ args = 0, pretend = 0, frame = 8
+ 323              		@ frame_needed = 1, uses_anonymous_args = 0
+ 324              		@ link register save eliminated.
+ 325 0000 80B4     		push	{r7}
+ 326              	.LCFI14:
+ 327              		.cfi_def_cfa_offset 4
+ 328              		.cfi_offset 7, -4
+ 329 0002 83B0     		sub	sp, sp, #12
+ 330              	.LCFI15:
+ 331              		.cfi_def_cfa_offset 16
+ 332 0004 00AF     		add	r7, sp, #0
+ 333              	.LCFI16:
+ 334              		.cfi_def_cfa_register 7
+ 335 0006 0346     		mov	r3, r0
+ 336 0008 FB71     		strb	r3, [r7, #7]
+ 263:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Check the parameter */
+ 264:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   //assert_param(IS_FUNCTIONAL_STATE(NewState));
+ 265:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 266:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Remap the USB interupt lines */
+ 267:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *(__IO uint32_t *) CFGR1_USBITRMP_BB = (uint32_t)NewState;
+ 337              		.loc 1 267 0
+ 338 000a 044B     		ldr	r3, .L21
+ 339 000c FA79     		ldrb	r2, [r7, #7]	@ zero_extendqisi2
+ 340 000e 1A60     		str	r2, [r3, #0]
+ 268:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** }
+ 341              		.loc 1 268 0
+ 342 0010 07F10C07 		add	r7, r7, #12
+ 343 0014 BD46     		mov	sp, r7
+ 344 0016 80BC     		pop	{r7}
+ 345 0018 7047     		bx	lr
+ 346              	.L22:
+ 347 001a 00BF     		.align	2
+ 348              	.L21:
+ 349 001c 14002042 		.word	1109393428
+ 350              		.cfi_endproc
+ 351              	.LFE115:
+ 353              		.section	.text.SYSCFG_I2CFastModePlusConfig,"ax",%progbits
+ 354              		.align	2
+ 355              		.global	SYSCFG_I2CFastModePlusConfig
+ 356              		.thumb
+ 357              		.thumb_func
+ 359              	SYSCFG_I2CFastModePlusConfig:
+ 360              	.LFB116:
+ 269:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 270:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /**
+ 271:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @brief  Configures the I2C fast mode plus driving capability.
+ 272:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  SYSCFG_I2CFastModePlus: selects the pin.
+ 273:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *   This parameter can be one of the following values:
+ 274:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_I2CFastModePlus_PB6: Configure fast mode plus driving capability for PB6
+ 275:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_I2CFastModePlus_PB7: Configure fast mode plus driving capability for PB7
+ 276:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_I2CFastModePlus_PB8: Configure fast mode plus driving capability for PB8
+ 277:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_I2CFastModePlus_PB9: Configure fast mode plus driving capability for PB9
+ 278:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_I2CFastModePlus_I2C1: Configure fast mode plus driving capability for I2C1 pins
+ 279:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_I2CFastModePlus_I2C2: Configure fast mode plus driving capability for I2C2 pins
+ 280:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  NewState: new state of the DMA channel remapping. 
+ 281:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *         This parameter can be:
+ 282:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg ENABLE: Enable fast mode plus driving capability for selected I2C pin
+ 283:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg DISABLE: Disable fast mode plus driving capability for selected I2C pin
+ 284:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @note  For I2C1, fast mode plus driving capability can be enabled on all selected
+ 285:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *        I2C1 pins using SYSCFG_I2CFastModePlus_I2C1 parameter or independently
+ 286:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *        on each one of the following pins PB6, PB7, PB8 and PB9.
+ 287:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @note  For remaing I2C1 pins (PA14, PA15...) fast mode plus driving capability
+ 288:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *        can be enabled only by using SYSCFG_I2CFastModePlus_I2C1 parameter.
+ 289:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @note  For all I2C2 pins fast mode plus driving capability can be enabled
+ 290:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *        only by using SYSCFG_I2CFastModePlus_I2C2 parameter.
+ 291:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @retval None
+ 292:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */
+ 293:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** void SYSCFG_I2CFastModePlusConfig(uint32_t SYSCFG_I2CFastModePlus, FunctionalState NewState)
+ 294:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** {
+ 361              		.loc 1 294 0
+ 362              		.cfi_startproc
+ 363              		@ args = 0, pretend = 0, frame = 8
+ 364              		@ frame_needed = 1, uses_anonymous_args = 0
+ 365              		@ link register save eliminated.
+ 366 0000 80B4     		push	{r7}
+ 367              	.LCFI17:
+ 368              		.cfi_def_cfa_offset 4
+ 369              		.cfi_offset 7, -4
+ 370 0002 83B0     		sub	sp, sp, #12
+ 371              	.LCFI18:
+ 372              		.cfi_def_cfa_offset 16
+ 373 0004 00AF     		add	r7, sp, #0
+ 374              	.LCFI19:
+ 375              		.cfi_def_cfa_register 7
+ 376 0006 7860     		str	r0, [r7, #4]
+ 377 0008 0B46     		mov	r3, r1
+ 378 000a FB70     		strb	r3, [r7, #3]
+ 295:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Check the parameters */
+ 296:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   //assert_param(IS_SYSCFG_I2C_FMP(SYSCFG_I2CFastModePlus));
+ 297:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   //assert_param(IS_FUNCTIONAL_STATE(NewState));
+ 298:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 299:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   if (NewState != DISABLE)
+ 379              		.loc 1 299 0
+ 380 000c FB78     		ldrb	r3, [r7, #3]	@ zero_extendqisi2
+ 381 000e 002B     		cmp	r3, #0
+ 382 0010 06D0     		beq	.L24
+ 300:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   {
+ 301:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     /* Enable fast mode plus driving capability for selected I2C pin */
+ 302:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     SYSCFG->CFGR1 |= (uint32_t)SYSCFG_I2CFastModePlus;
+ 383              		.loc 1 302 0
+ 384 0012 0A4B     		ldr	r3, .L26
+ 385 0014 094A     		ldr	r2, .L26
+ 386 0016 1168     		ldr	r1, [r2, #0]
+ 387 0018 7A68     		ldr	r2, [r7, #4]
+ 388 001a 0A43     		orrs	r2, r2, r1
+ 389 001c 1A60     		str	r2, [r3, #0]
+ 390 001e 07E0     		b	.L23
+ 391              	.L24:
+ 303:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   }
+ 304:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   else
+ 305:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   {
+ 306:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     /* Disable fast mode plus driving capability for selected I2C pin */
+ 307:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     SYSCFG->CFGR1 &= (uint32_t)(~SYSCFG_I2CFastModePlus);
+ 392              		.loc 1 307 0
+ 393 0020 064B     		ldr	r3, .L26
+ 394 0022 064A     		ldr	r2, .L26
+ 395 0024 1168     		ldr	r1, [r2, #0]
+ 396 0026 7A68     		ldr	r2, [r7, #4]
+ 397 0028 6FEA0202 		mvn	r2, r2
+ 398 002c 0A40     		ands	r2, r2, r1
+ 399 002e 1A60     		str	r2, [r3, #0]
+ 400              	.L23:
+ 308:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   }
+ 309:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** }
+ 401              		.loc 1 309 0
+ 402 0030 07F10C07 		add	r7, r7, #12
+ 403 0034 BD46     		mov	sp, r7
+ 404 0036 80BC     		pop	{r7}
+ 405 0038 7047     		bx	lr
+ 406              	.L27:
+ 407 003a 00BF     		.align	2
+ 408              	.L26:
+ 409 003c 00000140 		.word	1073807360
+ 410              		.cfi_endproc
+ 411              	.LFE116:
+ 413              		.section	.text.SYSCFG_ITConfig,"ax",%progbits
+ 414              		.align	2
+ 415              		.global	SYSCFG_ITConfig
+ 416              		.thumb
+ 417              		.thumb_func
+ 419              	SYSCFG_ITConfig:
+ 420              	.LFB117:
+ 310:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 311:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /**
+ 312:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @brief  Enables or disables the selected SYSCFG interrupts.
+ 313:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  SYSCFG_IT: specifies the SYSCFG interrupt sources to be enabled or disabled.
+ 314:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *   This parameter can be one of the following values:
+ 315:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_IT_IXC: Inexact Interrupt
+ 316:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_IT_IDC: Input denormal Interrupt
+ 317:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_IT_OFC: Overflow Interrupt
+ 318:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_IT_UFC: Underflow Interrupt
+ 319:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_IT_DZC: Divide-by-zero Interrupt
+ 320:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_IT_IOC: Invalid operation Interrupt
+ 321:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  NewState: new state of the specified SYSCFG interrupts.
+ 322:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *         This parameter can be: ENABLE or DISABLE.
+ 323:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @retval None
+ 324:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */
+ 325:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** void SYSCFG_ITConfig(uint32_t SYSCFG_IT, FunctionalState NewState)  
+ 326:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** {
+ 421              		.loc 1 326 0
+ 422              		.cfi_startproc
+ 423              		@ args = 0, pretend = 0, frame = 8
+ 424              		@ frame_needed = 1, uses_anonymous_args = 0
+ 425              		@ link register save eliminated.
+ 426 0000 80B4     		push	{r7}
+ 427              	.LCFI20:
+ 428              		.cfi_def_cfa_offset 4
+ 429              		.cfi_offset 7, -4
+ 430 0002 83B0     		sub	sp, sp, #12
+ 431              	.LCFI21:
+ 432              		.cfi_def_cfa_offset 16
+ 433 0004 00AF     		add	r7, sp, #0
+ 434              	.LCFI22:
+ 435              		.cfi_def_cfa_register 7
+ 436 0006 7860     		str	r0, [r7, #4]
+ 437 0008 0B46     		mov	r3, r1
+ 438 000a FB70     		strb	r3, [r7, #3]
+ 327:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Check the parameters */
+ 328:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   //assert_param(IS_FUNCTIONAL_STATE(NewState));
+ 329:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   //assert_param(IS_SYSCFG_IT(SYSCFG_IT)); 
+ 330:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 331:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   if (NewState != DISABLE)
+ 439              		.loc 1 331 0
+ 440 000c FB78     		ldrb	r3, [r7, #3]	@ zero_extendqisi2
+ 441 000e 002B     		cmp	r3, #0
+ 442 0010 06D0     		beq	.L29
+ 332:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   {
+ 333:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     /* Enable the selected SYSCFG interrupts */
+ 334:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     SYSCFG->CFGR1 |= SYSCFG_IT;
+ 443              		.loc 1 334 0
+ 444 0012 0A4B     		ldr	r3, .L31
+ 445 0014 094A     		ldr	r2, .L31
+ 446 0016 1168     		ldr	r1, [r2, #0]
+ 447 0018 7A68     		ldr	r2, [r7, #4]
+ 448 001a 0A43     		orrs	r2, r2, r1
+ 449 001c 1A60     		str	r2, [r3, #0]
+ 450 001e 07E0     		b	.L28
+ 451              	.L29:
+ 335:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   }
+ 336:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   else
+ 337:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   {
+ 338:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     /* Disable the selected SYSCFG interrupts */
+ 339:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     SYSCFG->CFGR1 &= ((uint32_t)~SYSCFG_IT);
+ 452              		.loc 1 339 0
+ 453 0020 064B     		ldr	r3, .L31
+ 454 0022 064A     		ldr	r2, .L31
+ 455 0024 1168     		ldr	r1, [r2, #0]
+ 456 0026 7A68     		ldr	r2, [r7, #4]
+ 457 0028 6FEA0202 		mvn	r2, r2
+ 458 002c 0A40     		ands	r2, r2, r1
+ 459 002e 1A60     		str	r2, [r3, #0]
+ 460              	.L28:
+ 340:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   }
+ 341:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** }
+ 461              		.loc 1 341 0
+ 462 0030 07F10C07 		add	r7, r7, #12
+ 463 0034 BD46     		mov	sp, r7
+ 464 0036 80BC     		pop	{r7}
+ 465 0038 7047     		bx	lr
+ 466              	.L32:
+ 467 003a 00BF     		.align	2
+ 468              	.L31:
+ 469 003c 00000140 		.word	1073807360
+ 470              		.cfi_endproc
+ 471              	.LFE117:
+ 473              		.section	.text.SYSCFG_EXTILineConfig,"ax",%progbits
+ 474              		.align	2
+ 475              		.global	SYSCFG_EXTILineConfig
+ 476              		.thumb
+ 477              		.thumb_func
+ 479              	SYSCFG_EXTILineConfig:
+ 480              	.LFB118:
+ 342:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 343:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /**
+ 344:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @brief  Selects the GPIO pin used as EXTI Line.
+ 345:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  EXTI_PortSourceGPIOx : selects the GPIO port to be used as source 
+ 346:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *                                for EXTI lines where x can be (A, B, C, D, E or F).
+ 347:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  EXTI_PinSourcex: specifies the EXTI line to be configured.
+ 348:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *         This parameter can be EXTI_PinSourcex where x can be (0..15)
+ 349:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @retval None
+ 350:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */
+ 351:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** void SYSCFG_EXTILineConfig(uint8_t EXTI_PortSourceGPIOx, uint8_t EXTI_PinSourcex)
+ 352:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** {
+ 481              		.loc 1 352 0
+ 482              		.cfi_startproc
+ 483              		@ args = 0, pretend = 0, frame = 16
+ 484              		@ frame_needed = 1, uses_anonymous_args = 0
+ 485              		@ link register save eliminated.
+ 486 0000 90B4     		push	{r4, r7}
+ 487              	.LCFI23:
+ 488              		.cfi_def_cfa_offset 8
+ 489              		.cfi_offset 4, -8
+ 490              		.cfi_offset 7, -4
+ 491 0002 84B0     		sub	sp, sp, #16
+ 492              	.LCFI24:
+ 493              		.cfi_def_cfa_offset 24
+ 494 0004 00AF     		add	r7, sp, #0
+ 495              	.LCFI25:
+ 496              		.cfi_def_cfa_register 7
+ 497 0006 0246     		mov	r2, r0
+ 498 0008 0B46     		mov	r3, r1
+ 499 000a FA71     		strb	r2, [r7, #7]
+ 500 000c BB71     		strb	r3, [r7, #6]
+ 353:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   uint32_t tmp = 0x00;
+ 501              		.loc 1 353 0
+ 502 000e 4FF00003 		mov	r3, #0
+ 503 0012 FB60     		str	r3, [r7, #12]
+ 354:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 355:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Check the parameters */
+ 356:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   //assert_param(IS_EXTI_PORT_SOURCE(EXTI_PortSourceGPIOx));
+ 357:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   //assert_param(IS_EXTI_PIN_SOURCE(EXTI_PinSourcex));
+ 358:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   
+ 359:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   tmp = ((uint32_t)0x0F) << (0x04 * (EXTI_PinSourcex & (uint8_t)0x03));
+ 504              		.loc 1 359 0
+ 505 0014 BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 506 0016 03F00303 		and	r3, r3, #3
+ 507 001a 4FEA8303 		lsl	r3, r3, #2
+ 508 001e 4FF00F02 		mov	r2, #15
+ 509 0022 02FA03F3 		lsl	r3, r2, r3
+ 510 0026 FB60     		str	r3, [r7, #12]
+ 360:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   SYSCFG->EXTICR[EXTI_PinSourcex >> 0x02] &= ~tmp;
+ 511              		.loc 1 360 0
+ 512 0028 1A4B     		ldr	r3, .L34
+ 513 002a BA79     		ldrb	r2, [r7, #6]	@ zero_extendqisi2
+ 514 002c 4FEA9202 		lsr	r2, r2, #2
+ 515 0030 D2B2     		uxtb	r2, r2
+ 516 0032 1849     		ldr	r1, .L34
+ 517 0034 B879     		ldrb	r0, [r7, #6]	@ zero_extendqisi2
+ 518 0036 4FEA9000 		lsr	r0, r0, #2
+ 519 003a C0B2     		uxtb	r0, r0
+ 520 003c 00F10200 		add	r0, r0, #2
+ 521 0040 51F82000 		ldr	r0, [r1, r0, lsl #2]
+ 522 0044 F968     		ldr	r1, [r7, #12]
+ 523 0046 6FEA0101 		mvn	r1, r1
+ 524 004a 0140     		ands	r1, r1, r0
+ 525 004c 02F10202 		add	r2, r2, #2
+ 526 0050 43F82210 		str	r1, [r3, r2, lsl #2]
+ 361:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   SYSCFG->EXTICR[EXTI_PinSourcex >> 0x02] |= (((uint32_t)EXTI_PortSourceGPIOx) << (0x04 * (EXTI_Pin
+ 527              		.loc 1 361 0
+ 528 0054 0F4B     		ldr	r3, .L34
+ 529 0056 BA79     		ldrb	r2, [r7, #6]	@ zero_extendqisi2
+ 530 0058 4FEA9202 		lsr	r2, r2, #2
+ 531 005c D2B2     		uxtb	r2, r2
+ 532 005e 0D49     		ldr	r1, .L34
+ 533 0060 B879     		ldrb	r0, [r7, #6]	@ zero_extendqisi2
+ 534 0062 4FEA9000 		lsr	r0, r0, #2
+ 535 0066 C0B2     		uxtb	r0, r0
+ 536 0068 00F10200 		add	r0, r0, #2
+ 537 006c 51F82000 		ldr	r0, [r1, r0, lsl #2]
+ 538 0070 FC79     		ldrb	r4, [r7, #7]	@ zero_extendqisi2
+ 539 0072 B979     		ldrb	r1, [r7, #6]	@ zero_extendqisi2
+ 540 0074 01F00301 		and	r1, r1, #3
+ 541 0078 4FEA8101 		lsl	r1, r1, #2
+ 542 007c 04FA01F1 		lsl	r1, r4, r1
+ 543 0080 0143     		orrs	r1, r1, r0
+ 544 0082 02F10202 		add	r2, r2, #2
+ 545 0086 43F82210 		str	r1, [r3, r2, lsl #2]
+ 362:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** }
+ 546              		.loc 1 362 0
+ 547 008a 07F11007 		add	r7, r7, #16
+ 548 008e BD46     		mov	sp, r7
+ 549 0090 90BC     		pop	{r4, r7}
+ 550 0092 7047     		bx	lr
+ 551              	.L35:
+ 552              		.align	2
+ 553              	.L34:
+ 554 0094 00000140 		.word	1073807360
+ 555              		.cfi_endproc
+ 556              	.LFE118:
+ 558              		.section	.text.SYSCFG_BreakConfig,"ax",%progbits
+ 559              		.align	2
+ 560              		.global	SYSCFG_BreakConfig
+ 561              		.thumb
+ 562              		.thumb_func
+ 564              	SYSCFG_BreakConfig:
+ 565              	.LFB119:
+ 363:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 364:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /**
+ 365:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @brief  Connects the selected parameter to the break input of TIM1.
+ 366:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @note   The selected configuration is locked and can be unlocked by system reset
+ 367:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  SYSCFG_Break: selects the configuration to be connected to break
+ 368:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *         input of TIM1
+ 369:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *   This parameter can be any combination of the following values:
+ 370:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_Break_PVD: PVD interrupt is connected to the break input of TIM1.
+ 371:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_Break_SRAMParity: SRAM Parity error is connected to the break input of TIM1.
+ 372:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_Break_HardFault: Lockup output of CortexM4 is connected to the break input of T
+ 373:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @retval None
+ 374:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */
+ 375:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** void SYSCFG_BreakConfig(uint32_t SYSCFG_Break)
+ 376:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** {
+ 566              		.loc 1 376 0
+ 567              		.cfi_startproc
+ 568              		@ args = 0, pretend = 0, frame = 8
+ 569              		@ frame_needed = 1, uses_anonymous_args = 0
+ 570              		@ link register save eliminated.
+ 571 0000 80B4     		push	{r7}
+ 572              	.LCFI26:
+ 573              		.cfi_def_cfa_offset 4
+ 574              		.cfi_offset 7, -4
+ 575 0002 83B0     		sub	sp, sp, #12
+ 576              	.LCFI27:
+ 577              		.cfi_def_cfa_offset 16
+ 578 0004 00AF     		add	r7, sp, #0
+ 579              	.LCFI28:
+ 580              		.cfi_def_cfa_register 7
+ 581 0006 7860     		str	r0, [r7, #4]
+ 377:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Check the parameter */
+ 378:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   //assert_param(IS_SYSCFG_LOCK_CONFIG(SYSCFG_Break));
+ 379:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 380:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   SYSCFG->CFGR2 |= (uint32_t) SYSCFG_Break;
+ 582              		.loc 1 380 0
+ 583 0008 054B     		ldr	r3, .L37
+ 584 000a 054A     		ldr	r2, .L37
+ 585 000c 9169     		ldr	r1, [r2, #24]
+ 586 000e 7A68     		ldr	r2, [r7, #4]
+ 587 0010 0A43     		orrs	r2, r2, r1
+ 588 0012 9A61     		str	r2, [r3, #24]
+ 381:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** }
+ 589              		.loc 1 381 0
+ 590 0014 07F10C07 		add	r7, r7, #12
+ 591 0018 BD46     		mov	sp, r7
+ 592 001a 80BC     		pop	{r7}
+ 593 001c 7047     		bx	lr
+ 594              	.L38:
+ 595 001e 00BF     		.align	2
+ 596              	.L37:
+ 597 0020 00000140 		.word	1073807360
+ 598              		.cfi_endproc
+ 599              	.LFE119:
+ 601              		.section	.text.SYSCFG_BypassParityCheckDisable,"ax",%progbits
+ 602              		.align	2
+ 603              		.global	SYSCFG_BypassParityCheckDisable
+ 604              		.thumb
+ 605              		.thumb_func
+ 607              	SYSCFG_BypassParityCheckDisable:
+ 608              	.LFB120:
+ 382:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 383:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /**
+ 384:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @brief  Disables the parity check on RAM.
+ 385:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @note   Disabling the parity check on RAM locks the configuration bit.
+ 386:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *         To re-enable the parity check on RAM perform a system reset.  
+ 387:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  None
+ 388:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @retval None
+ 389:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */
+ 390:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** void SYSCFG_BypassParityCheckDisable(void)
+ 391:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** {
+ 609              		.loc 1 391 0
+ 610              		.cfi_startproc
+ 611              		@ args = 0, pretend = 0, frame = 0
+ 612              		@ frame_needed = 1, uses_anonymous_args = 0
+ 613              		@ link register save eliminated.
+ 614 0000 80B4     		push	{r7}
+ 615              	.LCFI29:
+ 616              		.cfi_def_cfa_offset 4
+ 617              		.cfi_offset 7, -4
+ 618 0002 00AF     		add	r7, sp, #0
+ 619              	.LCFI30:
+ 620              		.cfi_def_cfa_register 7
+ 392:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Disable the adddress parity check on RAM */
+ 393:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *(__IO uint32_t *) CFGR1_BYPADDRPAR_BB = (uint32_t)0x00000001;
+ 621              		.loc 1 393 0
+ 622 0004 034B     		ldr	r3, .L40
+ 623 0006 4FF00102 		mov	r2, #1
+ 624 000a 1A60     		str	r2, [r3, #0]
+ 394:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** }
+ 625              		.loc 1 394 0
+ 626 000c BD46     		mov	sp, r7
+ 627 000e 80BC     		pop	{r7}
+ 628 0010 7047     		bx	lr
+ 629              	.L41:
+ 630 0012 00BF     		.align	2
+ 631              	.L40:
+ 632 0014 10032042 		.word	1109394192
+ 633              		.cfi_endproc
+ 634              	.LFE120:
+ 636              		.section	.text.SYSCFG_SRAMWRPEnable,"ax",%progbits
+ 637              		.align	2
+ 638              		.global	SYSCFG_SRAMWRPEnable
+ 639              		.thumb
+ 640              		.thumb_func
+ 642              	SYSCFG_SRAMWRPEnable:
+ 643              	.LFB121:
+ 395:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 396:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /**
+ 397:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @brief  Enables the ICODE SRAM write protection.
+ 398:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @note   Enabling the ICODE SRAM write protection locks the configuration bit.
+ 399:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *         To disable the ICODE SRAM write protection perform a system reset.
+ 400:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  None
+ 401:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @retval None
+ 402:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */
+ 403:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** void SYSCFG_SRAMWRPEnable(uint32_t SYSCFG_SRAMWRP)
+ 404:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** {
+ 644              		.loc 1 404 0
+ 645              		.cfi_startproc
+ 646              		@ args = 0, pretend = 0, frame = 8
+ 647              		@ frame_needed = 1, uses_anonymous_args = 0
+ 648              		@ link register save eliminated.
+ 649 0000 80B4     		push	{r7}
+ 650              	.LCFI31:
+ 651              		.cfi_def_cfa_offset 4
+ 652              		.cfi_offset 7, -4
+ 653 0002 83B0     		sub	sp, sp, #12
+ 654              	.LCFI32:
+ 655              		.cfi_def_cfa_offset 16
+ 656 0004 00AF     		add	r7, sp, #0
+ 657              	.LCFI33:
+ 658              		.cfi_def_cfa_register 7
+ 659 0006 7860     		str	r0, [r7, #4]
+ 405:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Check the parameter */
+ 406:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   //assert_param(IS_SYSCFG_PAGE(SYSCFG_SRAMWRP));
+ 407:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 408:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Enable the write-protection on the selected ICODE SRAM page */
+ 409:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   SYSCFG->RCR |= (uint32_t)SYSCFG_SRAMWRP;
+ 660              		.loc 1 409 0
+ 661 0008 054B     		ldr	r3, .L43
+ 662 000a 054A     		ldr	r2, .L43
+ 663 000c 5168     		ldr	r1, [r2, #4]
+ 664 000e 7A68     		ldr	r2, [r7, #4]
+ 665 0010 0A43     		orrs	r2, r2, r1
+ 666 0012 5A60     		str	r2, [r3, #4]
+ 410:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** }
+ 667              		.loc 1 410 0
+ 668 0014 07F10C07 		add	r7, r7, #12
+ 669 0018 BD46     		mov	sp, r7
+ 670 001a 80BC     		pop	{r7}
+ 671 001c 7047     		bx	lr
+ 672              	.L44:
+ 673 001e 00BF     		.align	2
+ 674              	.L43:
+ 675 0020 00000140 		.word	1073807360
+ 676              		.cfi_endproc
+ 677              	.LFE121:
+ 679              		.section	.text.SYSCFG_GetFlagStatus,"ax",%progbits
+ 680              		.align	2
+ 681              		.global	SYSCFG_GetFlagStatus
+ 682              		.thumb
+ 683              		.thumb_func
+ 685              	SYSCFG_GetFlagStatus:
+ 686              	.LFB122:
+ 411:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 412:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /**
+ 413:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @brief  Checks whether the specified SYSCFG flag is set or not.
+ 414:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  SYSCFG_Flag: specifies the SYSCFG flag to check. 
+ 415:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *   This parameter can be one of the following values:
+ 416:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_FLAG_PE: SRAM parity error flag.
+ 417:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @retval The new state of SYSCFG_Flag (SET or RESET).
+ 418:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */
+ 419:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** FlagStatus SYSCFG_GetFlagStatus(uint32_t SYSCFG_Flag)
+ 420:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** {
+ 687              		.loc 1 420 0
+ 688              		.cfi_startproc
+ 689              		@ args = 0, pretend = 0, frame = 16
+ 690              		@ frame_needed = 1, uses_anonymous_args = 0
+ 691              		@ link register save eliminated.
+ 692 0000 80B4     		push	{r7}
+ 693              	.LCFI34:
+ 694              		.cfi_def_cfa_offset 4
+ 695              		.cfi_offset 7, -4
+ 696 0002 85B0     		sub	sp, sp, #20
+ 697              	.LCFI35:
+ 698              		.cfi_def_cfa_offset 24
+ 699 0004 00AF     		add	r7, sp, #0
+ 700              	.LCFI36:
+ 701              		.cfi_def_cfa_register 7
+ 702 0006 7860     		str	r0, [r7, #4]
+ 421:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   FlagStatus bitstatus = RESET;
+ 703              		.loc 1 421 0
+ 704 0008 4FF00003 		mov	r3, #0
+ 705 000c FB73     		strb	r3, [r7, #15]
+ 422:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 423:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Check the parameter */
+ 424:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   //assert_param(IS_SYSCFG_FLAG(SYSCFG_Flag));
+ 425:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 426:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Check the status of the specified SPI flag */
+ 427:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   if ((SYSCFG->CFGR2 & SYSCFG_CFGR2_SRAM_PE) != (uint32_t)RESET)
+ 706              		.loc 1 427 0
+ 707 000e 0A4B     		ldr	r3, .L49
+ 708 0010 9B69     		ldr	r3, [r3, #24]
+ 709 0012 03F48073 		and	r3, r3, #256
+ 710 0016 002B     		cmp	r3, #0
+ 711 0018 03D0     		beq	.L46
+ 428:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   {
+ 429:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     /* SYSCFG_Flag is set */
+ 430:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     bitstatus = SET;
+ 712              		.loc 1 430 0
+ 713 001a 4FF00103 		mov	r3, #1
+ 714 001e FB73     		strb	r3, [r7, #15]
+ 715 0020 02E0     		b	.L47
+ 716              	.L46:
+ 431:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   }
+ 432:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   else
+ 433:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   {
+ 434:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     /* SYSCFG_Flag is reset */
+ 435:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****     bitstatus = RESET;
+ 717              		.loc 1 435 0
+ 718 0022 4FF00003 		mov	r3, #0
+ 719 0026 FB73     		strb	r3, [r7, #15]
+ 720              	.L47:
+ 436:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   }
+ 437:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Return the SYSCFG_Flag status */
+ 438:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   return  bitstatus;
+ 721              		.loc 1 438 0
+ 722 0028 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 439:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** }
+ 723              		.loc 1 439 0
+ 724 002a 1846     		mov	r0, r3
+ 725 002c 07F11407 		add	r7, r7, #20
+ 726 0030 BD46     		mov	sp, r7
+ 727 0032 80BC     		pop	{r7}
+ 728 0034 7047     		bx	lr
+ 729              	.L50:
+ 730 0036 00BF     		.align	2
+ 731              	.L49:
+ 732 0038 00000140 		.word	1073807360
+ 733              		.cfi_endproc
+ 734              	.LFE122:
+ 736              		.section	.text.SYSCFG_ClearFlag,"ax",%progbits
+ 737              		.align	2
+ 738              		.global	SYSCFG_ClearFlag
+ 739              		.thumb
+ 740              		.thumb_func
+ 742              	SYSCFG_ClearFlag:
+ 743              	.LFB123:
+ 440:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 441:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** /**
+ 442:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @brief  Clears the selected SYSCFG flag.
+ 443:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @param  SYSCFG_Flag: selects the flag to be cleared.
+ 444:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *   This parameter can be any combination of the following values:
+ 445:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   *     @arg SYSCFG_FLAG_PE: SRAM parity error flag.
+ 446:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   * @retval None
+ 447:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   */
+ 448:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** void SYSCFG_ClearFlag(uint32_t SYSCFG_Flag)
+ 449:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** {
+ 744              		.loc 1 449 0
+ 745              		.cfi_startproc
+ 746              		@ args = 0, pretend = 0, frame = 8
+ 747              		@ frame_needed = 1, uses_anonymous_args = 0
+ 748              		@ link register save eliminated.
+ 749 0000 80B4     		push	{r7}
+ 750              	.LCFI37:
+ 751              		.cfi_def_cfa_offset 4
+ 752              		.cfi_offset 7, -4
+ 753 0002 83B0     		sub	sp, sp, #12
+ 754              	.LCFI38:
+ 755              		.cfi_def_cfa_offset 16
+ 756 0004 00AF     		add	r7, sp, #0
+ 757              	.LCFI39:
+ 758              		.cfi_def_cfa_register 7
+ 759 0006 7860     		str	r0, [r7, #4]
+ 450:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   /* Check the parameter */
+ 451:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   //assert_param(IS_SYSCFG_FLAG(SYSCFG_Flag));
+ 452:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** 
+ 453:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c ****   SYSCFG->CFGR2 |= (uint32_t) SYSCFG_Flag;
+ 760              		.loc 1 453 0
+ 761 0008 054B     		ldr	r3, .L52
+ 762 000a 054A     		ldr	r2, .L52
+ 763 000c 9169     		ldr	r1, [r2, #24]
+ 764 000e 7A68     		ldr	r2, [r7, #4]
+ 765 0010 0A43     		orrs	r2, r2, r1
+ 766 0012 9A61     		str	r2, [r3, #24]
+ 454:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_syscfg.c **** }
+ 767              		.loc 1 454 0
+ 768 0014 07F10C07 		add	r7, r7, #12
+ 769 0018 BD46     		mov	sp, r7
+ 770 001a 80BC     		pop	{r7}
+ 771 001c 7047     		bx	lr
+ 772              	.L53:
+ 773 001e 00BF     		.align	2
+ 774              	.L52:
+ 775 0020 00000140 		.word	1073807360
+ 776              		.cfi_endproc
+ 777              	.LFE123:
+ 779              		.text
+ 780              	.Letext0:
+ 781              		.file 2 "/home/chaitannya/CodeSourcery/bin/../lib/gcc/arm-none-eabi/4.7.3/../../../../arm-none-eab
+ 782              		.file 3 "inc/stm32f30x.h"
+ 783              		.file 4 "inc/core_cm4.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 stm32f30x_syscfg.c
+     /tmp/cca8t8tc.s:20     .text.SYSCFG_DeInit:00000000 $t
+     /tmp/cca8t8tc.s:25     .text.SYSCFG_DeInit:00000000 SYSCFG_DeInit
+     /tmp/cca8t8tc.s:83     .text.SYSCFG_DeInit:00000054 $d
+     /tmp/cca8t8tc.s:88     .text.SYSCFG_MemoryRemapConfig:00000000 $t
+     /tmp/cca8t8tc.s:93     .text.SYSCFG_MemoryRemapConfig:00000000 SYSCFG_MemoryRemapConfig
+     /tmp/cca8t8tc.s:139    .text.SYSCFG_MemoryRemapConfig:00000034 $d
+     /tmp/cca8t8tc.s:144    .text.SYSCFG_DMAChannelRemapConfig:00000000 $t
+     /tmp/cca8t8tc.s:149    .text.SYSCFG_DMAChannelRemapConfig:00000000 SYSCFG_DMAChannelRemapConfig
+     /tmp/cca8t8tc.s:199    .text.SYSCFG_DMAChannelRemapConfig:0000003c $d
+     /tmp/cca8t8tc.s:204    .text.SYSCFG_TriggerRemapConfig:00000000 $t
+     /tmp/cca8t8tc.s:209    .text.SYSCFG_TriggerRemapConfig:00000000 SYSCFG_TriggerRemapConfig
+     /tmp/cca8t8tc.s:259    .text.SYSCFG_TriggerRemapConfig:0000003c $d
+     /tmp/cca8t8tc.s:264    .text.SYSCFG_EncoderRemapConfig:00000000 $t
+     /tmp/cca8t8tc.s:269    .text.SYSCFG_EncoderRemapConfig:00000000 SYSCFG_EncoderRemapConfig
+     /tmp/cca8t8tc.s:308    .text.SYSCFG_EncoderRemapConfig:0000002c $d
+     /tmp/cca8t8tc.s:313    .text.SYSCFG_USBInterruptLineRemapCmd:00000000 $t
+     /tmp/cca8t8tc.s:318    .text.SYSCFG_USBInterruptLineRemapCmd:00000000 SYSCFG_USBInterruptLineRemapCmd
+     /tmp/cca8t8tc.s:349    .text.SYSCFG_USBInterruptLineRemapCmd:0000001c $d
+     /tmp/cca8t8tc.s:354    .text.SYSCFG_I2CFastModePlusConfig:00000000 $t
+     /tmp/cca8t8tc.s:359    .text.SYSCFG_I2CFastModePlusConfig:00000000 SYSCFG_I2CFastModePlusConfig
+     /tmp/cca8t8tc.s:409    .text.SYSCFG_I2CFastModePlusConfig:0000003c $d
+     /tmp/cca8t8tc.s:414    .text.SYSCFG_ITConfig:00000000 $t
+     /tmp/cca8t8tc.s:419    .text.SYSCFG_ITConfig:00000000 SYSCFG_ITConfig
+     /tmp/cca8t8tc.s:469    .text.SYSCFG_ITConfig:0000003c $d
+     /tmp/cca8t8tc.s:474    .text.SYSCFG_EXTILineConfig:00000000 $t
+     /tmp/cca8t8tc.s:479    .text.SYSCFG_EXTILineConfig:00000000 SYSCFG_EXTILineConfig
+     /tmp/cca8t8tc.s:554    .text.SYSCFG_EXTILineConfig:00000094 $d
+     /tmp/cca8t8tc.s:559    .text.SYSCFG_BreakConfig:00000000 $t
+     /tmp/cca8t8tc.s:564    .text.SYSCFG_BreakConfig:00000000 SYSCFG_BreakConfig
+     /tmp/cca8t8tc.s:597    .text.SYSCFG_BreakConfig:00000020 $d
+     /tmp/cca8t8tc.s:602    .text.SYSCFG_BypassParityCheckDisable:00000000 $t
+     /tmp/cca8t8tc.s:607    .text.SYSCFG_BypassParityCheckDisable:00000000 SYSCFG_BypassParityCheckDisable
+     /tmp/cca8t8tc.s:632    .text.SYSCFG_BypassParityCheckDisable:00000014 $d
+     /tmp/cca8t8tc.s:637    .text.SYSCFG_SRAMWRPEnable:00000000 $t
+     /tmp/cca8t8tc.s:642    .text.SYSCFG_SRAMWRPEnable:00000000 SYSCFG_SRAMWRPEnable
+     /tmp/cca8t8tc.s:675    .text.SYSCFG_SRAMWRPEnable:00000020 $d
+     /tmp/cca8t8tc.s:680    .text.SYSCFG_GetFlagStatus:00000000 $t
+     /tmp/cca8t8tc.s:685    .text.SYSCFG_GetFlagStatus:00000000 SYSCFG_GetFlagStatus
+     /tmp/cca8t8tc.s:732    .text.SYSCFG_GetFlagStatus:00000038 $d
+     /tmp/cca8t8tc.s:737    .text.SYSCFG_ClearFlag:00000000 $t
+     /tmp/cca8t8tc.s:742    .text.SYSCFG_ClearFlag:00000000 SYSCFG_ClearFlag
+     /tmp/cca8t8tc.s:775    .text.SYSCFG_ClearFlag:00000020 $d
+                     .debug_frame:00000010 $d
+
+NO UNDEFINED SYMBOLS

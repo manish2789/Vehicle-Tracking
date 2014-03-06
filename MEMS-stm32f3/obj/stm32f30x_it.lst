@@ -1,0 +1,593 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"stm32f30x_it.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	i
+  20              		.section	.bss.i,"aw",%nobits
+  21              		.align	2
+  24              	i:
+  25 0000 00000000 		.space	4
+  26              		.section	.text.NMI_Handler,"ax",%progbits
+  27              		.align	2
+  28              		.global	NMI_Handler
+  29              		.thumb
+  30              		.thumb_func
+  32              	NMI_Handler:
+  33              	.LFB110:
+  34              		.file 1 "src/stm32f30x_it.c"
+   1:src/stm32f30x_it.c **** /**
+   2:src/stm32f30x_it.c ****   ******************************************************************************
+   3:src/stm32f30x_it.c ****   * @file    stm32f30x_it.c 
+   4:src/stm32f30x_it.c ****   * @author  MCD Application Team
+   5:src/stm32f30x_it.c ****   * @version V1.1.0
+   6:src/stm32f30x_it.c ****   * @date    20-September-2012
+   7:src/stm32f30x_it.c ****   * @brief   Main Interrupt Service Routines.
+   8:src/stm32f30x_it.c ****   *          This file provides template for all exceptions handler and 
+   9:src/stm32f30x_it.c ****   *          peripherals interrupt service routine.
+  10:src/stm32f30x_it.c ****   ******************************************************************************
+  11:src/stm32f30x_it.c ****   * @attention
+  12:src/stm32f30x_it.c ****   *
+  13:src/stm32f30x_it.c ****   * <h2><center>&copy; COPYRIGHT 2012 STMicroelectronics</center></h2>
+  14:src/stm32f30x_it.c ****   *
+  15:src/stm32f30x_it.c ****   * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+  16:src/stm32f30x_it.c ****   * You may not use this file except in compliance with the License.
+  17:src/stm32f30x_it.c ****   * You may obtain a copy of the License at:
+  18:src/stm32f30x_it.c ****   *
+  19:src/stm32f30x_it.c ****   *        http://www.st.com/software_license_agreement_liberty_v2
+  20:src/stm32f30x_it.c ****   *
+  21:src/stm32f30x_it.c ****   * Unless required by applicable law or agreed to in writing, software 
+  22:src/stm32f30x_it.c ****   * distributed under the License is distributed on an "AS IS" BASIS, 
+  23:src/stm32f30x_it.c ****   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  24:src/stm32f30x_it.c ****   * See the License for the specific language governing permissions and
+  25:src/stm32f30x_it.c ****   * limitations under the License.
+  26:src/stm32f30x_it.c ****   *
+  27:src/stm32f30x_it.c ****   ******************************************************************************
+  28:src/stm32f30x_it.c ****   */
+  29:src/stm32f30x_it.c **** 
+  30:src/stm32f30x_it.c **** /* Includes ------------------------------------------------------------------*/
+  31:src/stm32f30x_it.c **** #include "stm32f30x_it.h"
+  32:src/stm32f30x_it.c **** #include "main.h"
+  33:src/stm32f30x_it.c **** #include "usb_istr.h"
+  34:src/stm32f30x_it.c **** 
+  35:src/stm32f30x_it.c **** /** @addtogroup STM32F3-Discovery_Demo
+  36:src/stm32f30x_it.c ****   * @{
+  37:src/stm32f30x_it.c ****   */
+  38:src/stm32f30x_it.c **** 
+  39:src/stm32f30x_it.c **** /* Private typedef -----------------------------------------------------------*/
+  40:src/stm32f30x_it.c **** /* Private define ------------------------------------------------------------*/
+  41:src/stm32f30x_it.c **** /* Private macro -------------------------------------------------------------*/
+  42:src/stm32f30x_it.c **** /* Private variables ---------------------------------------------------------*/
+  43:src/stm32f30x_it.c **** extern __IO uint32_t UserButtonPressed;
+  44:src/stm32f30x_it.c **** extern __IO uint8_t DataReady;
+  45:src/stm32f30x_it.c **** extern __IO uint32_t USBConnectTimeOut;
+  46:src/stm32f30x_it.c **** __IO uint32_t i =0;
+  47:src/stm32f30x_it.c **** 
+  48:src/stm32f30x_it.c **** /* Private function prototypes -----------------------------------------------*/
+  49:src/stm32f30x_it.c **** /* Private functions ---------------------------------------------------------*/
+  50:src/stm32f30x_it.c **** 
+  51:src/stm32f30x_it.c **** /******************************************************************************/
+  52:src/stm32f30x_it.c **** /*            Cortex-M4 Processor Exceptions Handlers                         */
+  53:src/stm32f30x_it.c **** /******************************************************************************/
+  54:src/stm32f30x_it.c **** 
+  55:src/stm32f30x_it.c **** /**
+  56:src/stm32f30x_it.c ****   * @brief  This function handles NMI exception.
+  57:src/stm32f30x_it.c ****   * @param  None
+  58:src/stm32f30x_it.c ****   * @retval None
+  59:src/stm32f30x_it.c ****   */
+  60:src/stm32f30x_it.c **** void NMI_Handler(void)
+  61:src/stm32f30x_it.c **** {
+  35              		.loc 1 61 0
+  36              		.cfi_startproc
+  37              		@ args = 0, pretend = 0, frame = 0
+  38              		@ frame_needed = 1, uses_anonymous_args = 0
+  39              		@ link register save eliminated.
+  40 0000 80B4     		push	{r7}
+  41              	.LCFI0:
+  42              		.cfi_def_cfa_offset 4
+  43              		.cfi_offset 7, -4
+  44 0002 00AF     		add	r7, sp, #0
+  45              	.LCFI1:
+  46              		.cfi_def_cfa_register 7
+  62:src/stm32f30x_it.c **** }
+  47              		.loc 1 62 0
+  48 0004 BD46     		mov	sp, r7
+  49 0006 80BC     		pop	{r7}
+  50 0008 7047     		bx	lr
+  51              		.cfi_endproc
+  52              	.LFE110:
+  54 000a 00BF     		.section	.text.HardFault_Handler,"ax",%progbits
+  55              		.align	2
+  56              		.global	HardFault_Handler
+  57              		.thumb
+  58              		.thumb_func
+  60              	HardFault_Handler:
+  61              	.LFB111:
+  63:src/stm32f30x_it.c **** 
+  64:src/stm32f30x_it.c **** /**
+  65:src/stm32f30x_it.c ****   * @brief  This function handles Hard Fault exception.
+  66:src/stm32f30x_it.c ****   * @param  None
+  67:src/stm32f30x_it.c ****   * @retval None
+  68:src/stm32f30x_it.c ****   */
+  69:src/stm32f30x_it.c **** void HardFault_Handler(void)
+  70:src/stm32f30x_it.c **** {
+  62              		.loc 1 70 0
+  63              		.cfi_startproc
+  64              		@ args = 0, pretend = 0, frame = 0
+  65              		@ frame_needed = 1, uses_anonymous_args = 0
+  66              		@ link register save eliminated.
+  67 0000 80B4     		push	{r7}
+  68              	.LCFI2:
+  69              		.cfi_def_cfa_offset 4
+  70              		.cfi_offset 7, -4
+  71 0002 00AF     		add	r7, sp, #0
+  72              	.LCFI3:
+  73              		.cfi_def_cfa_register 7
+  74              	.L3:
+  71:src/stm32f30x_it.c ****   /* Go to infinite loop when Hard Fault exception occurs */
+  72:src/stm32f30x_it.c ****   while (1)
+  73:src/stm32f30x_it.c ****   {
+  74:src/stm32f30x_it.c ****   }
+  75              		.loc 1 74 0 discriminator 1
+  76 0004 FEE7     		b	.L3
+  77              		.cfi_endproc
+  78              	.LFE111:
+  80 0006 00BF     		.section	.text.MemManage_Handler,"ax",%progbits
+  81              		.align	2
+  82              		.global	MemManage_Handler
+  83              		.thumb
+  84              		.thumb_func
+  86              	MemManage_Handler:
+  87              	.LFB112:
+  75:src/stm32f30x_it.c **** }
+  76:src/stm32f30x_it.c **** 
+  77:src/stm32f30x_it.c **** /**
+  78:src/stm32f30x_it.c ****   * @brief  This function handles Memory Manage exception.
+  79:src/stm32f30x_it.c ****   * @param  None
+  80:src/stm32f30x_it.c ****   * @retval None
+  81:src/stm32f30x_it.c ****   */
+  82:src/stm32f30x_it.c **** void MemManage_Handler(void)
+  83:src/stm32f30x_it.c **** {
+  88              		.loc 1 83 0
+  89              		.cfi_startproc
+  90              		@ args = 0, pretend = 0, frame = 0
+  91              		@ frame_needed = 1, uses_anonymous_args = 0
+  92              		@ link register save eliminated.
+  93 0000 80B4     		push	{r7}
+  94              	.LCFI4:
+  95              		.cfi_def_cfa_offset 4
+  96              		.cfi_offset 7, -4
+  97 0002 00AF     		add	r7, sp, #0
+  98              	.LCFI5:
+  99              		.cfi_def_cfa_register 7
+ 100              	.L5:
+  84:src/stm32f30x_it.c ****   /* Go to infinite loop when Memory Manage exception occurs */
+  85:src/stm32f30x_it.c ****   while (1)
+  86:src/stm32f30x_it.c ****   {
+  87:src/stm32f30x_it.c ****   }
+ 101              		.loc 1 87 0 discriminator 1
+ 102 0004 FEE7     		b	.L5
+ 103              		.cfi_endproc
+ 104              	.LFE112:
+ 106 0006 00BF     		.section	.text.BusFault_Handler,"ax",%progbits
+ 107              		.align	2
+ 108              		.global	BusFault_Handler
+ 109              		.thumb
+ 110              		.thumb_func
+ 112              	BusFault_Handler:
+ 113              	.LFB113:
+  88:src/stm32f30x_it.c **** }
+  89:src/stm32f30x_it.c **** 
+  90:src/stm32f30x_it.c **** /**
+  91:src/stm32f30x_it.c ****   * @brief  This function handles Bus Fault exception.
+  92:src/stm32f30x_it.c ****   * @param  None
+  93:src/stm32f30x_it.c ****   * @retval None
+  94:src/stm32f30x_it.c ****   */
+  95:src/stm32f30x_it.c **** void BusFault_Handler(void)
+  96:src/stm32f30x_it.c **** {
+ 114              		.loc 1 96 0
+ 115              		.cfi_startproc
+ 116              		@ args = 0, pretend = 0, frame = 0
+ 117              		@ frame_needed = 1, uses_anonymous_args = 0
+ 118              		@ link register save eliminated.
+ 119 0000 80B4     		push	{r7}
+ 120              	.LCFI6:
+ 121              		.cfi_def_cfa_offset 4
+ 122              		.cfi_offset 7, -4
+ 123 0002 00AF     		add	r7, sp, #0
+ 124              	.LCFI7:
+ 125              		.cfi_def_cfa_register 7
+ 126              	.L7:
+  97:src/stm32f30x_it.c ****   /* Go to infinite loop when Bus Fault exception occurs */
+  98:src/stm32f30x_it.c ****   while (1)
+  99:src/stm32f30x_it.c ****   {
+ 100:src/stm32f30x_it.c ****   }
+ 127              		.loc 1 100 0 discriminator 1
+ 128 0004 FEE7     		b	.L7
+ 129              		.cfi_endproc
+ 130              	.LFE113:
+ 132 0006 00BF     		.section	.text.UsageFault_Handler,"ax",%progbits
+ 133              		.align	2
+ 134              		.global	UsageFault_Handler
+ 135              		.thumb
+ 136              		.thumb_func
+ 138              	UsageFault_Handler:
+ 139              	.LFB114:
+ 101:src/stm32f30x_it.c **** }
+ 102:src/stm32f30x_it.c **** 
+ 103:src/stm32f30x_it.c **** /**
+ 104:src/stm32f30x_it.c ****   * @brief  This function handles Usage Fault exception.
+ 105:src/stm32f30x_it.c ****   * @param  None
+ 106:src/stm32f30x_it.c ****   * @retval None
+ 107:src/stm32f30x_it.c ****   */
+ 108:src/stm32f30x_it.c **** void UsageFault_Handler(void)
+ 109:src/stm32f30x_it.c **** {
+ 140              		.loc 1 109 0
+ 141              		.cfi_startproc
+ 142              		@ args = 0, pretend = 0, frame = 0
+ 143              		@ frame_needed = 1, uses_anonymous_args = 0
+ 144              		@ link register save eliminated.
+ 145 0000 80B4     		push	{r7}
+ 146              	.LCFI8:
+ 147              		.cfi_def_cfa_offset 4
+ 148              		.cfi_offset 7, -4
+ 149 0002 00AF     		add	r7, sp, #0
+ 150              	.LCFI9:
+ 151              		.cfi_def_cfa_register 7
+ 152              	.L9:
+ 110:src/stm32f30x_it.c ****   /* Go to infinite loop when Usage Fault exception occurs */
+ 111:src/stm32f30x_it.c ****   while (1)
+ 112:src/stm32f30x_it.c ****   {
+ 113:src/stm32f30x_it.c ****   }
+ 153              		.loc 1 113 0 discriminator 1
+ 154 0004 FEE7     		b	.L9
+ 155              		.cfi_endproc
+ 156              	.LFE114:
+ 158 0006 00BF     		.section	.text.SVC_Handler,"ax",%progbits
+ 159              		.align	2
+ 160              		.global	SVC_Handler
+ 161              		.thumb
+ 162              		.thumb_func
+ 164              	SVC_Handler:
+ 165              	.LFB115:
+ 114:src/stm32f30x_it.c **** }
+ 115:src/stm32f30x_it.c **** 
+ 116:src/stm32f30x_it.c **** /**
+ 117:src/stm32f30x_it.c ****   * @brief  This function handles SVCall exception.
+ 118:src/stm32f30x_it.c ****   * @param  None
+ 119:src/stm32f30x_it.c ****   * @retval None
+ 120:src/stm32f30x_it.c ****   */
+ 121:src/stm32f30x_it.c **** void SVC_Handler(void)
+ 122:src/stm32f30x_it.c **** {
+ 166              		.loc 1 122 0
+ 167              		.cfi_startproc
+ 168              		@ args = 0, pretend = 0, frame = 0
+ 169              		@ frame_needed = 1, uses_anonymous_args = 0
+ 170              		@ link register save eliminated.
+ 171 0000 80B4     		push	{r7}
+ 172              	.LCFI10:
+ 173              		.cfi_def_cfa_offset 4
+ 174              		.cfi_offset 7, -4
+ 175 0002 00AF     		add	r7, sp, #0
+ 176              	.LCFI11:
+ 177              		.cfi_def_cfa_register 7
+ 123:src/stm32f30x_it.c **** }
+ 178              		.loc 1 123 0
+ 179 0004 BD46     		mov	sp, r7
+ 180 0006 80BC     		pop	{r7}
+ 181 0008 7047     		bx	lr
+ 182              		.cfi_endproc
+ 183              	.LFE115:
+ 185 000a 00BF     		.section	.text.DebugMon_Handler,"ax",%progbits
+ 186              		.align	2
+ 187              		.global	DebugMon_Handler
+ 188              		.thumb
+ 189              		.thumb_func
+ 191              	DebugMon_Handler:
+ 192              	.LFB116:
+ 124:src/stm32f30x_it.c **** 
+ 125:src/stm32f30x_it.c **** /**
+ 126:src/stm32f30x_it.c ****   * @brief  This function handles Debug Monitor exception.
+ 127:src/stm32f30x_it.c ****   * @param  None
+ 128:src/stm32f30x_it.c ****   * @retval None
+ 129:src/stm32f30x_it.c ****   */
+ 130:src/stm32f30x_it.c **** void DebugMon_Handler(void)
+ 131:src/stm32f30x_it.c **** {
+ 193              		.loc 1 131 0
+ 194              		.cfi_startproc
+ 195              		@ args = 0, pretend = 0, frame = 0
+ 196              		@ frame_needed = 1, uses_anonymous_args = 0
+ 197              		@ link register save eliminated.
+ 198 0000 80B4     		push	{r7}
+ 199              	.LCFI12:
+ 200              		.cfi_def_cfa_offset 4
+ 201              		.cfi_offset 7, -4
+ 202 0002 00AF     		add	r7, sp, #0
+ 203              	.LCFI13:
+ 204              		.cfi_def_cfa_register 7
+ 132:src/stm32f30x_it.c **** }
+ 205              		.loc 1 132 0
+ 206 0004 BD46     		mov	sp, r7
+ 207 0006 80BC     		pop	{r7}
+ 208 0008 7047     		bx	lr
+ 209              		.cfi_endproc
+ 210              	.LFE116:
+ 212 000a 00BF     		.section	.text.PendSV_Handler,"ax",%progbits
+ 213              		.align	2
+ 214              		.global	PendSV_Handler
+ 215              		.thumb
+ 216              		.thumb_func
+ 218              	PendSV_Handler:
+ 219              	.LFB117:
+ 133:src/stm32f30x_it.c **** 
+ 134:src/stm32f30x_it.c **** /**
+ 135:src/stm32f30x_it.c ****   * @brief  This function handles PendSVC exception.
+ 136:src/stm32f30x_it.c ****   * @param  None
+ 137:src/stm32f30x_it.c ****   * @retval None
+ 138:src/stm32f30x_it.c ****   */
+ 139:src/stm32f30x_it.c **** void PendSV_Handler(void)
+ 140:src/stm32f30x_it.c **** {
+ 220              		.loc 1 140 0
+ 221              		.cfi_startproc
+ 222              		@ args = 0, pretend = 0, frame = 0
+ 223              		@ frame_needed = 1, uses_anonymous_args = 0
+ 224              		@ link register save eliminated.
+ 225 0000 80B4     		push	{r7}
+ 226              	.LCFI14:
+ 227              		.cfi_def_cfa_offset 4
+ 228              		.cfi_offset 7, -4
+ 229 0002 00AF     		add	r7, sp, #0
+ 230              	.LCFI15:
+ 231              		.cfi_def_cfa_register 7
+ 141:src/stm32f30x_it.c **** }
+ 232              		.loc 1 141 0
+ 233 0004 BD46     		mov	sp, r7
+ 234 0006 80BC     		pop	{r7}
+ 235 0008 7047     		bx	lr
+ 236              		.cfi_endproc
+ 237              	.LFE117:
+ 239 000a 00BF     		.section	.text.SysTick_Handler,"ax",%progbits
+ 240              		.align	2
+ 241              		.global	SysTick_Handler
+ 242              		.thumb
+ 243              		.thumb_func
+ 245              	SysTick_Handler:
+ 246              	.LFB118:
+ 142:src/stm32f30x_it.c **** 
+ 143:src/stm32f30x_it.c **** /**
+ 144:src/stm32f30x_it.c ****   * @brief  This function handles SysTick Handler.
+ 145:src/stm32f30x_it.c ****   * @param  None
+ 146:src/stm32f30x_it.c ****   * @retval None
+ 147:src/stm32f30x_it.c ****   */
+ 148:src/stm32f30x_it.c **** void SysTick_Handler(void)
+ 149:src/stm32f30x_it.c **** {
+ 247              		.loc 1 149 0
+ 248              		.cfi_startproc
+ 249              		@ args = 0, pretend = 0, frame = 0
+ 250              		@ frame_needed = 1, uses_anonymous_args = 0
+ 251 0000 80B5     		push	{r7, lr}
+ 252              	.LCFI16:
+ 253              		.cfi_def_cfa_offset 8
+ 254              		.cfi_offset 7, -8
+ 255              		.cfi_offset 14, -4
+ 256 0002 00AF     		add	r7, sp, #0
+ 257              	.LCFI17:
+ 258              		.cfi_def_cfa_register 7
+ 150:src/stm32f30x_it.c ****   TimingDelay_Decrement();
+ 259              		.loc 1 150 0
+ 260 0004 FFF7FEFF 		bl	TimingDelay_Decrement
+ 151:src/stm32f30x_it.c ****   //USBConnectTimeOut--;
+ 152:src/stm32f30x_it.c ****   DataReady ++;
+ 261              		.loc 1 152 0
+ 262 0008 044B     		ldr	r3, .L14
+ 263 000a 1B78     		ldrb	r3, [r3, #0]
+ 264 000c DBB2     		uxtb	r3, r3
+ 265 000e 03F10103 		add	r3, r3, #1
+ 266 0012 DAB2     		uxtb	r2, r3
+ 267 0014 014B     		ldr	r3, .L14
+ 268 0016 1A70     		strb	r2, [r3, #0]
+ 153:src/stm32f30x_it.c **** }
+ 269              		.loc 1 153 0
+ 270 0018 80BD     		pop	{r7, pc}
+ 271              	.L15:
+ 272 001a 00BF     		.align	2
+ 273              	.L14:
+ 274 001c 00000000 		.word	DataReady
+ 275              		.cfi_endproc
+ 276              	.LFE118:
+ 278              		.section	.text.EXTI0_IRQHandler,"ax",%progbits
+ 279              		.align	2
+ 280              		.global	EXTI0_IRQHandler
+ 281              		.thumb
+ 282              		.thumb_func
+ 284              	EXTI0_IRQHandler:
+ 285              	.LFB119:
+ 154:src/stm32f30x_it.c **** 
+ 155:src/stm32f30x_it.c **** /******************************************************************************/
+ 156:src/stm32f30x_it.c **** /*                 STM32F30x Peripherals Interrupt Handlers                   */
+ 157:src/stm32f30x_it.c **** /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
+ 158:src/stm32f30x_it.c **** /*  available peripheral interrupt handler's name please refer to the startup */
+ 159:src/stm32f30x_it.c **** /*  file (startup_stm32f30x.s).                                            */
+ 160:src/stm32f30x_it.c **** /******************************************************************************/
+ 161:src/stm32f30x_it.c **** /**
+ 162:src/stm32f30x_it.c ****   * @brief  This function handles EXTI0_IRQ Handler.
+ 163:src/stm32f30x_it.c ****   * @param  None
+ 164:src/stm32f30x_it.c ****   * @retval None
+ 165:src/stm32f30x_it.c ****   */
+ 166:src/stm32f30x_it.c **** void EXTI0_IRQHandler(void)
+ 167:src/stm32f30x_it.c **** { 
+ 286              		.loc 1 167 0
+ 287              		.cfi_startproc
+ 288              		@ args = 0, pretend = 0, frame = 0
+ 289              		@ frame_needed = 1, uses_anonymous_args = 0
+ 290 0000 80B5     		push	{r7, lr}
+ 291              	.LCFI18:
+ 292              		.cfi_def_cfa_offset 8
+ 293              		.cfi_offset 7, -8
+ 294              		.cfi_offset 14, -4
+ 295 0002 00AF     		add	r7, sp, #0
+ 296              	.LCFI19:
+ 297              		.cfi_def_cfa_register 7
+ 168:src/stm32f30x_it.c ****   if ((EXTI_GetITStatus(USER_BUTTON_EXTI_LINE) == SET)&&(STM_EVAL_PBGetState(BUTTON_USER) != RESET)
+ 298              		.loc 1 168 0
+ 299 0004 4FF00000 		mov	r0, #0
+ 300 0008 FFF7FEFF 		bl	EXTI_GetITStatus
+ 301 000c 0346     		mov	r3, r0
+ 302 000e 012B     		cmp	r3, #1
+ 303 0010 40D1     		bne	.L16
+ 304              		.loc 1 168 0 is_stmt 0 discriminator 1
+ 305 0012 4FF00000 		mov	r0, #0
+ 306 0016 FFF7FEFF 		bl	STM_EVAL_PBGetState
+ 307 001a 0346     		mov	r3, r0
+ 308 001c 002B     		cmp	r3, #0
+ 309 001e 39D0     		beq	.L16
+ 169:src/stm32f30x_it.c ****   {
+ 170:src/stm32f30x_it.c ****     /* Delay */
+ 171:src/stm32f30x_it.c ****     for(i=0; i<0x7FFFF; i++);
+ 310              		.loc 1 171 0 is_stmt 1
+ 311 0020 1D4B     		ldr	r3, .L24
+ 312 0022 4FF00002 		mov	r2, #0
+ 313 0026 1A60     		str	r2, [r3, #0]
+ 314 0028 05E0     		b	.L18
+ 315              	.L19:
+ 316              		.loc 1 171 0 is_stmt 0 discriminator 2
+ 317 002a 1B4B     		ldr	r3, .L24
+ 318 002c 1B68     		ldr	r3, [r3, #0]
+ 319 002e 03F10102 		add	r2, r3, #1
+ 320 0032 194B     		ldr	r3, .L24
+ 321 0034 1A60     		str	r2, [r3, #0]
+ 322              	.L18:
+ 323              		.loc 1 171 0 discriminator 1
+ 324 0036 184B     		ldr	r3, .L24
+ 325 0038 1A68     		ldr	r2, [r3, #0]
+ 326 003a 184B     		ldr	r3, .L24+4
+ 327 003c 9A42     		cmp	r2, r3
+ 328 003e F4D9     		bls	.L19
+ 172:src/stm32f30x_it.c ****     
+ 173:src/stm32f30x_it.c ****     /* Wait for SEL button to be pressed  */
+ 174:src/stm32f30x_it.c ****     while(STM_EVAL_PBGetState(BUTTON_USER) != RESET); 
+ 329              		.loc 1 174 0 is_stmt 1
+ 330 0040 00BF     		nop
+ 331              	.L20:
+ 332              		.loc 1 174 0 is_stmt 0 discriminator 1
+ 333 0042 4FF00000 		mov	r0, #0
+ 334 0046 FFF7FEFF 		bl	STM_EVAL_PBGetState
+ 335 004a 0346     		mov	r3, r0
+ 336 004c 002B     		cmp	r3, #0
+ 337 004e F8D1     		bne	.L20
+ 175:src/stm32f30x_it.c ****     /* Delay */
+ 176:src/stm32f30x_it.c ****     for(i=0; i<0x7FFFF; i++);
+ 338              		.loc 1 176 0 is_stmt 1
+ 339 0050 114B     		ldr	r3, .L24
+ 340 0052 4FF00002 		mov	r2, #0
+ 341 0056 1A60     		str	r2, [r3, #0]
+ 342 0058 05E0     		b	.L21
+ 343              	.L22:
+ 344              		.loc 1 176 0 is_stmt 0 discriminator 2
+ 345 005a 0F4B     		ldr	r3, .L24
+ 346 005c 1B68     		ldr	r3, [r3, #0]
+ 347 005e 03F10102 		add	r2, r3, #1
+ 348 0062 0D4B     		ldr	r3, .L24
+ 349 0064 1A60     		str	r2, [r3, #0]
+ 350              	.L21:
+ 351              		.loc 1 176 0 discriminator 1
+ 352 0066 0C4B     		ldr	r3, .L24
+ 353 0068 1A68     		ldr	r2, [r3, #0]
+ 354 006a 0C4B     		ldr	r3, .L24+4
+ 355 006c 9A42     		cmp	r2, r3
+ 356 006e F4D9     		bls	.L22
+ 177:src/stm32f30x_it.c ****     UserButtonPressed++;
+ 357              		.loc 1 177 0 is_stmt 1
+ 358 0070 0B4B     		ldr	r3, .L24+8
+ 359 0072 1B68     		ldr	r3, [r3, #0]
+ 360 0074 03F10102 		add	r2, r3, #1
+ 361 0078 094B     		ldr	r3, .L24+8
+ 362 007a 1A60     		str	r2, [r3, #0]
+ 178:src/stm32f30x_it.c ****     
+ 179:src/stm32f30x_it.c ****     if (UserButtonPressed > 0x2)
+ 363              		.loc 1 179 0
+ 364 007c 084B     		ldr	r3, .L24+8
+ 365 007e 1B68     		ldr	r3, [r3, #0]
+ 366 0080 022B     		cmp	r3, #2
+ 367 0082 03D9     		bls	.L23
+ 180:src/stm32f30x_it.c ****     {
+ 181:src/stm32f30x_it.c ****       UserButtonPressed = 0x0;
+ 368              		.loc 1 181 0
+ 369 0084 064B     		ldr	r3, .L24+8
+ 370 0086 4FF00002 		mov	r2, #0
+ 371 008a 1A60     		str	r2, [r3, #0]
+ 372              	.L23:
+ 182:src/stm32f30x_it.c ****     }
+ 183:src/stm32f30x_it.c ****     
+ 184:src/stm32f30x_it.c ****     /* Clear the EXTI line pending bit */
+ 185:src/stm32f30x_it.c ****     EXTI_ClearITPendingBit(USER_BUTTON_EXTI_LINE);
+ 373              		.loc 1 185 0
+ 374 008c 4FF00000 		mov	r0, #0
+ 375 0090 FFF7FEFF 		bl	EXTI_ClearITPendingBit
+ 376              	.L16:
+ 186:src/stm32f30x_it.c ****   }
+ 187:src/stm32f30x_it.c **** }
+ 377              		.loc 1 187 0
+ 378 0094 80BD     		pop	{r7, pc}
+ 379              	.L25:
+ 380 0096 00BF     		.align	2
+ 381              	.L24:
+ 382 0098 00000000 		.word	i
+ 383 009c FEFF0700 		.word	524286
+ 384 00a0 00000000 		.word	UserButtonPressed
+ 385              		.cfi_endproc
+ 386              	.LFE119:
+ 388              		.text
+ 389              	.Letext0:
+ 390              		.file 2 "/home/chaitannya/CodeSourcery/bin/../lib/gcc/arm-none-eabi/4.7.3/../../../../arm-none-eab
+ 391              		.file 3 "inc/stm32f30x.h"
+ 392              		.file 4 "src/stm32f3_discovery.h"
+ 393              		.file 5 "inc/core_cm4.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 stm32f30x_it.c
+     /tmp/ccY1o9E8.s:24     .bss.i:00000000 i
+     /tmp/ccY1o9E8.s:21     .bss.i:00000000 $d
+     /tmp/ccY1o9E8.s:27     .text.NMI_Handler:00000000 $t
+     /tmp/ccY1o9E8.s:32     .text.NMI_Handler:00000000 NMI_Handler
+     /tmp/ccY1o9E8.s:55     .text.HardFault_Handler:00000000 $t
+     /tmp/ccY1o9E8.s:60     .text.HardFault_Handler:00000000 HardFault_Handler
+     /tmp/ccY1o9E8.s:81     .text.MemManage_Handler:00000000 $t
+     /tmp/ccY1o9E8.s:86     .text.MemManage_Handler:00000000 MemManage_Handler
+     /tmp/ccY1o9E8.s:107    .text.BusFault_Handler:00000000 $t
+     /tmp/ccY1o9E8.s:112    .text.BusFault_Handler:00000000 BusFault_Handler
+     /tmp/ccY1o9E8.s:133    .text.UsageFault_Handler:00000000 $t
+     /tmp/ccY1o9E8.s:138    .text.UsageFault_Handler:00000000 UsageFault_Handler
+     /tmp/ccY1o9E8.s:159    .text.SVC_Handler:00000000 $t
+     /tmp/ccY1o9E8.s:164    .text.SVC_Handler:00000000 SVC_Handler
+     /tmp/ccY1o9E8.s:186    .text.DebugMon_Handler:00000000 $t
+     /tmp/ccY1o9E8.s:191    .text.DebugMon_Handler:00000000 DebugMon_Handler
+     /tmp/ccY1o9E8.s:213    .text.PendSV_Handler:00000000 $t
+     /tmp/ccY1o9E8.s:218    .text.PendSV_Handler:00000000 PendSV_Handler
+     /tmp/ccY1o9E8.s:240    .text.SysTick_Handler:00000000 $t
+     /tmp/ccY1o9E8.s:245    .text.SysTick_Handler:00000000 SysTick_Handler
+     /tmp/ccY1o9E8.s:274    .text.SysTick_Handler:0000001c $d
+     /tmp/ccY1o9E8.s:279    .text.EXTI0_IRQHandler:00000000 $t
+     /tmp/ccY1o9E8.s:284    .text.EXTI0_IRQHandler:00000000 EXTI0_IRQHandler
+     /tmp/ccY1o9E8.s:382    .text.EXTI0_IRQHandler:00000098 $d
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+TimingDelay_Decrement
+DataReady
+EXTI_GetITStatus
+STM_EVAL_PBGetState
+EXTI_ClearITPendingBit
+UserButtonPressed

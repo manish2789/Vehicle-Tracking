@@ -1,0 +1,1416 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"stm32f30x_gpio.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.GPIO_DeInit,"ax",%progbits
+  20              		.align	2
+  21              		.global	GPIO_DeInit
+  22              		.thumb
+  23              		.thumb_func
+  25              	GPIO_DeInit:
+  26              	.LFB110:
+  27              		.file 1 "libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c"
+   1:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /**
+   2:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   ******************************************************************************
+   3:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @file    stm32f30x_gpio.c
+   4:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @author  MCD Application Team
+   5:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @version V1.0.1
+   6:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @date    23-October-2012
+   7:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @brief   This file provides firmware functions to manage the following 
+   8:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *          functionalities of the GPIO peripheral:
+   9:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *           + Initialization and Configuration functions
+  10:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *           + GPIO Read and Write functions
+  11:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *           + GPIO Alternate functions configuration functions
+  12:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *
+  13:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *  @verbatim
+  14:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+  15:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+  16:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****  ===============================================================================
+  17:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****                       ##### How to use this driver #####
+  18:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****  ===============================================================================
+  19:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     [..]
+  20:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     (#) Enable the GPIO AHB clock using RCC_AHBPeriphClockCmd()
+  21:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     (#) Configure the GPIO pin(s) using GPIO_Init()
+  22:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         Four possible configuration are available for each pin:
+  23:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         (++) Input: Floating, Pull-up, Pull-down.
+  24:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         (++) Output: Push-Pull (Pull-up, Pull-down or no Pull),
+  25:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****                      Open Drain (Pull-up, Pull-down or no Pull).
+  26:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****              In output mode, the speed is configurable: Low, Medium, Fast or High.
+  27:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         (++) Alternate Function: Push-Pull (Pull-up, Pull-down or no Pull), 
+  28:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****                                  Open Drain (Pull-up, Pull-down or no Pull).
+  29:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         (++) Analog: required mode when a pin is to be used as ADC channel,
+  30:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****              DAC output or comparator input.
+  31:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     (#) Peripherals alternate function:
+  32:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         (++) For ADC, DAC and comparators, configure the desired pin in 
+  33:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****              analog mode using GPIO_InitStruct->GPIO_Mode = GPIO_Mode_AN
+  34:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         (++) For other peripherals (TIM, USART...):
+  35:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****              (+++) Connect the pin to the desired peripherals' Alternate 
+  36:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****                    Function (AF) using GPIO_PinAFConfig() function.
+  37:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****              (+++) Configure the desired pin in alternate function mode using
+  38:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****                    GPIO_InitStruct->GPIO_Mode = GPIO_Mode_AF
+  39:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****              (+++) Select the type, pull-up/pull-down and output speed via 
+  40:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****                    GPIO_PuPd, GPIO_OType and GPIO_Speed members.
+  41:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****              (+++) Call GPIO_Init() function.
+  42:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     (#) To get the level of a pin configured in input mode use GPIO_ReadInputDataBit()
+  43:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     (#) To set/reset the level of a pin configured in output mode use
+  44:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         GPIO_SetBits()/GPIO_ResetBits()
+  45:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     (#) During and just after reset, the alternate functions are not active 
+  46:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         and the GPIO pins are configured in input floating mode (except JTAG pins).
+  47:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     (#) The LSE oscillator pins OSC32_IN and OSC32_OUT can be used as 
+  48:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         general-purpose (PC14 and PC15, respectively) when the LSE
+  49:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         oscillator is off. The LSE has priority over the GPIO function.
+  50:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     (#) The HSE oscillator pins OSC_IN/OSC_OUT can be used as general-purpose 
+  51:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         (PF0 and PF1 respectively) when the HSE oscillator is off. The HSE has 
+  52:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         the priority over the GPIO function.  
+  53:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+  54:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   @endverbatim
+  55:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+  56:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   ******************************************************************************
+  57:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @attention
+  58:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *
+  59:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * <h2><center>&copy; COPYRIGHT 2012 STMicroelectronics</center></h2>
+  60:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *
+  61:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+  62:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * You may not use this file except in compliance with the License.
+  63:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * You may obtain a copy of the License at:
+  64:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *
+  65:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *        http://www.st.com/software_license_agreement_liberty_v2
+  66:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *
+  67:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * Unless required by applicable law or agreed to in writing, software 
+  68:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * distributed under the License is distributed on an "AS IS" BASIS, 
+  69:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  70:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * See the License for the specific language governing permissions and
+  71:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * limitations under the License.
+  72:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *
+  73:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   ******************************************************************************
+  74:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+  75:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+  76:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /* Includes ------------------------------------------------------------------*/
+  77:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** #include "stm32f30x_gpio.h"
+  78:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** #include "stm32f30x_rcc.h"
+  79:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+  80:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /** @addtogroup STM32F30x_StdPeriph_Driver
+  81:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @{
+  82:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+  83:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+  84:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /** @defgroup GPIO 
+  85:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @brief GPIO driver modules
+  86:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @{
+  87:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+  88:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+  89:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+  90:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /* Private typedef -----------------------------------------------------------*/
+  91:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /* Private define ------------------------------------------------------------*/
+  92:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+  93:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+  94:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /* Private macro -------------------------------------------------------------*/
+  95:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /* Private variables ---------------------------------------------------------*/
+  96:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /* Private function prototypes -----------------------------------------------*/
+  97:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /* Private functions ---------------------------------------------------------*/
+  98:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+  99:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /** @defgroup GPIO_Private_Functions 
+ 100:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @{
+ 101:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 102:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 103:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /** @defgroup GPIO_Group1 Initialization and Configuration
+ 104:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****  *  @brief   Initialization and Configuration
+ 105:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****  *
+ 106:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** @verbatim
+ 107:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****  ===============================================================================
+ 108:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****             ##### Initialization and Configuration #####
+ 109:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****  ===============================================================================
+ 110:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 111:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** @endverbatim
+ 112:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @{
+ 113:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 114:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   
+ 115:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /**
+ 116:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @brief  Deinitializes the GPIOx peripheral registers to their default reset 
+ 117:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         values.
+ 118:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIOx: where x can be (A, B, C, D, E or F) to select the GPIO peripheral.
+ 119:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @retval None
+ 120:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 121:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** void GPIO_DeInit(GPIO_TypeDef* GPIOx)
+ 122:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** {
+  28              		.loc 1 122 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 8
+  31              		@ frame_needed = 1, uses_anonymous_args = 0
+  32 0000 80B5     		push	{r7, lr}
+  33              	.LCFI0:
+  34              		.cfi_def_cfa_offset 8
+  35              		.cfi_offset 7, -8
+  36              		.cfi_offset 14, -4
+  37 0002 82B0     		sub	sp, sp, #8
+  38              	.LCFI1:
+  39              		.cfi_def_cfa_offset 16
+  40 0004 00AF     		add	r7, sp, #0
+  41              	.LCFI2:
+  42              		.cfi_def_cfa_register 7
+  43 0006 7860     		str	r0, [r7, #4]
+ 123:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Check the parameters */
+ 124:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+ 125:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 126:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   if(GPIOx == GPIOA)
+  44              		.loc 1 126 0
+  45 0008 7B68     		ldr	r3, [r7, #4]
+  46 000a B3F1904F 		cmp	r3, #1207959552
+  47 000e 0CD1     		bne	.L2
+ 127:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   {
+ 128:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     RCC_AHBPeriphResetCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+  48              		.loc 1 128 0
+  49 0010 4FF40030 		mov	r0, #131072
+  50 0014 4FF00101 		mov	r1, #1
+  51 0018 FFF7FEFF 		bl	RCC_AHBPeriphResetCmd
+ 129:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     RCC_AHBPeriphResetCmd(RCC_AHBPeriph_GPIOA, DISABLE);
+  52              		.loc 1 129 0
+  53 001c 4FF40030 		mov	r0, #131072
+  54 0020 4FF00001 		mov	r1, #0
+  55 0024 FFF7FEFF 		bl	RCC_AHBPeriphResetCmd
+  56 0028 53E0     		b	.L1
+  57              	.L2:
+ 130:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   }
+ 131:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   else if(GPIOx == GPIOB)
+  58              		.loc 1 131 0
+  59 002a 7A68     		ldr	r2, [r7, #4]
+  60 002c 2B4B     		ldr	r3, .L8
+  61 002e 9A42     		cmp	r2, r3
+  62 0030 0CD1     		bne	.L4
+ 132:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   {
+ 133:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     RCC_AHBPeriphResetCmd(RCC_AHBPeriph_GPIOB, ENABLE);
+  63              		.loc 1 133 0
+  64 0032 4FF48020 		mov	r0, #262144
+  65 0036 4FF00101 		mov	r1, #1
+  66 003a FFF7FEFF 		bl	RCC_AHBPeriphResetCmd
+ 134:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     RCC_AHBPeriphResetCmd(RCC_AHBPeriph_GPIOB, DISABLE);
+  67              		.loc 1 134 0
+  68 003e 4FF48020 		mov	r0, #262144
+  69 0042 4FF00001 		mov	r1, #0
+  70 0046 FFF7FEFF 		bl	RCC_AHBPeriphResetCmd
+  71 004a 42E0     		b	.L1
+  72              	.L4:
+ 135:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   }
+ 136:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   else if(GPIOx == GPIOC)
+  73              		.loc 1 136 0
+  74 004c 7A68     		ldr	r2, [r7, #4]
+  75 004e 244B     		ldr	r3, .L8+4
+  76 0050 9A42     		cmp	r2, r3
+  77 0052 0CD1     		bne	.L5
+ 137:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   {
+ 138:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     RCC_AHBPeriphResetCmd(RCC_AHBPeriph_GPIOC, ENABLE);
+  78              		.loc 1 138 0
+  79 0054 4FF40020 		mov	r0, #524288
+  80 0058 4FF00101 		mov	r1, #1
+  81 005c FFF7FEFF 		bl	RCC_AHBPeriphResetCmd
+ 139:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     RCC_AHBPeriphResetCmd(RCC_AHBPeriph_GPIOC, DISABLE);
+  82              		.loc 1 139 0
+  83 0060 4FF40020 		mov	r0, #524288
+  84 0064 4FF00001 		mov	r1, #0
+  85 0068 FFF7FEFF 		bl	RCC_AHBPeriphResetCmd
+  86 006c 31E0     		b	.L1
+  87              	.L5:
+ 140:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   }
+ 141:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   else if(GPIOx == GPIOD)
+  88              		.loc 1 141 0
+  89 006e 7A68     		ldr	r2, [r7, #4]
+  90 0070 1C4B     		ldr	r3, .L8+8
+  91 0072 9A42     		cmp	r2, r3
+  92 0074 0CD1     		bne	.L6
+ 142:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   {
+ 143:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     RCC_AHBPeriphResetCmd(RCC_AHBPeriph_GPIOD, ENABLE);
+  93              		.loc 1 143 0
+  94 0076 4FF48010 		mov	r0, #1048576
+  95 007a 4FF00101 		mov	r1, #1
+  96 007e FFF7FEFF 		bl	RCC_AHBPeriphResetCmd
+ 144:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     RCC_AHBPeriphResetCmd(RCC_AHBPeriph_GPIOD, DISABLE);
+  97              		.loc 1 144 0
+  98 0082 4FF48010 		mov	r0, #1048576
+  99 0086 4FF00001 		mov	r1, #0
+ 100 008a FFF7FEFF 		bl	RCC_AHBPeriphResetCmd
+ 101 008e 20E0     		b	.L1
+ 102              	.L6:
+ 145:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   }
+ 146:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   else if(GPIOx == GPIOE)
+ 103              		.loc 1 146 0
+ 104 0090 7A68     		ldr	r2, [r7, #4]
+ 105 0092 154B     		ldr	r3, .L8+12
+ 106 0094 9A42     		cmp	r2, r3
+ 107 0096 0CD1     		bne	.L7
+ 147:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   {
+ 148:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     RCC_AHBPeriphResetCmd(RCC_AHBPeriph_GPIOE, ENABLE);
+ 108              		.loc 1 148 0
+ 109 0098 4FF40010 		mov	r0, #2097152
+ 110 009c 4FF00101 		mov	r1, #1
+ 111 00a0 FFF7FEFF 		bl	RCC_AHBPeriphResetCmd
+ 149:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     RCC_AHBPeriphResetCmd(RCC_AHBPeriph_GPIOE, DISABLE);
+ 112              		.loc 1 149 0
+ 113 00a4 4FF40010 		mov	r0, #2097152
+ 114 00a8 4FF00001 		mov	r1, #0
+ 115 00ac FFF7FEFF 		bl	RCC_AHBPeriphResetCmd
+ 116 00b0 0FE0     		b	.L1
+ 117              	.L7:
+ 150:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   }
+ 151:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   else
+ 152:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   {
+ 153:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     if(GPIOx == GPIOF)
+ 118              		.loc 1 153 0
+ 119 00b2 7A68     		ldr	r2, [r7, #4]
+ 120 00b4 0D4B     		ldr	r3, .L8+16
+ 121 00b6 9A42     		cmp	r2, r3
+ 122 00b8 0BD1     		bne	.L1
+ 154:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     {
+ 155:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****       RCC_AHBPeriphResetCmd(RCC_AHBPeriph_GPIOF, ENABLE);
+ 123              		.loc 1 155 0
+ 124 00ba 4FF48000 		mov	r0, #4194304
+ 125 00be 4FF00101 		mov	r1, #1
+ 126 00c2 FFF7FEFF 		bl	RCC_AHBPeriphResetCmd
+ 156:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****       RCC_AHBPeriphResetCmd(RCC_AHBPeriph_GPIOF, DISABLE);
+ 127              		.loc 1 156 0
+ 128 00c6 4FF48000 		mov	r0, #4194304
+ 129 00ca 4FF00001 		mov	r1, #0
+ 130 00ce FFF7FEFF 		bl	RCC_AHBPeriphResetCmd
+ 131              	.L1:
+ 157:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     }
+ 158:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   }
+ 159:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** }
+ 132              		.loc 1 159 0
+ 133 00d2 07F10807 		add	r7, r7, #8
+ 134 00d6 BD46     		mov	sp, r7
+ 135 00d8 80BD     		pop	{r7, pc}
+ 136              	.L9:
+ 137 00da 00BF     		.align	2
+ 138              	.L8:
+ 139 00dc 00040048 		.word	1207960576
+ 140 00e0 00080048 		.word	1207961600
+ 141 00e4 000C0048 		.word	1207962624
+ 142 00e8 00100048 		.word	1207963648
+ 143 00ec 00140048 		.word	1207964672
+ 144              		.cfi_endproc
+ 145              	.LFE110:
+ 147              		.section	.text.GPIO_Init,"ax",%progbits
+ 148              		.align	2
+ 149              		.global	GPIO_Init
+ 150              		.thumb
+ 151              		.thumb_func
+ 153              	GPIO_Init:
+ 154              	.LFB111:
+ 160:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 161:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /**
+ 162:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @brief  Initializes the GPIOx peripheral according to the specified 
+ 163:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         parameters in the GPIO_InitStruct.
+ 164:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIOx: where x can be (A, B, C, D, E or F) to select the GPIO peripheral.
+ 165:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIO_InitStruct: pointer to a GPIO_InitTypeDef structure that 
+ 166:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         contains the configuration information for the specified GPIO
+ 167:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         peripheral.
+ 168:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @note   GPIO_Pin: selects the pin to be configured:
+ 169:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         GPIO_Pin_0->GPIO_Pin_15 for GPIOA, GPIOB, GPIOC, GPIOD and GPIOE;
+ 170:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         GPIO_Pin_0->GPIO_Pin_2, GPIO_Pin_4, GPIO_Pin_6, GPIO_Pin_9 
+ 171:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *                       and GPIO_Pin_10 for GPIOF.
+ 172:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @retval None
+ 173:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 174:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** void GPIO_Init(GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitStruct)
+ 175:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** { 
+ 155              		.loc 1 175 0
+ 156              		.cfi_startproc
+ 157              		@ args = 0, pretend = 0, frame = 24
+ 158              		@ frame_needed = 1, uses_anonymous_args = 0
+ 159              		@ link register save eliminated.
+ 160 0000 80B4     		push	{r7}
+ 161              	.LCFI3:
+ 162              		.cfi_def_cfa_offset 4
+ 163              		.cfi_offset 7, -4
+ 164 0002 87B0     		sub	sp, sp, #28
+ 165              	.LCFI4:
+ 166              		.cfi_def_cfa_offset 32
+ 167 0004 00AF     		add	r7, sp, #0
+ 168              	.LCFI5:
+ 169              		.cfi_def_cfa_register 7
+ 170 0006 7860     		str	r0, [r7, #4]
+ 171 0008 3960     		str	r1, [r7, #0]
+ 176:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   uint32_t pinpos = 0x00, pos = 0x00 , currentpin = 0x00;
+ 172              		.loc 1 176 0
+ 173 000a 4FF00003 		mov	r3, #0
+ 174 000e 7B61     		str	r3, [r7, #20]
+ 175 0010 4FF00003 		mov	r3, #0
+ 176 0014 3B61     		str	r3, [r7, #16]
+ 177 0016 4FF00003 		mov	r3, #0
+ 178 001a FB60     		str	r3, [r7, #12]
+ 177:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 178:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Check the parameters */
+ 179:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+ 180:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_PIN(GPIO_InitStruct->GPIO_Pin));
+ 181:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_MODE(GPIO_InitStruct->GPIO_Mode));
+ 182:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_PUPD(GPIO_InitStruct->GPIO_PuPd));
+ 183:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 184:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /*-------------------------- Configure the port pins -----------------------*/
+ 185:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /*-- GPIO Mode Configuration --*/
+ 186:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   for (pinpos = 0x00; pinpos < 0x10; pinpos++)
+ 179              		.loc 1 186 0
+ 180 001c 4FF00003 		mov	r3, #0
+ 181 0020 7B61     		str	r3, [r7, #20]
+ 182 0022 8CE0     		b	.L11
+ 183              	.L15:
+ 187:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   {
+ 188:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     pos = ((uint32_t)0x01) << pinpos;
+ 184              		.loc 1 188 0
+ 185 0024 7B69     		ldr	r3, [r7, #20]
+ 186 0026 4FF00102 		mov	r2, #1
+ 187 002a 02FA03F3 		lsl	r3, r2, r3
+ 188 002e 3B61     		str	r3, [r7, #16]
+ 189:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 190:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     /* Get the port pins position */
+ 191:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     currentpin = (GPIO_InitStruct->GPIO_Pin) & pos;
+ 189              		.loc 1 191 0
+ 190 0030 3B68     		ldr	r3, [r7, #0]
+ 191 0032 1A68     		ldr	r2, [r3, #0]
+ 192 0034 3B69     		ldr	r3, [r7, #16]
+ 193 0036 1340     		ands	r3, r3, r2
+ 194 0038 FB60     		str	r3, [r7, #12]
+ 192:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 193:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     if (currentpin == pos)
+ 195              		.loc 1 193 0
+ 196 003a FA68     		ldr	r2, [r7, #12]
+ 197 003c 3B69     		ldr	r3, [r7, #16]
+ 198 003e 9A42     		cmp	r2, r3
+ 199 0040 79D1     		bne	.L12
+ 194:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     {
+ 195:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****       if ((GPIO_InitStruct->GPIO_Mode == GPIO_Mode_OUT) || (GPIO_InitStruct->GPIO_Mode == GPIO_Mode
+ 200              		.loc 1 195 0
+ 201 0042 3B68     		ldr	r3, [r7, #0]
+ 202 0044 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 203 0046 012B     		cmp	r3, #1
+ 204 0048 03D0     		beq	.L13
+ 205              		.loc 1 195 0 is_stmt 0 discriminator 1
+ 206 004a 3B68     		ldr	r3, [r7, #0]
+ 207 004c 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 208 004e 022B     		cmp	r3, #2
+ 209 0050 3AD1     		bne	.L14
+ 210              	.L13:
+ 196:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****       {
+ 197:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         /* Check Speed mode parameters */
+ 198:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****       //  assert_param(IS_GPIO_SPEED(GPIO_InitStruct->GPIO_Speed));
+ 199:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 200:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         /* Speed mode configuration */
+ 201:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         GPIOx->OSPEEDR &= ~(GPIO_OSPEEDER_OSPEEDR0 << (pinpos * 2));
+ 211              		.loc 1 201 0 is_stmt 1
+ 212 0052 7B68     		ldr	r3, [r7, #4]
+ 213 0054 9A68     		ldr	r2, [r3, #8]
+ 214 0056 7B69     		ldr	r3, [r7, #20]
+ 215 0058 4FEA4303 		lsl	r3, r3, #1
+ 216 005c 4FF00301 		mov	r1, #3
+ 217 0060 01FA03F3 		lsl	r3, r1, r3
+ 218 0064 6FEA0303 		mvn	r3, r3
+ 219 0068 1A40     		ands	r2, r2, r3
+ 220 006a 7B68     		ldr	r3, [r7, #4]
+ 221 006c 9A60     		str	r2, [r3, #8]
+ 202:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         GPIOx->OSPEEDR |= ((uint32_t)(GPIO_InitStruct->GPIO_Speed) << (pinpos * 2));
+ 222              		.loc 1 202 0
+ 223 006e 7B68     		ldr	r3, [r7, #4]
+ 224 0070 9A68     		ldr	r2, [r3, #8]
+ 225 0072 3B68     		ldr	r3, [r7, #0]
+ 226 0074 5B79     		ldrb	r3, [r3, #5]	@ zero_extendqisi2
+ 227 0076 1946     		mov	r1, r3
+ 228 0078 7B69     		ldr	r3, [r7, #20]
+ 229 007a 4FEA4303 		lsl	r3, r3, #1
+ 230 007e 01FA03F3 		lsl	r3, r1, r3
+ 231 0082 1A43     		orrs	r2, r2, r3
+ 232 0084 7B68     		ldr	r3, [r7, #4]
+ 233 0086 9A60     		str	r2, [r3, #8]
+ 203:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 204:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         /* Check Output mode parameters */
+ 205:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     //    assert_param(IS_GPIO_OTYPE(GPIO_InitStruct->GPIO_OType));
+ 206:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 207:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         /* Output mode configuration */
+ 208:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         GPIOx->OTYPER &= ~((GPIO_OTYPER_OT_0) << ((uint16_t)pinpos));
+ 234              		.loc 1 208 0
+ 235 0088 7B68     		ldr	r3, [r7, #4]
+ 236 008a 9B88     		ldrh	r3, [r3, #4]	@ movhi
+ 237 008c 9AB2     		uxth	r2, r3
+ 238 008e 7B69     		ldr	r3, [r7, #20]
+ 239 0090 9BB2     		uxth	r3, r3
+ 240 0092 4FF00101 		mov	r1, #1
+ 241 0096 01FA03F3 		lsl	r3, r1, r3
+ 242 009a 9BB2     		uxth	r3, r3
+ 243 009c 6FEA0303 		mvn	r3, r3
+ 244 00a0 9BB2     		uxth	r3, r3
+ 245 00a2 1340     		ands	r3, r3, r2
+ 246 00a4 9AB2     		uxth	r2, r3
+ 247 00a6 7B68     		ldr	r3, [r7, #4]
+ 248 00a8 9A80     		strh	r2, [r3, #4]	@ movhi
+ 209:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****         GPIOx->OTYPER |= (uint16_t)(((uint16_t)GPIO_InitStruct->GPIO_OType) << ((uint16_t)pinpos));
+ 249              		.loc 1 209 0
+ 250 00aa 7B68     		ldr	r3, [r7, #4]
+ 251 00ac 9B88     		ldrh	r3, [r3, #4]	@ movhi
+ 252 00ae 9AB2     		uxth	r2, r3
+ 253 00b0 3B68     		ldr	r3, [r7, #0]
+ 254 00b2 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 255 00b4 1946     		mov	r1, r3
+ 256 00b6 7B69     		ldr	r3, [r7, #20]
+ 257 00b8 9BB2     		uxth	r3, r3
+ 258 00ba 01FA03F3 		lsl	r3, r1, r3
+ 259 00be 9BB2     		uxth	r3, r3
+ 260 00c0 1343     		orrs	r3, r3, r2
+ 261 00c2 9AB2     		uxth	r2, r3
+ 262 00c4 7B68     		ldr	r3, [r7, #4]
+ 263 00c6 9A80     		strh	r2, [r3, #4]	@ movhi
+ 264              	.L14:
+ 210:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****       }
+ 211:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****       
+ 212:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****       GPIOx->MODER  &= ~(GPIO_MODER_MODER0 << (pinpos * 2));
+ 265              		.loc 1 212 0
+ 266 00c8 7B68     		ldr	r3, [r7, #4]
+ 267 00ca 1A68     		ldr	r2, [r3, #0]
+ 268 00cc 7B69     		ldr	r3, [r7, #20]
+ 269 00ce 4FEA4303 		lsl	r3, r3, #1
+ 270 00d2 4FF00301 		mov	r1, #3
+ 271 00d6 01FA03F3 		lsl	r3, r1, r3
+ 272 00da 6FEA0303 		mvn	r3, r3
+ 273 00de 1A40     		ands	r2, r2, r3
+ 274 00e0 7B68     		ldr	r3, [r7, #4]
+ 275 00e2 1A60     		str	r2, [r3, #0]
+ 213:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 214:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****       GPIOx->MODER |= (((uint32_t)GPIO_InitStruct->GPIO_Mode) << (pinpos * 2));
+ 276              		.loc 1 214 0
+ 277 00e4 7B68     		ldr	r3, [r7, #4]
+ 278 00e6 1A68     		ldr	r2, [r3, #0]
+ 279 00e8 3B68     		ldr	r3, [r7, #0]
+ 280 00ea 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 281 00ec 1946     		mov	r1, r3
+ 282 00ee 7B69     		ldr	r3, [r7, #20]
+ 283 00f0 4FEA4303 		lsl	r3, r3, #1
+ 284 00f4 01FA03F3 		lsl	r3, r1, r3
+ 285 00f8 1A43     		orrs	r2, r2, r3
+ 286 00fa 7B68     		ldr	r3, [r7, #4]
+ 287 00fc 1A60     		str	r2, [r3, #0]
+ 215:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 216:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****       /* Pull-up Pull down resistor configuration */
+ 217:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****       GPIOx->PUPDR &= ~(GPIO_PUPDR_PUPDR0 << ((uint16_t)pinpos * 2));
+ 288              		.loc 1 217 0
+ 289 00fe 7B68     		ldr	r3, [r7, #4]
+ 290 0100 DA68     		ldr	r2, [r3, #12]
+ 291 0102 7B69     		ldr	r3, [r7, #20]
+ 292 0104 9BB2     		uxth	r3, r3
+ 293 0106 4FEA4303 		lsl	r3, r3, #1
+ 294 010a 4FF00301 		mov	r1, #3
+ 295 010e 01FA03F3 		lsl	r3, r1, r3
+ 296 0112 6FEA0303 		mvn	r3, r3
+ 297 0116 1A40     		ands	r2, r2, r3
+ 298 0118 7B68     		ldr	r3, [r7, #4]
+ 299 011a DA60     		str	r2, [r3, #12]
+ 218:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****       GPIOx->PUPDR |= (((uint32_t)GPIO_InitStruct->GPIO_PuPd) << (pinpos * 2));
+ 300              		.loc 1 218 0
+ 301 011c 7B68     		ldr	r3, [r7, #4]
+ 302 011e DA68     		ldr	r2, [r3, #12]
+ 303 0120 3B68     		ldr	r3, [r7, #0]
+ 304 0122 DB79     		ldrb	r3, [r3, #7]	@ zero_extendqisi2
+ 305 0124 1946     		mov	r1, r3
+ 306 0126 7B69     		ldr	r3, [r7, #20]
+ 307 0128 4FEA4303 		lsl	r3, r3, #1
+ 308 012c 01FA03F3 		lsl	r3, r1, r3
+ 309 0130 1A43     		orrs	r2, r2, r3
+ 310 0132 7B68     		ldr	r3, [r7, #4]
+ 311 0134 DA60     		str	r2, [r3, #12]
+ 312              	.L12:
+ 186:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   for (pinpos = 0x00; pinpos < 0x10; pinpos++)
+ 313              		.loc 1 186 0
+ 314 0136 7B69     		ldr	r3, [r7, #20]
+ 315 0138 03F10103 		add	r3, r3, #1
+ 316 013c 7B61     		str	r3, [r7, #20]
+ 317              	.L11:
+ 186:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   for (pinpos = 0x00; pinpos < 0x10; pinpos++)
+ 318              		.loc 1 186 0 is_stmt 0 discriminator 1
+ 319 013e 7B69     		ldr	r3, [r7, #20]
+ 320 0140 0F2B     		cmp	r3, #15
+ 321 0142 7FF66FAF 		bls	.L15
+ 219:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     }
+ 220:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   }
+ 221:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** }
+ 322              		.loc 1 221 0 is_stmt 1
+ 323 0146 07F11C07 		add	r7, r7, #28
+ 324 014a BD46     		mov	sp, r7
+ 325 014c 80BC     		pop	{r7}
+ 326 014e 7047     		bx	lr
+ 327              		.cfi_endproc
+ 328              	.LFE111:
+ 330              		.section	.text.GPIO_StructInit,"ax",%progbits
+ 331              		.align	2
+ 332              		.global	GPIO_StructInit
+ 333              		.thumb
+ 334              		.thumb_func
+ 336              	GPIO_StructInit:
+ 337              	.LFB112:
+ 222:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 223:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /**
+ 224:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @brief  Fills each GPIO_InitStruct member with its default value.
+ 225:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIO_InitStruct: pointer to a GPIO_InitTypeDef structure which will 
+ 226:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         be initialized.
+ 227:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @retval None
+ 228:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 229:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** void GPIO_StructInit(GPIO_InitTypeDef* GPIO_InitStruct)
+ 230:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** {
+ 338              		.loc 1 230 0
+ 339              		.cfi_startproc
+ 340              		@ args = 0, pretend = 0, frame = 8
+ 341              		@ frame_needed = 1, uses_anonymous_args = 0
+ 342              		@ link register save eliminated.
+ 343 0000 80B4     		push	{r7}
+ 344              	.LCFI6:
+ 345              		.cfi_def_cfa_offset 4
+ 346              		.cfi_offset 7, -4
+ 347 0002 83B0     		sub	sp, sp, #12
+ 348              	.LCFI7:
+ 349              		.cfi_def_cfa_offset 16
+ 350 0004 00AF     		add	r7, sp, #0
+ 351              	.LCFI8:
+ 352              		.cfi_def_cfa_register 7
+ 353 0006 7860     		str	r0, [r7, #4]
+ 231:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Reset GPIO init structure parameters values */
+ 232:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   GPIO_InitStruct->GPIO_Pin  = GPIO_Pin_All;
+ 354              		.loc 1 232 0
+ 355 0008 7B68     		ldr	r3, [r7, #4]
+ 356 000a 4FF6FF72 		movw	r2, #65535
+ 357 000e 1A60     		str	r2, [r3, #0]
+ 233:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   GPIO_InitStruct->GPIO_Mode = GPIO_Mode_IN;
+ 358              		.loc 1 233 0
+ 359 0010 7B68     		ldr	r3, [r7, #4]
+ 360 0012 4FF00002 		mov	r2, #0
+ 361 0016 1A71     		strb	r2, [r3, #4]
+ 234:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   GPIO_InitStruct->GPIO_Speed = GPIO_Speed_2MHz;
+ 362              		.loc 1 234 0
+ 363 0018 7B68     		ldr	r3, [r7, #4]
+ 364 001a 4FF00202 		mov	r2, #2
+ 365 001e 5A71     		strb	r2, [r3, #5]
+ 235:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   GPIO_InitStruct->GPIO_OType = GPIO_OType_PP;
+ 366              		.loc 1 235 0
+ 367 0020 7B68     		ldr	r3, [r7, #4]
+ 368 0022 4FF00002 		mov	r2, #0
+ 369 0026 9A71     		strb	r2, [r3, #6]
+ 236:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   GPIO_InitStruct->GPIO_PuPd = GPIO_PuPd_NOPULL;
+ 370              		.loc 1 236 0
+ 371 0028 7B68     		ldr	r3, [r7, #4]
+ 372 002a 4FF00002 		mov	r2, #0
+ 373 002e DA71     		strb	r2, [r3, #7]
+ 237:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** }
+ 374              		.loc 1 237 0
+ 375 0030 07F10C07 		add	r7, r7, #12
+ 376 0034 BD46     		mov	sp, r7
+ 377 0036 80BC     		pop	{r7}
+ 378 0038 7047     		bx	lr
+ 379              		.cfi_endproc
+ 380              	.LFE112:
+ 382 003a 00BF     		.section	.text.GPIO_PinLockConfig,"ax",%progbits
+ 383              		.align	2
+ 384              		.global	GPIO_PinLockConfig
+ 385              		.thumb
+ 386              		.thumb_func
+ 388              	GPIO_PinLockConfig:
+ 389              	.LFB113:
+ 238:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 239:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /**
+ 240:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @brief  Locks GPIO Pins configuration registers.
+ 241:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         The locked registers are GPIOx_MODER, GPIOx_OTYPER, GPIOx_OSPEEDR,
+ 242:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         GPIOx_PUPDR, GPIOx_AFRL and GPIOx_AFRH.
+ 243:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @note   The configuration of the locked GPIO pins can no longer be modified
+ 244:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         until the next reset.
+ 245:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIOx: where x can be (A or B or D) to select the GPIO peripheral.
+ 246:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIO_Pin: specifies the port bit to be written.
+ 247:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *   This parameter can be any combination of GPIO_Pin_x where x can be (0..15).
+ 248:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @retval None
+ 249:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 250:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** void GPIO_PinLockConfig(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
+ 251:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** {
+ 390              		.loc 1 251 0
+ 391              		.cfi_startproc
+ 392              		@ args = 0, pretend = 0, frame = 16
+ 393              		@ frame_needed = 1, uses_anonymous_args = 0
+ 394              		@ link register save eliminated.
+ 395 0000 80B4     		push	{r7}
+ 396              	.LCFI9:
+ 397              		.cfi_def_cfa_offset 4
+ 398              		.cfi_offset 7, -4
+ 399 0002 85B0     		sub	sp, sp, #20
+ 400              	.LCFI10:
+ 401              		.cfi_def_cfa_offset 24
+ 402 0004 00AF     		add	r7, sp, #0
+ 403              	.LCFI11:
+ 404              		.cfi_def_cfa_register 7
+ 405 0006 7860     		str	r0, [r7, #4]
+ 406 0008 0B46     		mov	r3, r1
+ 407 000a 7B80     		strh	r3, [r7, #2]	@ movhi
+ 252:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   uint32_t tmp = 0x00010000;
+ 408              		.loc 1 252 0
+ 409 000c 4FF48033 		mov	r3, #65536
+ 410 0010 FB60     		str	r3, [r7, #12]
+ 253:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   
+ 254:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Check the parameters */
+ 255:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_LIST_PERIPH(GPIOx));
+ 256:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_PIN(GPIO_Pin));
+ 257:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   
+ 258:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   tmp |= GPIO_Pin;
+ 411              		.loc 1 258 0
+ 412 0012 7B88     		ldrh	r3, [r7, #2]
+ 413 0014 FA68     		ldr	r2, [r7, #12]
+ 414 0016 1343     		orrs	r3, r3, r2
+ 415 0018 FB60     		str	r3, [r7, #12]
+ 259:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Set LCKK bit */
+ 260:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   GPIOx->LCKR = tmp;
+ 416              		.loc 1 260 0
+ 417 001a 7B68     		ldr	r3, [r7, #4]
+ 418 001c FA68     		ldr	r2, [r7, #12]
+ 419 001e DA61     		str	r2, [r3, #28]
+ 261:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Reset LCKK bit */
+ 262:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   GPIOx->LCKR =  GPIO_Pin;
+ 420              		.loc 1 262 0
+ 421 0020 7A88     		ldrh	r2, [r7, #2]
+ 422 0022 7B68     		ldr	r3, [r7, #4]
+ 423 0024 DA61     		str	r2, [r3, #28]
+ 263:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Set LCKK bit */
+ 264:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   GPIOx->LCKR = tmp;
+ 424              		.loc 1 264 0
+ 425 0026 7B68     		ldr	r3, [r7, #4]
+ 426 0028 FA68     		ldr	r2, [r7, #12]
+ 427 002a DA61     		str	r2, [r3, #28]
+ 265:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Read LCKK bit */
+ 266:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   tmp = GPIOx->LCKR;
+ 428              		.loc 1 266 0
+ 429 002c 7B68     		ldr	r3, [r7, #4]
+ 430 002e DB69     		ldr	r3, [r3, #28]
+ 431 0030 FB60     		str	r3, [r7, #12]
+ 267:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Read LCKK bit */
+ 268:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   tmp = GPIOx->LCKR;
+ 432              		.loc 1 268 0
+ 433 0032 7B68     		ldr	r3, [r7, #4]
+ 434 0034 DB69     		ldr	r3, [r3, #28]
+ 435 0036 FB60     		str	r3, [r7, #12]
+ 269:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** }
+ 436              		.loc 1 269 0
+ 437 0038 07F11407 		add	r7, r7, #20
+ 438 003c BD46     		mov	sp, r7
+ 439 003e 80BC     		pop	{r7}
+ 440 0040 7047     		bx	lr
+ 441              		.cfi_endproc
+ 442              	.LFE113:
+ 444 0042 00BF     		.section	.text.GPIO_ReadInputDataBit,"ax",%progbits
+ 445              		.align	2
+ 446              		.global	GPIO_ReadInputDataBit
+ 447              		.thumb
+ 448              		.thumb_func
+ 450              	GPIO_ReadInputDataBit:
+ 451              	.LFB114:
+ 270:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 271:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /**
+ 272:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @}
+ 273:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 274:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   
+ 275:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /** @defgroup GPIO_Group2 GPIO Read and Write
+ 276:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****  *  @brief    GPIO Read and Write
+ 277:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****  *
+ 278:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** @verbatim
+ 279:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****  ===============================================================================
+ 280:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****                   ##### GPIO Read and Write #####
+ 281:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****  ===============================================================================  
+ 282:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 283:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** @endverbatim
+ 284:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @{
+ 285:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */   
+ 286:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 287:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /**
+ 288:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @brief  Reads the specified input port pin.
+ 289:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIOx: where x can be (A, B, C, D, E or F) to select the GPIO peripheral.
+ 290:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIO_Pin: specifies the port bit to read.
+ 291:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @note   This parameter can be GPIO_Pin_x where x can be :
+ 292:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         (0..15) for GPIOA, GPIOB, GPIOC, GPIOD or GPIOE;
+ 293:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         (0..2, 4, 6, 9..10) for GPIOF.
+ 294:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @retval The input port pin value.
+ 295:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 296:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** uint8_t GPIO_ReadInputDataBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
+ 297:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** {
+ 452              		.loc 1 297 0
+ 453              		.cfi_startproc
+ 454              		@ args = 0, pretend = 0, frame = 16
+ 455              		@ frame_needed = 1, uses_anonymous_args = 0
+ 456              		@ link register save eliminated.
+ 457 0000 80B4     		push	{r7}
+ 458              	.LCFI12:
+ 459              		.cfi_def_cfa_offset 4
+ 460              		.cfi_offset 7, -4
+ 461 0002 85B0     		sub	sp, sp, #20
+ 462              	.LCFI13:
+ 463              		.cfi_def_cfa_offset 24
+ 464 0004 00AF     		add	r7, sp, #0
+ 465              	.LCFI14:
+ 466              		.cfi_def_cfa_register 7
+ 467 0006 7860     		str	r0, [r7, #4]
+ 468 0008 0B46     		mov	r3, r1
+ 469 000a 7B80     		strh	r3, [r7, #2]	@ movhi
+ 298:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   uint8_t bitstatus = 0x00;
+ 470              		.loc 1 298 0
+ 471 000c 4FF00003 		mov	r3, #0
+ 472 0010 FB73     		strb	r3, [r7, #15]
+ 299:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   
+ 300:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Check the parameters */
+ 301:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+ 302:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GET_GPIO_PIN(GPIO_Pin));
+ 303:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 304:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   if ((GPIOx->IDR & GPIO_Pin) != (uint32_t)Bit_RESET)
+ 473              		.loc 1 304 0
+ 474 0012 7B68     		ldr	r3, [r7, #4]
+ 475 0014 1B8A     		ldrh	r3, [r3, #16]	@ movhi
+ 476 0016 9AB2     		uxth	r2, r3
+ 477 0018 7B88     		ldrh	r3, [r7, #2]	@ movhi
+ 478 001a 1340     		ands	r3, r3, r2
+ 479 001c 9BB2     		uxth	r3, r3
+ 480 001e 002B     		cmp	r3, #0
+ 481 0020 03D0     		beq	.L19
+ 305:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   {
+ 306:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     bitstatus = (uint8_t)Bit_SET;
+ 482              		.loc 1 306 0
+ 483 0022 4FF00103 		mov	r3, #1
+ 484 0026 FB73     		strb	r3, [r7, #15]
+ 485 0028 02E0     		b	.L20
+ 486              	.L19:
+ 307:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   }
+ 308:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   else
+ 309:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   {
+ 310:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     bitstatus = (uint8_t)Bit_RESET;
+ 487              		.loc 1 310 0
+ 488 002a 4FF00003 		mov	r3, #0
+ 489 002e FB73     		strb	r3, [r7, #15]
+ 490              	.L20:
+ 311:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   }
+ 312:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   return bitstatus;
+ 491              		.loc 1 312 0
+ 492 0030 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 313:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** }
+ 493              		.loc 1 313 0
+ 494 0032 1846     		mov	r0, r3
+ 495 0034 07F11407 		add	r7, r7, #20
+ 496 0038 BD46     		mov	sp, r7
+ 497 003a 80BC     		pop	{r7}
+ 498 003c 7047     		bx	lr
+ 499              		.cfi_endproc
+ 500              	.LFE114:
+ 502 003e 00BF     		.section	.text.GPIO_ReadInputData,"ax",%progbits
+ 503              		.align	2
+ 504              		.global	GPIO_ReadInputData
+ 505              		.thumb
+ 506              		.thumb_func
+ 508              	GPIO_ReadInputData:
+ 509              	.LFB115:
+ 314:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 315:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /**
+ 316:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @brief  Reads the specified input port pin.
+ 317:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIOx: where x can be (A, B, C, D, E or F) to select the GPIO peripheral.
+ 318:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @retval The input port pin value.
+ 319:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 320:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** uint16_t GPIO_ReadInputData(GPIO_TypeDef* GPIOx)
+ 321:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** {
+ 510              		.loc 1 321 0
+ 511              		.cfi_startproc
+ 512              		@ args = 0, pretend = 0, frame = 8
+ 513              		@ frame_needed = 1, uses_anonymous_args = 0
+ 514              		@ link register save eliminated.
+ 515 0000 80B4     		push	{r7}
+ 516              	.LCFI15:
+ 517              		.cfi_def_cfa_offset 4
+ 518              		.cfi_offset 7, -4
+ 519 0002 83B0     		sub	sp, sp, #12
+ 520              	.LCFI16:
+ 521              		.cfi_def_cfa_offset 16
+ 522 0004 00AF     		add	r7, sp, #0
+ 523              	.LCFI17:
+ 524              		.cfi_def_cfa_register 7
+ 525 0006 7860     		str	r0, [r7, #4]
+ 322:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Check the parameters */
+ 323:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+ 324:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 325:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   return ((uint16_t)GPIOx->IDR);
+ 526              		.loc 1 325 0
+ 527 0008 7B68     		ldr	r3, [r7, #4]
+ 528 000a 1B8A     		ldrh	r3, [r3, #16]	@ movhi
+ 529 000c 9BB2     		uxth	r3, r3
+ 326:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** }
+ 530              		.loc 1 326 0
+ 531 000e 1846     		mov	r0, r3
+ 532 0010 07F10C07 		add	r7, r7, #12
+ 533 0014 BD46     		mov	sp, r7
+ 534 0016 80BC     		pop	{r7}
+ 535 0018 7047     		bx	lr
+ 536              		.cfi_endproc
+ 537              	.LFE115:
+ 539 001a 00BF     		.section	.text.GPIO_ReadOutputDataBit,"ax",%progbits
+ 540              		.align	2
+ 541              		.global	GPIO_ReadOutputDataBit
+ 542              		.thumb
+ 543              		.thumb_func
+ 545              	GPIO_ReadOutputDataBit:
+ 546              	.LFB116:
+ 327:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 328:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /**
+ 329:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @brief  Reads the specified output data port bit.
+ 330:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIOx: where x can be (A, B, C, D, E or F) to select the GPIO peripheral.
+ 331:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIO_Pin: Specifies the port bit to read.
+ 332:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @note   This parameter can be GPIO_Pin_x where x can be :
+ 333:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         (0..15) for GPIOA, GPIOB, GPIOC, GPIOD or GPIOE;
+ 334:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         (0..2, 4, 6, 9..10) for GPIOF.
+ 335:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @retval The output port pin value.
+ 336:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 337:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** uint8_t GPIO_ReadOutputDataBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
+ 338:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** {
+ 547              		.loc 1 338 0
+ 548              		.cfi_startproc
+ 549              		@ args = 0, pretend = 0, frame = 16
+ 550              		@ frame_needed = 1, uses_anonymous_args = 0
+ 551              		@ link register save eliminated.
+ 552 0000 80B4     		push	{r7}
+ 553              	.LCFI18:
+ 554              		.cfi_def_cfa_offset 4
+ 555              		.cfi_offset 7, -4
+ 556 0002 85B0     		sub	sp, sp, #20
+ 557              	.LCFI19:
+ 558              		.cfi_def_cfa_offset 24
+ 559 0004 00AF     		add	r7, sp, #0
+ 560              	.LCFI20:
+ 561              		.cfi_def_cfa_register 7
+ 562 0006 7860     		str	r0, [r7, #4]
+ 563 0008 0B46     		mov	r3, r1
+ 564 000a 7B80     		strh	r3, [r7, #2]	@ movhi
+ 339:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   uint8_t bitstatus = 0x00;
+ 565              		.loc 1 339 0
+ 566 000c 4FF00003 		mov	r3, #0
+ 567 0010 FB73     		strb	r3, [r7, #15]
+ 340:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 341:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Check the parameters */
+ 342:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+ 343:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GET_GPIO_PIN(GPIO_Pin));
+ 344:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   
+ 345:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   if ((GPIOx->ODR & GPIO_Pin) != (uint32_t)Bit_RESET)
+ 568              		.loc 1 345 0
+ 569 0012 7B68     		ldr	r3, [r7, #4]
+ 570 0014 9B8A     		ldrh	r3, [r3, #20]	@ movhi
+ 571 0016 9AB2     		uxth	r2, r3
+ 572 0018 7B88     		ldrh	r3, [r7, #2]	@ movhi
+ 573 001a 1340     		ands	r3, r3, r2
+ 574 001c 9BB2     		uxth	r3, r3
+ 575 001e 002B     		cmp	r3, #0
+ 576 0020 03D0     		beq	.L25
+ 346:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   {
+ 347:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     bitstatus = (uint8_t)Bit_SET;
+ 577              		.loc 1 347 0
+ 578 0022 4FF00103 		mov	r3, #1
+ 579 0026 FB73     		strb	r3, [r7, #15]
+ 580 0028 02E0     		b	.L26
+ 581              	.L25:
+ 348:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   }
+ 349:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   else
+ 350:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   {
+ 351:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     bitstatus = (uint8_t)Bit_RESET;
+ 582              		.loc 1 351 0
+ 583 002a 4FF00003 		mov	r3, #0
+ 584 002e FB73     		strb	r3, [r7, #15]
+ 585              	.L26:
+ 352:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   }
+ 353:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   return bitstatus;
+ 586              		.loc 1 353 0
+ 587 0030 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 354:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** }
+ 588              		.loc 1 354 0
+ 589 0032 1846     		mov	r0, r3
+ 590 0034 07F11407 		add	r7, r7, #20
+ 591 0038 BD46     		mov	sp, r7
+ 592 003a 80BC     		pop	{r7}
+ 593 003c 7047     		bx	lr
+ 594              		.cfi_endproc
+ 595              	.LFE116:
+ 597 003e 00BF     		.section	.text.GPIO_ReadOutputData,"ax",%progbits
+ 598              		.align	2
+ 599              		.global	GPIO_ReadOutputData
+ 600              		.thumb
+ 601              		.thumb_func
+ 603              	GPIO_ReadOutputData:
+ 604              	.LFB117:
+ 355:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 356:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /**
+ 357:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @brief  Reads the specified GPIO output data port.
+ 358:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIOx: where x can be (A, B, C, D, E or F) to select the GPIO peripheral.
+ 359:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @retval GPIO output data port value.
+ 360:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 361:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** uint16_t GPIO_ReadOutputData(GPIO_TypeDef* GPIOx)
+ 362:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** {
+ 605              		.loc 1 362 0
+ 606              		.cfi_startproc
+ 607              		@ args = 0, pretend = 0, frame = 8
+ 608              		@ frame_needed = 1, uses_anonymous_args = 0
+ 609              		@ link register save eliminated.
+ 610 0000 80B4     		push	{r7}
+ 611              	.LCFI21:
+ 612              		.cfi_def_cfa_offset 4
+ 613              		.cfi_offset 7, -4
+ 614 0002 83B0     		sub	sp, sp, #12
+ 615              	.LCFI22:
+ 616              		.cfi_def_cfa_offset 16
+ 617 0004 00AF     		add	r7, sp, #0
+ 618              	.LCFI23:
+ 619              		.cfi_def_cfa_register 7
+ 620 0006 7860     		str	r0, [r7, #4]
+ 363:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Check the parameters */
+ 364:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+ 365:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   
+ 366:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   return ((uint16_t)GPIOx->ODR);
+ 621              		.loc 1 366 0
+ 622 0008 7B68     		ldr	r3, [r7, #4]
+ 623 000a 9B8A     		ldrh	r3, [r3, #20]	@ movhi
+ 624 000c 9BB2     		uxth	r3, r3
+ 367:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** }
+ 625              		.loc 1 367 0
+ 626 000e 1846     		mov	r0, r3
+ 627 0010 07F10C07 		add	r7, r7, #12
+ 628 0014 BD46     		mov	sp, r7
+ 629 0016 80BC     		pop	{r7}
+ 630 0018 7047     		bx	lr
+ 631              		.cfi_endproc
+ 632              	.LFE117:
+ 634 001a 00BF     		.section	.text.GPIO_SetBits,"ax",%progbits
+ 635              		.align	2
+ 636              		.global	GPIO_SetBits
+ 637              		.thumb
+ 638              		.thumb_func
+ 640              	GPIO_SetBits:
+ 641              	.LFB118:
+ 368:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 369:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /**
+ 370:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @brief  Sets the selected data port bits.
+ 371:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIOx: where x can be (A, B, C, D, E or F) to select the GPIO peripheral.
+ 372:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIO_Pin: specifies the port bits to be written.
+ 373:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @note   This parameter can be GPIO_Pin_x where x can be :
+ 374:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         (0..15) for GPIOA, GPIOB, GPIOC, GPIOD or GPIOE;
+ 375:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         (0..2, 4, 6, 9..10) for GPIOF.
+ 376:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @retval None
+ 377:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 378:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** void GPIO_SetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
+ 379:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** {
+ 642              		.loc 1 379 0
+ 643              		.cfi_startproc
+ 644              		@ args = 0, pretend = 0, frame = 8
+ 645              		@ frame_needed = 1, uses_anonymous_args = 0
+ 646              		@ link register save eliminated.
+ 647 0000 80B4     		push	{r7}
+ 648              	.LCFI24:
+ 649              		.cfi_def_cfa_offset 4
+ 650              		.cfi_offset 7, -4
+ 651 0002 83B0     		sub	sp, sp, #12
+ 652              	.LCFI25:
+ 653              		.cfi_def_cfa_offset 16
+ 654 0004 00AF     		add	r7, sp, #0
+ 655              	.LCFI26:
+ 656              		.cfi_def_cfa_register 7
+ 657 0006 7860     		str	r0, [r7, #4]
+ 658 0008 0B46     		mov	r3, r1
+ 659 000a 7B80     		strh	r3, [r7, #2]	@ movhi
+ 380:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Check the parameters */
+ 381:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+ 382:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_PIN(GPIO_Pin));
+ 383:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   
+ 384:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   GPIOx->BSRR = GPIO_Pin;
+ 660              		.loc 1 384 0
+ 661 000c 7A88     		ldrh	r2, [r7, #2]
+ 662 000e 7B68     		ldr	r3, [r7, #4]
+ 663 0010 9A61     		str	r2, [r3, #24]
+ 385:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** }
+ 664              		.loc 1 385 0
+ 665 0012 07F10C07 		add	r7, r7, #12
+ 666 0016 BD46     		mov	sp, r7
+ 667 0018 80BC     		pop	{r7}
+ 668 001a 7047     		bx	lr
+ 669              		.cfi_endproc
+ 670              	.LFE118:
+ 672              		.section	.text.GPIO_ResetBits,"ax",%progbits
+ 673              		.align	2
+ 674              		.global	GPIO_ResetBits
+ 675              		.thumb
+ 676              		.thumb_func
+ 678              	GPIO_ResetBits:
+ 679              	.LFB119:
+ 386:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 387:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /**
+ 388:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @brief  Clears the selected data port bits.
+ 389:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIOx: where x can be (A, B, C, D, E or F) to select the GPIO peripheral.
+ 390:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIO_Pin: specifies the port bits to be written.
+ 391:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @note   This parameter can be GPIO_Pin_x where x can be :
+ 392:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         (0..15) for GPIOA, GPIOB, GPIOC, GPIOD or GPIOE;
+ 393:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         (0..2, 4, 6, 9..10) for GPIOF.
+ 394:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @retval None
+ 395:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 396:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** void GPIO_ResetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
+ 397:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** {
+ 680              		.loc 1 397 0
+ 681              		.cfi_startproc
+ 682              		@ args = 0, pretend = 0, frame = 8
+ 683              		@ frame_needed = 1, uses_anonymous_args = 0
+ 684              		@ link register save eliminated.
+ 685 0000 80B4     		push	{r7}
+ 686              	.LCFI27:
+ 687              		.cfi_def_cfa_offset 4
+ 688              		.cfi_offset 7, -4
+ 689 0002 83B0     		sub	sp, sp, #12
+ 690              	.LCFI28:
+ 691              		.cfi_def_cfa_offset 16
+ 692 0004 00AF     		add	r7, sp, #0
+ 693              	.LCFI29:
+ 694              		.cfi_def_cfa_register 7
+ 695 0006 7860     		str	r0, [r7, #4]
+ 696 0008 0B46     		mov	r3, r1
+ 697 000a 7B80     		strh	r3, [r7, #2]	@ movhi
+ 398:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Check the parameters */
+ 399:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+ 400:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_PIN(GPIO_Pin));
+ 401:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   
+ 402:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   GPIOx->BRR = GPIO_Pin;
+ 698              		.loc 1 402 0
+ 699 000c 7B68     		ldr	r3, [r7, #4]
+ 700 000e 7A88     		ldrh	r2, [r7, #2]	@ movhi
+ 701 0010 1A85     		strh	r2, [r3, #40]	@ movhi
+ 403:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** }
+ 702              		.loc 1 403 0
+ 703 0012 07F10C07 		add	r7, r7, #12
+ 704 0016 BD46     		mov	sp, r7
+ 705 0018 80BC     		pop	{r7}
+ 706 001a 7047     		bx	lr
+ 707              		.cfi_endproc
+ 708              	.LFE119:
+ 710              		.section	.text.GPIO_WriteBit,"ax",%progbits
+ 711              		.align	2
+ 712              		.global	GPIO_WriteBit
+ 713              		.thumb
+ 714              		.thumb_func
+ 716              	GPIO_WriteBit:
+ 717              	.LFB120:
+ 404:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 405:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /**
+ 406:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @brief  Sets or clears the selected data port bit.
+ 407:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIOx: where x can be (A, B, C, D, E or F) to select the GPIO peripheral.
+ 408:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIO_Pin: specifies the port bit to be written.
+ 409:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @note   This parameter can be GPIO_Pin_x where x can be :
+ 410:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         (0..15) for GPIOA, GPIOB, GPIOC, GPIOD or GPIOE;
+ 411:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *         (0..2, 4, 6, 9..10) for GPIOF.
+ 412:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  BitVal: specifies the value to be written to the selected bit.
+ 413:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *   This parameter can be one of the BitAction enumeration values:
+ 414:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *     @arg Bit_RESET: to clear the port pin
+ 415:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *     @arg Bit_SET: to set the port pin
+ 416:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @retval None
+ 417:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 418:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** void GPIO_WriteBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, BitAction BitVal)
+ 419:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** {
+ 718              		.loc 1 419 0
+ 719              		.cfi_startproc
+ 720              		@ args = 0, pretend = 0, frame = 8
+ 721              		@ frame_needed = 1, uses_anonymous_args = 0
+ 722              		@ link register save eliminated.
+ 723 0000 80B4     		push	{r7}
+ 724              	.LCFI30:
+ 725              		.cfi_def_cfa_offset 4
+ 726              		.cfi_offset 7, -4
+ 727 0002 83B0     		sub	sp, sp, #12
+ 728              	.LCFI31:
+ 729              		.cfi_def_cfa_offset 16
+ 730 0004 00AF     		add	r7, sp, #0
+ 731              	.LCFI32:
+ 732              		.cfi_def_cfa_register 7
+ 733 0006 7860     		str	r0, [r7, #4]
+ 734 0008 1346     		mov	r3, r2
+ 735 000a 0A46     		mov	r2, r1	@ movhi
+ 736 000c 7A80     		strh	r2, [r7, #2]	@ movhi
+ 737 000e 7B70     		strb	r3, [r7, #1]
+ 420:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Check the parameters */
+ 421:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+ 422:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GET_GPIO_PIN(GPIO_Pin));
+ 423:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_BIT_ACTION(BitVal));
+ 424:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   
+ 425:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   if (BitVal != Bit_RESET)
+ 738              		.loc 1 425 0
+ 739 0010 7B78     		ldrb	r3, [r7, #1]	@ zero_extendqisi2
+ 740 0012 002B     		cmp	r3, #0
+ 741 0014 03D0     		beq	.L33
+ 426:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   {
+ 427:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     GPIOx->BSRR = GPIO_Pin;
+ 742              		.loc 1 427 0
+ 743 0016 7A88     		ldrh	r2, [r7, #2]
+ 744 0018 7B68     		ldr	r3, [r7, #4]
+ 745 001a 9A61     		str	r2, [r3, #24]
+ 746 001c 02E0     		b	.L32
+ 747              	.L33:
+ 428:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   }
+ 429:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   else
+ 430:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   {
+ 431:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****     GPIOx->BRR = GPIO_Pin ;
+ 748              		.loc 1 431 0
+ 749 001e 7B68     		ldr	r3, [r7, #4]
+ 750 0020 7A88     		ldrh	r2, [r7, #2]	@ movhi
+ 751 0022 1A85     		strh	r2, [r3, #40]	@ movhi
+ 752              	.L32:
+ 432:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   }
+ 433:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** }
+ 753              		.loc 1 433 0
+ 754 0024 07F10C07 		add	r7, r7, #12
+ 755 0028 BD46     		mov	sp, r7
+ 756 002a 80BC     		pop	{r7}
+ 757 002c 7047     		bx	lr
+ 758              		.cfi_endproc
+ 759              	.LFE120:
+ 761 002e 00BF     		.section	.text.GPIO_Write,"ax",%progbits
+ 762              		.align	2
+ 763              		.global	GPIO_Write
+ 764              		.thumb
+ 765              		.thumb_func
+ 767              	GPIO_Write:
+ 768              	.LFB121:
+ 434:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 435:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /**
+ 436:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @brief  Writes data to the specified GPIO data port.
+ 437:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIOx: where x can be (A, B, C, D, E or F) to select the GPIO peripheral.
+ 438:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  PortVal: specifies the value to be written to the port output data 
+ 439:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *                  register.
+ 440:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @retval None
+ 441:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 442:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** void GPIO_Write(GPIO_TypeDef* GPIOx, uint16_t PortVal)
+ 443:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** {
+ 769              		.loc 1 443 0
+ 770              		.cfi_startproc
+ 771              		@ args = 0, pretend = 0, frame = 8
+ 772              		@ frame_needed = 1, uses_anonymous_args = 0
+ 773              		@ link register save eliminated.
+ 774 0000 80B4     		push	{r7}
+ 775              	.LCFI33:
+ 776              		.cfi_def_cfa_offset 4
+ 777              		.cfi_offset 7, -4
+ 778 0002 83B0     		sub	sp, sp, #12
+ 779              	.LCFI34:
+ 780              		.cfi_def_cfa_offset 16
+ 781 0004 00AF     		add	r7, sp, #0
+ 782              	.LCFI35:
+ 783              		.cfi_def_cfa_register 7
+ 784 0006 7860     		str	r0, [r7, #4]
+ 785 0008 0B46     		mov	r3, r1
+ 786 000a 7B80     		strh	r3, [r7, #2]	@ movhi
+ 444:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Check the parameters */
+ 445:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+ 446:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   
+ 447:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   GPIOx->ODR = PortVal;
+ 787              		.loc 1 447 0
+ 788 000c 7B68     		ldr	r3, [r7, #4]
+ 789 000e 7A88     		ldrh	r2, [r7, #2]	@ movhi
+ 790 0010 9A82     		strh	r2, [r3, #20]	@ movhi
+ 448:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** }
+ 791              		.loc 1 448 0
+ 792 0012 07F10C07 		add	r7, r7, #12
+ 793 0016 BD46     		mov	sp, r7
+ 794 0018 80BC     		pop	{r7}
+ 795 001a 7047     		bx	lr
+ 796              		.cfi_endproc
+ 797              	.LFE121:
+ 799              		.section	.text.GPIO_PinAFConfig,"ax",%progbits
+ 800              		.align	2
+ 801              		.global	GPIO_PinAFConfig
+ 802              		.thumb
+ 803              		.thumb_func
+ 805              	GPIO_PinAFConfig:
+ 806              	.LFB122:
+ 449:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 450:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /**
+ 451:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @}
+ 452:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 453:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 454:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /** @defgroup GPIO_Group3 GPIO Alternate functions configuration functions
+ 455:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****  *  @brief   GPIO Alternate functions configuration functions
+ 456:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****  *
+ 457:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** @verbatim
+ 458:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****  ===============================================================================
+ 459:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****           ##### GPIO Alternate functions configuration functions #####
+ 460:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****  ===============================================================================
+ 461:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 462:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** @endverbatim
+ 463:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @{
+ 464:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 465:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** 
+ 466:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** /**
+ 467:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @brief  Writes data to the specified GPIO data port.
+ 468:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIOx: where x can be (A, B, C, D, E or F) to select the GPIO peripheral.
+ 469:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIO_PinSource: specifies the pin for the Alternate function.
+ 470:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *   This parameter can be GPIO_PinSourcex where x can be (0..15).
+ 471:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @param  GPIO_AF: selects the pin to be used as Alternate function.  
+ 472:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *   This parameter can be one of the following value:
+ 473:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *     @arg GPIO_AF_0:  JTCK-SWCLK, JTDI, JTDO/TRACESW0, JTMS-SWDAT, MCO, NJTRST, 
+ 474:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *                      TRACED, TRACECK.
+ 475:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *     @arg GPIO_AF_1:  OUT, TIM2, TIM15, TIM16, TIM17.
+ 476:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *     @arg GPIO_AF_2:  COMP1_OUT, TIM1, TIM2, TIM3, TIM4, TIM8, TIM15.
+ 477:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *     @arg GPIO_AF_3:  COMP7_OUT, TIM8, TIM15, Touch.
+ 478:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *     @arg GPIO_AF_4:  I2C1, I2C2, TIM1, TIM8, TIM16, TIM17.
+ 479:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *     @arg GPIO_AF_5:  IR_OUT, I2S2, I2S3, SPI1, SPI2, TIM8, USART4, USART5
+ 480:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *     @arg GPIO_AF_6:  IR_OUT, I2S2, I2S3, SPI2, SPI3, TIM1, TIM8
+ 481:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *     @arg GPIO_AF_7:  AOP2_OUT, CAN, COMP3_OUT, COMP5_OUT, COMP6_OUT, USART1, 
+ 482:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *                      USART2, USART3.
+ 483:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *     @arg GPIO_AF_8:  COMP1_OUT, COMP2_OUT, COMP3_OUT, COMP4_OUT, COMP5_OUT, 
+ 484:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *                      COMP6_OUT.
+ 485:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *     @arg GPIO_AF_9:  AOP4_OUT, CAN, TIM1, TIM8, TIM15.
+ 486:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *     @arg GPIO_AF_10: AOP1_OUT, AOP3_OUT, TIM2, TIM3, TIM4, TIM8, TIM17. 
+ 487:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *     @arg GPIO_AF_11: TIM1, TIM8.
+ 488:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *     @arg GPIO_AF_12: TIM1.
+ 489:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *     @arg GPIO_AF_14: USBDM, USBDP.
+ 490:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *     @arg GPIO_AF_15: OUT.             
+ 491:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @note  The pin should already been configured in Alternate Function mode(AF)
+ 492:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *        using GPIO_InitStruct->GPIO_Mode = GPIO_Mode_AF
+ 493:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @note  Refer to the Alternate function mapping table in the device datasheet 
+ 494:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *        for the detailed mapping of the system and peripherals alternate 
+ 495:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   *        function I/O pins.
+ 496:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   * @retval None
+ 497:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   */
+ 498:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** void GPIO_PinAFConfig(GPIO_TypeDef* GPIOx, uint16_t GPIO_PinSource, uint8_t GPIO_AF)
+ 499:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** {
+ 807              		.loc 1 499 0
+ 808              		.cfi_startproc
+ 809              		@ args = 0, pretend = 0, frame = 16
+ 810              		@ frame_needed = 1, uses_anonymous_args = 0
+ 811              		@ link register save eliminated.
+ 812 0000 80B4     		push	{r7}
+ 813              	.LCFI36:
+ 814              		.cfi_def_cfa_offset 4
+ 815              		.cfi_offset 7, -4
+ 816 0002 85B0     		sub	sp, sp, #20
+ 817              	.LCFI37:
+ 818              		.cfi_def_cfa_offset 24
+ 819 0004 00AF     		add	r7, sp, #0
+ 820              	.LCFI38:
+ 821              		.cfi_def_cfa_register 7
+ 822 0006 7860     		str	r0, [r7, #4]
+ 823 0008 1346     		mov	r3, r2
+ 824 000a 0A46     		mov	r2, r1	@ movhi
+ 825 000c 7A80     		strh	r2, [r7, #2]	@ movhi
+ 826 000e 7B70     		strb	r3, [r7, #1]
+ 500:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   uint32_t temp = 0x00;
+ 827              		.loc 1 500 0
+ 828 0010 4FF00003 		mov	r3, #0
+ 829 0014 FB60     		str	r3, [r7, #12]
+ 501:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   uint32_t temp_2 = 0x00;
+ 830              		.loc 1 501 0
+ 831 0016 4FF00003 		mov	r3, #0
+ 832 001a BB60     		str	r3, [r7, #8]
+ 502:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   
+ 503:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   /* Check the parameters */
+ 504:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+ 505:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_PIN_SOURCE(GPIO_PinSource));
+ 506:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   //assert_param(IS_GPIO_AF(GPIO_AF));
+ 507:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   
+ 508:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4));
+ 833              		.loc 1 508 0
+ 834 001c 7A78     		ldrb	r2, [r7, #1]	@ zero_extendqisi2
+ 835 001e 7B88     		ldrh	r3, [r7, #2]
+ 836 0020 03F00703 		and	r3, r3, #7
+ 837 0024 4FEA8303 		lsl	r3, r3, #2
+ 838 0028 02FA03F3 		lsl	r3, r2, r3
+ 839 002c FB60     		str	r3, [r7, #12]
+ 509:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (
+ 840              		.loc 1 509 0
+ 841 002e 7B88     		ldrh	r3, [r7, #2]
+ 842 0030 4FEAD303 		lsr	r3, r3, #3
+ 843 0034 9BB2     		uxth	r3, r3
+ 844 0036 1A46     		mov	r2, r3
+ 845 0038 7B88     		ldrh	r3, [r7, #2]
+ 846 003a 4FEAD303 		lsr	r3, r3, #3
+ 847 003e 9BB2     		uxth	r3, r3
+ 848 0040 1946     		mov	r1, r3
+ 849 0042 7B68     		ldr	r3, [r7, #4]
+ 850 0044 01F10801 		add	r1, r1, #8
+ 851 0048 53F82110 		ldr	r1, [r3, r1, lsl #2]
+ 852 004c 7B88     		ldrh	r3, [r7, #2]
+ 853 004e 03F00703 		and	r3, r3, #7
+ 854 0052 4FEA8303 		lsl	r3, r3, #2
+ 855 0056 4FF00F00 		mov	r0, #15
+ 856 005a 00FA03F3 		lsl	r3, r0, r3
+ 857 005e 6FEA0303 		mvn	r3, r3
+ 858 0062 1940     		ands	r1, r1, r3
+ 859 0064 7B68     		ldr	r3, [r7, #4]
+ 860 0066 02F10802 		add	r2, r2, #8
+ 861 006a 43F82210 		str	r1, [r3, r2, lsl #2]
+ 510:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;
+ 862              		.loc 1 510 0
+ 863 006e 7B88     		ldrh	r3, [r7, #2]
+ 864 0070 4FEAD303 		lsr	r3, r3, #3
+ 865 0074 9BB2     		uxth	r3, r3
+ 866 0076 1A46     		mov	r2, r3
+ 867 0078 7B68     		ldr	r3, [r7, #4]
+ 868 007a 02F10802 		add	r2, r2, #8
+ 869 007e 53F82220 		ldr	r2, [r3, r2, lsl #2]
+ 870 0082 FB68     		ldr	r3, [r7, #12]
+ 871 0084 1343     		orrs	r3, r3, r2
+ 872 0086 BB60     		str	r3, [r7, #8]
+ 511:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c ****   GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
+ 873              		.loc 1 511 0
+ 874 0088 7B88     		ldrh	r3, [r7, #2]
+ 875 008a 4FEAD303 		lsr	r3, r3, #3
+ 876 008e 9BB2     		uxth	r3, r3
+ 877 0090 1A46     		mov	r2, r3
+ 878 0092 7B68     		ldr	r3, [r7, #4]
+ 879 0094 02F10802 		add	r2, r2, #8
+ 880 0098 B968     		ldr	r1, [r7, #8]
+ 881 009a 43F82210 		str	r1, [r3, r2, lsl #2]
+ 512:libs/STM32F30x_StdPeriph_Driver/src/stm32f30x_gpio.c **** }
+ 882              		.loc 1 512 0
+ 883 009e 07F11407 		add	r7, r7, #20
+ 884 00a2 BD46     		mov	sp, r7
+ 885 00a4 80BC     		pop	{r7}
+ 886 00a6 7047     		bx	lr
+ 887              		.cfi_endproc
+ 888              	.LFE122:
+ 890              		.text
+ 891              	.Letext0:
+ 892              		.file 2 "/home/chaitannya/CodeSourcery/bin/../lib/gcc/arm-none-eabi/4.7.3/../../../../arm-none-eab
+ 893              		.file 3 "inc/stm32f30x.h"
+ 894              		.file 4 "libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_gpio.h"
+ 895              		.file 5 "inc/core_cm4.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 stm32f30x_gpio.c
+     /tmp/ccLmLpbd.s:20     .text.GPIO_DeInit:00000000 $t
+     /tmp/ccLmLpbd.s:25     .text.GPIO_DeInit:00000000 GPIO_DeInit
+     /tmp/ccLmLpbd.s:139    .text.GPIO_DeInit:000000dc $d
+     /tmp/ccLmLpbd.s:148    .text.GPIO_Init:00000000 $t
+     /tmp/ccLmLpbd.s:153    .text.GPIO_Init:00000000 GPIO_Init
+     /tmp/ccLmLpbd.s:331    .text.GPIO_StructInit:00000000 $t
+     /tmp/ccLmLpbd.s:336    .text.GPIO_StructInit:00000000 GPIO_StructInit
+     /tmp/ccLmLpbd.s:383    .text.GPIO_PinLockConfig:00000000 $t
+     /tmp/ccLmLpbd.s:388    .text.GPIO_PinLockConfig:00000000 GPIO_PinLockConfig
+     /tmp/ccLmLpbd.s:445    .text.GPIO_ReadInputDataBit:00000000 $t
+     /tmp/ccLmLpbd.s:450    .text.GPIO_ReadInputDataBit:00000000 GPIO_ReadInputDataBit
+     /tmp/ccLmLpbd.s:503    .text.GPIO_ReadInputData:00000000 $t
+     /tmp/ccLmLpbd.s:508    .text.GPIO_ReadInputData:00000000 GPIO_ReadInputData
+     /tmp/ccLmLpbd.s:540    .text.GPIO_ReadOutputDataBit:00000000 $t
+     /tmp/ccLmLpbd.s:545    .text.GPIO_ReadOutputDataBit:00000000 GPIO_ReadOutputDataBit
+     /tmp/ccLmLpbd.s:598    .text.GPIO_ReadOutputData:00000000 $t
+     /tmp/ccLmLpbd.s:603    .text.GPIO_ReadOutputData:00000000 GPIO_ReadOutputData
+     /tmp/ccLmLpbd.s:635    .text.GPIO_SetBits:00000000 $t
+     /tmp/ccLmLpbd.s:640    .text.GPIO_SetBits:00000000 GPIO_SetBits
+     /tmp/ccLmLpbd.s:673    .text.GPIO_ResetBits:00000000 $t
+     /tmp/ccLmLpbd.s:678    .text.GPIO_ResetBits:00000000 GPIO_ResetBits
+     /tmp/ccLmLpbd.s:711    .text.GPIO_WriteBit:00000000 $t
+     /tmp/ccLmLpbd.s:716    .text.GPIO_WriteBit:00000000 GPIO_WriteBit
+     /tmp/ccLmLpbd.s:762    .text.GPIO_Write:00000000 $t
+     /tmp/ccLmLpbd.s:767    .text.GPIO_Write:00000000 GPIO_Write
+     /tmp/ccLmLpbd.s:800    .text.GPIO_PinAFConfig:00000000 $t
+     /tmp/ccLmLpbd.s:805    .text.GPIO_PinAFConfig:00000000 GPIO_PinAFConfig
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+RCC_AHBPeriphResetCmd

@@ -1,0 +1,2296 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"stm32f3_discovery_lsm303dlhc.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	LSM303DLHC_Timeout
+  20              		.section	.data.LSM303DLHC_Timeout,"aw",%progbits
+  21              		.align	2
+  24              	LSM303DLHC_Timeout:
+  25 0000 00A00000 		.word	40960
+  26              		.section	.text.LSM303DLHC_AccInit,"ax",%progbits
+  27              		.align	2
+  28              		.global	LSM303DLHC_AccInit
+  29              		.thumb
+  30              		.thumb_func
+  32              	LSM303DLHC_AccInit:
+  33              	.LFB110:
+  34              		.file 1 "src/stm32f3_discovery_lsm303dlhc.c"
+   1:src/stm32f3_discovery_lsm303dlhc.c **** /**
+   2:src/stm32f3_discovery_lsm303dlhc.c ****   ******************************************************************************
+   3:src/stm32f3_discovery_lsm303dlhc.c ****   * @file    stm32f3_discovery_lsm303dlhc.c
+   4:src/stm32f3_discovery_lsm303dlhc.c ****   * @author  MCD Application Team
+   5:src/stm32f3_discovery_lsm303dlhc.c ****   * @version V1.1.0
+   6:src/stm32f3_discovery_lsm303dlhc.c ****   * @date    20-September-2012
+   7:src/stm32f3_discovery_lsm303dlhc.c ****   * @brief   This file provides a set of functions needed to manage the lsm303dlhc
+   8:src/stm32f3_discovery_lsm303dlhc.c ****   *          MEMS accelerometer available on STM32F3-Discovery Kit.
+   9:src/stm32f3_discovery_lsm303dlhc.c ****   ******************************************************************************
+  10:src/stm32f3_discovery_lsm303dlhc.c ****   * @attention
+  11:src/stm32f3_discovery_lsm303dlhc.c ****   *
+  12:src/stm32f3_discovery_lsm303dlhc.c ****   * <h2><center>&copy; COPYRIGHT 2012 STMicroelectronics</center></h2>
+  13:src/stm32f3_discovery_lsm303dlhc.c ****   *
+  14:src/stm32f3_discovery_lsm303dlhc.c ****   * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+  15:src/stm32f3_discovery_lsm303dlhc.c ****   * You may not use this file except in compliance with the License.
+  16:src/stm32f3_discovery_lsm303dlhc.c ****   * You may obtain a copy of the License at:
+  17:src/stm32f3_discovery_lsm303dlhc.c ****   *
+  18:src/stm32f3_discovery_lsm303dlhc.c ****   *        http://www.st.com/software_license_agreement_liberty_v2
+  19:src/stm32f3_discovery_lsm303dlhc.c ****   *
+  20:src/stm32f3_discovery_lsm303dlhc.c ****   * Unless required by applicable law or agreed to in writing, software 
+  21:src/stm32f3_discovery_lsm303dlhc.c ****   * distributed under the License is distributed on an "AS IS" BASIS, 
+  22:src/stm32f3_discovery_lsm303dlhc.c ****   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  23:src/stm32f3_discovery_lsm303dlhc.c ****   * See the License for the specific language governing permissions and
+  24:src/stm32f3_discovery_lsm303dlhc.c ****   * limitations under the License.
+  25:src/stm32f3_discovery_lsm303dlhc.c ****   *
+  26:src/stm32f3_discovery_lsm303dlhc.c ****   ******************************************************************************
+  27:src/stm32f3_discovery_lsm303dlhc.c ****   */
+  28:src/stm32f3_discovery_lsm303dlhc.c **** /* Includes ------------------------------------------------------------------*/
+  29:src/stm32f3_discovery_lsm303dlhc.c **** #include "stm32f3_discovery_lsm303dlhc.h"
+  30:src/stm32f3_discovery_lsm303dlhc.c **** #include </home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_rcc.h>
+  31:src/stm32f3_discovery_lsm303dlhc.c **** #include </home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_gpio.h>
+  32:src/stm32f3_discovery_lsm303dlhc.c **** #include </home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_misc.h>
+  33:src/stm32f3_discovery_lsm303dlhc.c **** #include </home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_spi.h>
+  34:src/stm32f3_discovery_lsm303dlhc.c **** #include </home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_i2c.h>
+  35:src/stm32f3_discovery_lsm303dlhc.c **** #include </home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_exti.h>
+  36:src/stm32f3_discovery_lsm303dlhc.c **** #include </home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_syscfg.h>
+  37:src/stm32f3_discovery_lsm303dlhc.c **** 
+  38:src/stm32f3_discovery_lsm303dlhc.c **** /** @addtogroup Utilities
+  39:src/stm32f3_discovery_lsm303dlhc.c ****   * @{
+  40:src/stm32f3_discovery_lsm303dlhc.c ****   */ 
+  41:src/stm32f3_discovery_lsm303dlhc.c **** 
+  42:src/stm32f3_discovery_lsm303dlhc.c **** /** @addtogroup STM32F3_DISCOVERY
+  43:src/stm32f3_discovery_lsm303dlhc.c ****   * @{
+  44:src/stm32f3_discovery_lsm303dlhc.c ****   */ 
+  45:src/stm32f3_discovery_lsm303dlhc.c **** 
+  46:src/stm32f3_discovery_lsm303dlhc.c **** /** @addtogroup STM32F3_DISCOVERY_LSM303DLHC
+  47:src/stm32f3_discovery_lsm303dlhc.c ****   * @{
+  48:src/stm32f3_discovery_lsm303dlhc.c ****   */
+  49:src/stm32f3_discovery_lsm303dlhc.c **** 
+  50:src/stm32f3_discovery_lsm303dlhc.c **** 
+  51:src/stm32f3_discovery_lsm303dlhc.c **** /** @defgroup STM32F3_DISCOVERY_LSM303DLHC_Private_TypesDefinitions
+  52:src/stm32f3_discovery_lsm303dlhc.c ****   * @{
+  53:src/stm32f3_discovery_lsm303dlhc.c ****   */
+  54:src/stm32f3_discovery_lsm303dlhc.c **** 
+  55:src/stm32f3_discovery_lsm303dlhc.c **** /**
+  56:src/stm32f3_discovery_lsm303dlhc.c ****   * @}
+  57:src/stm32f3_discovery_lsm303dlhc.c ****   */
+  58:src/stm32f3_discovery_lsm303dlhc.c **** 
+  59:src/stm32f3_discovery_lsm303dlhc.c **** /** @defgroup STM32F3_DISCOVERY_LSM303DLHC_Private_Defines
+  60:src/stm32f3_discovery_lsm303dlhc.c ****   * @{
+  61:src/stm32f3_discovery_lsm303dlhc.c ****   */
+  62:src/stm32f3_discovery_lsm303dlhc.c **** 
+  63:src/stm32f3_discovery_lsm303dlhc.c **** /**
+  64:src/stm32f3_discovery_lsm303dlhc.c ****   * @}
+  65:src/stm32f3_discovery_lsm303dlhc.c ****   */
+  66:src/stm32f3_discovery_lsm303dlhc.c **** 
+  67:src/stm32f3_discovery_lsm303dlhc.c **** /** @defgroup STM32F3_DISCOVERY_LSM303DLHC_Private_Macros
+  68:src/stm32f3_discovery_lsm303dlhc.c ****   * @{
+  69:src/stm32f3_discovery_lsm303dlhc.c ****   */
+  70:src/stm32f3_discovery_lsm303dlhc.c **** 
+  71:src/stm32f3_discovery_lsm303dlhc.c **** /**
+  72:src/stm32f3_discovery_lsm303dlhc.c ****   * @}
+  73:src/stm32f3_discovery_lsm303dlhc.c ****   */ 
+  74:src/stm32f3_discovery_lsm303dlhc.c ****   
+  75:src/stm32f3_discovery_lsm303dlhc.c **** /** @defgroup STM32F3_DISCOVERY_LSM303DLHC_Private_Variables
+  76:src/stm32f3_discovery_lsm303dlhc.c ****   * @{
+  77:src/stm32f3_discovery_lsm303dlhc.c ****   */ 
+  78:src/stm32f3_discovery_lsm303dlhc.c **** __IO uint32_t  LSM303DLHC_Timeout = LSM303DLHC_LONG_TIMEOUT; 
+  79:src/stm32f3_discovery_lsm303dlhc.c **** /**
+  80:src/stm32f3_discovery_lsm303dlhc.c ****   * @}
+  81:src/stm32f3_discovery_lsm303dlhc.c ****   */
+  82:src/stm32f3_discovery_lsm303dlhc.c **** 
+  83:src/stm32f3_discovery_lsm303dlhc.c **** /** @defgroup STM32F3_DISCOVERY_LSM303DLHC_Private_FunctionPrototypes
+  84:src/stm32f3_discovery_lsm303dlhc.c ****   * @{
+  85:src/stm32f3_discovery_lsm303dlhc.c ****   */
+  86:src/stm32f3_discovery_lsm303dlhc.c **** static void LSM303DLHC_LowLevel_Init(void);
+  87:src/stm32f3_discovery_lsm303dlhc.c **** /**
+  88:src/stm32f3_discovery_lsm303dlhc.c ****   * @}
+  89:src/stm32f3_discovery_lsm303dlhc.c ****   */
+  90:src/stm32f3_discovery_lsm303dlhc.c **** 
+  91:src/stm32f3_discovery_lsm303dlhc.c **** /** @defgroup STM32F3_DISCOVERY_LSM303DLHC_Private_Functions
+  92:src/stm32f3_discovery_lsm303dlhc.c ****   * @{
+  93:src/stm32f3_discovery_lsm303dlhc.c ****   */
+  94:src/stm32f3_discovery_lsm303dlhc.c **** 
+  95:src/stm32f3_discovery_lsm303dlhc.c **** /**
+  96:src/stm32f3_discovery_lsm303dlhc.c ****   * @brief  Set LSM303DLHC Initialization.
+  97:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  LSM303DLHC_InitStruct: pointer to a LSM303DLHC_InitTypeDef structure 
+  98:src/stm32f3_discovery_lsm303dlhc.c ****   *         that contains the configuration setting for the LSM303DLHC.
+  99:src/stm32f3_discovery_lsm303dlhc.c ****   * @retval None
+ 100:src/stm32f3_discovery_lsm303dlhc.c ****   */
+ 101:src/stm32f3_discovery_lsm303dlhc.c **** void LSM303DLHC_AccInit(LSM303DLHCAcc_InitTypeDef *LSM303DLHC_InitStruct)
+ 102:src/stm32f3_discovery_lsm303dlhc.c **** {  
+  35              		.loc 1 102 0
+  36              		.cfi_startproc
+  37              		@ args = 0, pretend = 0, frame = 16
+  38              		@ frame_needed = 1, uses_anonymous_args = 0
+  39 0000 80B5     		push	{r7, lr}
+  40              	.LCFI0:
+  41              		.cfi_def_cfa_offset 8
+  42              		.cfi_offset 7, -8
+  43              		.cfi_offset 14, -4
+  44 0002 84B0     		sub	sp, sp, #16
+  45              	.LCFI1:
+  46              		.cfi_def_cfa_offset 24
+  47 0004 00AF     		add	r7, sp, #0
+  48              	.LCFI2:
+  49              		.cfi_def_cfa_register 7
+  50 0006 7860     		str	r0, [r7, #4]
+ 103:src/stm32f3_discovery_lsm303dlhc.c ****   uint8_t ctrl1 = 0x00, ctrl4 = 0x00;
+  51              		.loc 1 103 0
+  52 0008 4FF00003 		mov	r3, #0
+  53 000c FB73     		strb	r3, [r7, #15]
+  54 000e 4FF00003 		mov	r3, #0
+  55 0012 BB73     		strb	r3, [r7, #14]
+ 104:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 105:src/stm32f3_discovery_lsm303dlhc.c ****   /* Configure the low level interface ---------------------------------------*/
+ 106:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_LowLevel_Init();
+  56              		.loc 1 106 0
+  57 0014 FFF7FEFF 		bl	LSM303DLHC_LowLevel_Init
+ 107:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 108:src/stm32f3_discovery_lsm303dlhc.c ****   /* Configure MEMS: data rate, power mode, full scale and axes */
+ 109:src/stm32f3_discovery_lsm303dlhc.c ****   ctrl1 |= (uint8_t) (LSM303DLHC_InitStruct->Power_Mode | LSM303DLHC_InitStruct->AccOutput_DataRate
+  58              		.loc 1 109 0
+  59 0018 7B68     		ldr	r3, [r7, #4]
+  60 001a 1A78     		ldrb	r2, [r3, #0]	@ zero_extendqisi2
+  61 001c 7B68     		ldr	r3, [r7, #4]
+  62 001e 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+  63 0020 1343     		orrs	r3, r3, r2
+  64 0022 DAB2     		uxtb	r2, r3
+ 110:src/stm32f3_discovery_lsm303dlhc.c ****                     LSM303DLHC_InitStruct->Axes_Enable);
+  65              		.loc 1 110 0
+  66 0024 7B68     		ldr	r3, [r7, #4]
+  67 0026 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 109:src/stm32f3_discovery_lsm303dlhc.c ****   ctrl1 |= (uint8_t) (LSM303DLHC_InitStruct->Power_Mode | LSM303DLHC_InitStruct->AccOutput_DataRate
+  68              		.loc 1 109 0
+  69 0028 1343     		orrs	r3, r3, r2
+  70 002a DAB2     		uxtb	r2, r3
+  71 002c FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+  72 002e 1343     		orrs	r3, r3, r2
+  73 0030 DBB2     		uxtb	r3, r3
+  74 0032 FB73     		strb	r3, [r7, #15]
+ 111:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 112:src/stm32f3_discovery_lsm303dlhc.c ****   ctrl4 |= (uint8_t) (LSM303DLHC_InitStruct->BlockData_Update | LSM303DLHC_InitStruct->Endianness |
+  75              		.loc 1 112 0
+  76 0034 7B68     		ldr	r3, [r7, #4]
+  77 0036 1A79     		ldrb	r2, [r3, #4]	@ zero_extendqisi2
+  78 0038 7B68     		ldr	r3, [r7, #4]
+  79 003a 5B79     		ldrb	r3, [r3, #5]	@ zero_extendqisi2
+  80 003c 1343     		orrs	r3, r3, r2
+  81 003e DAB2     		uxtb	r2, r3
+ 113:src/stm32f3_discovery_lsm303dlhc.c ****                     LSM303DLHC_InitStruct->AccFull_Scale|LSM303DLHC_InitStruct->High_Resolution);
+  82              		.loc 1 113 0
+  83 0040 7B68     		ldr	r3, [r7, #4]
+  84 0042 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 112:src/stm32f3_discovery_lsm303dlhc.c ****   ctrl4 |= (uint8_t) (LSM303DLHC_InitStruct->BlockData_Update | LSM303DLHC_InitStruct->Endianness |
+  85              		.loc 1 112 0
+  86 0044 1343     		orrs	r3, r3, r2
+  87 0046 DAB2     		uxtb	r2, r3
+  88              		.loc 1 113 0
+  89 0048 7B68     		ldr	r3, [r7, #4]
+  90 004a DB78     		ldrb	r3, [r3, #3]	@ zero_extendqisi2
+ 112:src/stm32f3_discovery_lsm303dlhc.c ****   ctrl4 |= (uint8_t) (LSM303DLHC_InitStruct->BlockData_Update | LSM303DLHC_InitStruct->Endianness |
+  91              		.loc 1 112 0
+  92 004c 1343     		orrs	r3, r3, r2
+  93 004e DAB2     		uxtb	r2, r3
+  94 0050 BB7B     		ldrb	r3, [r7, #14]	@ zero_extendqisi2
+  95 0052 1343     		orrs	r3, r3, r2
+  96 0054 DBB2     		uxtb	r3, r3
+  97 0056 BB73     		strb	r3, [r7, #14]
+ 114:src/stm32f3_discovery_lsm303dlhc.c ****                     
+ 115:src/stm32f3_discovery_lsm303dlhc.c ****   /* Write value to ACC MEMS CTRL_REG1 regsister */
+ 116:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Write(ACC_I2C_ADDRESS, LSM303DLHC_CTRL_REG1_A, &ctrl1);
+  98              		.loc 1 116 0
+  99 0058 07F10F03 		add	r3, r7, #15
+ 100 005c 4FF03200 		mov	r0, #50
+ 101 0060 4FF02001 		mov	r1, #32
+ 102 0064 1A46     		mov	r2, r3
+ 103 0066 FFF7FEFF 		bl	LSM303DLHC_Write
+ 117:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 118:src/stm32f3_discovery_lsm303dlhc.c ****   /* Write value to ACC MEMS CTRL_REG4 regsister */
+ 119:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Write(ACC_I2C_ADDRESS, LSM303DLHC_CTRL_REG4_A, &ctrl4);
+ 104              		.loc 1 119 0
+ 105 006a 07F10E03 		add	r3, r7, #14
+ 106 006e 4FF03200 		mov	r0, #50
+ 107 0072 4FF02301 		mov	r1, #35
+ 108 0076 1A46     		mov	r2, r3
+ 109 0078 FFF7FEFF 		bl	LSM303DLHC_Write
+ 120:src/stm32f3_discovery_lsm303dlhc.c **** }
+ 110              		.loc 1 120 0
+ 111 007c 07F11007 		add	r7, r7, #16
+ 112 0080 BD46     		mov	sp, r7
+ 113 0082 80BD     		pop	{r7, pc}
+ 114              		.cfi_endproc
+ 115              	.LFE110:
+ 117              		.section	.text.LSM303DLHC_AccRebootCmd,"ax",%progbits
+ 118              		.align	2
+ 119              		.global	LSM303DLHC_AccRebootCmd
+ 120              		.thumb
+ 121              		.thumb_func
+ 123              	LSM303DLHC_AccRebootCmd:
+ 124              	.LFB111:
+ 121:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 122:src/stm32f3_discovery_lsm303dlhc.c **** /**
+ 123:src/stm32f3_discovery_lsm303dlhc.c ****   * @brief  Reboot memory content of LSM303DLHC
+ 124:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  None
+ 125:src/stm32f3_discovery_lsm303dlhc.c ****   * @retval None
+ 126:src/stm32f3_discovery_lsm303dlhc.c ****   */
+ 127:src/stm32f3_discovery_lsm303dlhc.c **** void LSM303DLHC_AccRebootCmd(void)
+ 128:src/stm32f3_discovery_lsm303dlhc.c **** {
+ 125              		.loc 1 128 0
+ 126              		.cfi_startproc
+ 127              		@ args = 0, pretend = 0, frame = 8
+ 128              		@ frame_needed = 1, uses_anonymous_args = 0
+ 129 0000 80B5     		push	{r7, lr}
+ 130              	.LCFI3:
+ 131              		.cfi_def_cfa_offset 8
+ 132              		.cfi_offset 7, -8
+ 133              		.cfi_offset 14, -4
+ 134 0002 82B0     		sub	sp, sp, #8
+ 135              	.LCFI4:
+ 136              		.cfi_def_cfa_offset 16
+ 137 0004 00AF     		add	r7, sp, #0
+ 138              	.LCFI5:
+ 139              		.cfi_def_cfa_register 7
+ 129:src/stm32f3_discovery_lsm303dlhc.c ****   uint8_t tmpreg;
+ 130:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 131:src/stm32f3_discovery_lsm303dlhc.c ****   /* Read CTRL_REG5 register */
+ 132:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Read(ACC_I2C_ADDRESS, LSM303DLHC_CTRL_REG5_A, &tmpreg, 1);
+ 140              		.loc 1 132 0
+ 141 0006 07F10703 		add	r3, r7, #7
+ 142 000a 4FF03200 		mov	r0, #50
+ 143 000e 4FF02401 		mov	r1, #36
+ 144 0012 1A46     		mov	r2, r3
+ 145 0014 4FF00103 		mov	r3, #1
+ 146 0018 FFF7FEFF 		bl	LSM303DLHC_Read
+ 133:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 134:src/stm32f3_discovery_lsm303dlhc.c ****   /* Enable or Disable the reboot memory */
+ 135:src/stm32f3_discovery_lsm303dlhc.c ****   tmpreg |= LSM303DLHC_BOOT_REBOOTMEMORY;
+ 147              		.loc 1 135 0
+ 148 001c FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 149 001e 63F07F03 		orn	r3, r3, #127
+ 150 0022 DBB2     		uxtb	r3, r3
+ 151 0024 FB71     		strb	r3, [r7, #7]
+ 136:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 137:src/stm32f3_discovery_lsm303dlhc.c ****   /* Write value to ACC MEMS CTRL_REG5 regsister */
+ 138:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Write(ACC_I2C_ADDRESS, LSM303DLHC_CTRL_REG5_A, &tmpreg);
+ 152              		.loc 1 138 0
+ 153 0026 07F10703 		add	r3, r7, #7
+ 154 002a 4FF03200 		mov	r0, #50
+ 155 002e 4FF02401 		mov	r1, #36
+ 156 0032 1A46     		mov	r2, r3
+ 157 0034 FFF7FEFF 		bl	LSM303DLHC_Write
+ 139:src/stm32f3_discovery_lsm303dlhc.c **** }
+ 158              		.loc 1 139 0
+ 159 0038 07F10807 		add	r7, r7, #8
+ 160 003c BD46     		mov	sp, r7
+ 161 003e 80BD     		pop	{r7, pc}
+ 162              		.cfi_endproc
+ 163              	.LFE111:
+ 165              		.section	.text.LSM303DLHC_AccFilterConfig,"ax",%progbits
+ 166              		.align	2
+ 167              		.global	LSM303DLHC_AccFilterConfig
+ 168              		.thumb
+ 169              		.thumb_func
+ 171              	LSM303DLHC_AccFilterConfig:
+ 172              	.LFB112:
+ 140:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 141:src/stm32f3_discovery_lsm303dlhc.c **** /**
+ 142:src/stm32f3_discovery_lsm303dlhc.c ****   * @brief  Set High Pass Filter Modality
+ 143:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  LSM303DLHC_FilterStruct: pointer to a LSM303DLHC_FilterConfigTypeDef structure 
+ 144:src/stm32f3_discovery_lsm303dlhc.c ****   *         that contains the configuration setting for the LSM303DLHC.        
+ 145:src/stm32f3_discovery_lsm303dlhc.c ****   * @retval None
+ 146:src/stm32f3_discovery_lsm303dlhc.c ****   */
+ 147:src/stm32f3_discovery_lsm303dlhc.c **** void LSM303DLHC_AccFilterConfig(LSM303DLHCAcc_FilterConfigTypeDef *LSM303DLHC_FilterStruct) 
+ 148:src/stm32f3_discovery_lsm303dlhc.c **** {
+ 173              		.loc 1 148 0
+ 174              		.cfi_startproc
+ 175              		@ args = 0, pretend = 0, frame = 16
+ 176              		@ frame_needed = 1, uses_anonymous_args = 0
+ 177 0000 80B5     		push	{r7, lr}
+ 178              	.LCFI6:
+ 179              		.cfi_def_cfa_offset 8
+ 180              		.cfi_offset 7, -8
+ 181              		.cfi_offset 14, -4
+ 182 0002 84B0     		sub	sp, sp, #16
+ 183              	.LCFI7:
+ 184              		.cfi_def_cfa_offset 24
+ 185 0004 00AF     		add	r7, sp, #0
+ 186              	.LCFI8:
+ 187              		.cfi_def_cfa_register 7
+ 188 0006 7860     		str	r0, [r7, #4]
+ 149:src/stm32f3_discovery_lsm303dlhc.c ****   uint8_t tmpreg;
+ 150:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 151:src/stm32f3_discovery_lsm303dlhc.c ****   /* Read CTRL_REG2 register */
+ 152:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Read(ACC_I2C_ADDRESS, LSM303DLHC_CTRL_REG2_A, &tmpreg, 1);
+ 189              		.loc 1 152 0
+ 190 0008 07F10F03 		add	r3, r7, #15
+ 191 000c 4FF03200 		mov	r0, #50
+ 192 0010 4FF02101 		mov	r1, #33
+ 193 0014 1A46     		mov	r2, r3
+ 194 0016 4FF00103 		mov	r3, #1
+ 195 001a FFF7FEFF 		bl	LSM303DLHC_Read
+ 153:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 154:src/stm32f3_discovery_lsm303dlhc.c ****   tmpreg &= 0x0C;
+ 196              		.loc 1 154 0
+ 197 001e FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 198 0020 03F00C03 		and	r3, r3, #12
+ 199 0024 DBB2     		uxtb	r3, r3
+ 200 0026 FB73     		strb	r3, [r7, #15]
+ 155:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 156:src/stm32f3_discovery_lsm303dlhc.c ****   /* Configure MEMS: mode, cutoff frquency, Filter status, Click, AOI1 and AOI2 */
+ 157:src/stm32f3_discovery_lsm303dlhc.c ****   tmpreg |= (uint8_t) (LSM303DLHC_FilterStruct->HighPassFilter_Mode_Selection |\
+ 201              		.loc 1 157 0
+ 202 0028 7B68     		ldr	r3, [r7, #4]
+ 203 002a 1A78     		ldrb	r2, [r3, #0]	@ zero_extendqisi2
+ 158:src/stm32f3_discovery_lsm303dlhc.c ****                       LSM303DLHC_FilterStruct->HighPassFilter_CutOff_Frequency|\
+ 204              		.loc 1 158 0
+ 205 002c 7B68     		ldr	r3, [r7, #4]
+ 206 002e 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 157:src/stm32f3_discovery_lsm303dlhc.c ****   tmpreg |= (uint8_t) (LSM303DLHC_FilterStruct->HighPassFilter_Mode_Selection |\
+ 207              		.loc 1 157 0
+ 208 0030 1343     		orrs	r3, r3, r2
+ 209 0032 DAB2     		uxtb	r2, r3
+ 159:src/stm32f3_discovery_lsm303dlhc.c ****                       LSM303DLHC_FilterStruct->HighPassFilter_AOI1|\
+ 210              		.loc 1 159 0
+ 211 0034 7B68     		ldr	r3, [r7, #4]
+ 212 0036 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 157:src/stm32f3_discovery_lsm303dlhc.c ****   tmpreg |= (uint8_t) (LSM303DLHC_FilterStruct->HighPassFilter_Mode_Selection |\
+ 213              		.loc 1 157 0
+ 214 0038 1343     		orrs	r3, r3, r2
+ 215 003a DAB2     		uxtb	r2, r3
+ 160:src/stm32f3_discovery_lsm303dlhc.c ****                       LSM303DLHC_FilterStruct->HighPassFilter_AOI2);                             
+ 216              		.loc 1 160 0
+ 217 003c 7B68     		ldr	r3, [r7, #4]
+ 218 003e DB78     		ldrb	r3, [r3, #3]	@ zero_extendqisi2
+ 157:src/stm32f3_discovery_lsm303dlhc.c ****   tmpreg |= (uint8_t) (LSM303DLHC_FilterStruct->HighPassFilter_Mode_Selection |\
+ 219              		.loc 1 157 0
+ 220 0040 1343     		orrs	r3, r3, r2
+ 221 0042 DAB2     		uxtb	r2, r3
+ 222 0044 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 223 0046 1343     		orrs	r3, r3, r2
+ 224 0048 DBB2     		uxtb	r3, r3
+ 225 004a FB73     		strb	r3, [r7, #15]
+ 161:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 162:src/stm32f3_discovery_lsm303dlhc.c ****   /* Write value to ACC MEMS CTRL_REG2 regsister */
+ 163:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Write(ACC_I2C_ADDRESS, LSM303DLHC_CTRL_REG2_A, &tmpreg);
+ 226              		.loc 1 163 0
+ 227 004c 07F10F03 		add	r3, r7, #15
+ 228 0050 4FF03200 		mov	r0, #50
+ 229 0054 4FF02101 		mov	r1, #33
+ 230 0058 1A46     		mov	r2, r3
+ 231 005a FFF7FEFF 		bl	LSM303DLHC_Write
+ 164:src/stm32f3_discovery_lsm303dlhc.c **** }
+ 232              		.loc 1 164 0
+ 233 005e 07F11007 		add	r7, r7, #16
+ 234 0062 BD46     		mov	sp, r7
+ 235 0064 80BD     		pop	{r7, pc}
+ 236              		.cfi_endproc
+ 237              	.LFE112:
+ 239 0066 00BF     		.section	.text.LSM303DLHC_AccFilterCmd,"ax",%progbits
+ 240              		.align	2
+ 241              		.global	LSM303DLHC_AccFilterCmd
+ 242              		.thumb
+ 243              		.thumb_func
+ 245              	LSM303DLHC_AccFilterCmd:
+ 246              	.LFB113:
+ 165:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 166:src/stm32f3_discovery_lsm303dlhc.c **** /**
+ 167:src/stm32f3_discovery_lsm303dlhc.c ****   * @brief  Enable or Disable High Pass Filter
+ 168:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  HighPassFilterState: new state of the High Pass Filter feature.
+ 169:src/stm32f3_discovery_lsm303dlhc.c ****   *      This parameter can be: 
+ 170:src/stm32f3_discovery_lsm303dlhc.c ****   *         @arg: LSM303DLHC_HighPassFilter_DISABLE 
+ 171:src/stm32f3_discovery_lsm303dlhc.c ****   *         @arg: LSM303DLHC_HighPassFilter_ENABLE          
+ 172:src/stm32f3_discovery_lsm303dlhc.c ****   * @retval None
+ 173:src/stm32f3_discovery_lsm303dlhc.c ****   */
+ 174:src/stm32f3_discovery_lsm303dlhc.c **** void LSM303DLHC_AccFilterCmd(uint8_t HighPassFilterState)
+ 175:src/stm32f3_discovery_lsm303dlhc.c ****  {
+ 247              		.loc 1 175 0
+ 248              		.cfi_startproc
+ 249              		@ args = 0, pretend = 0, frame = 16
+ 250              		@ frame_needed = 1, uses_anonymous_args = 0
+ 251 0000 80B5     		push	{r7, lr}
+ 252              	.LCFI9:
+ 253              		.cfi_def_cfa_offset 8
+ 254              		.cfi_offset 7, -8
+ 255              		.cfi_offset 14, -4
+ 256 0002 84B0     		sub	sp, sp, #16
+ 257              	.LCFI10:
+ 258              		.cfi_def_cfa_offset 24
+ 259 0004 00AF     		add	r7, sp, #0
+ 260              	.LCFI11:
+ 261              		.cfi_def_cfa_register 7
+ 262 0006 0346     		mov	r3, r0
+ 263 0008 FB71     		strb	r3, [r7, #7]
+ 176:src/stm32f3_discovery_lsm303dlhc.c ****   uint8_t tmpreg;
+ 177:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 178:src/stm32f3_discovery_lsm303dlhc.c ****   /* Read CTRL_REG2 register */
+ 179:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Read(ACC_I2C_ADDRESS, LSM303DLHC_CTRL_REG2_A, &tmpreg, 1);
+ 264              		.loc 1 179 0
+ 265 000a 07F10F03 		add	r3, r7, #15
+ 266 000e 4FF03200 		mov	r0, #50
+ 267 0012 4FF02101 		mov	r1, #33
+ 268 0016 1A46     		mov	r2, r3
+ 269 0018 4FF00103 		mov	r3, #1
+ 270 001c FFF7FEFF 		bl	LSM303DLHC_Read
+ 180:src/stm32f3_discovery_lsm303dlhc.c ****                   
+ 181:src/stm32f3_discovery_lsm303dlhc.c ****   tmpreg &= 0xF7;
+ 271              		.loc 1 181 0
+ 272 0020 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 273 0022 23F00803 		bic	r3, r3, #8
+ 274 0026 DBB2     		uxtb	r3, r3
+ 275 0028 FB73     		strb	r3, [r7, #15]
+ 182:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 183:src/stm32f3_discovery_lsm303dlhc.c ****   tmpreg |= HighPassFilterState;
+ 276              		.loc 1 183 0
+ 277 002a FA7B     		ldrb	r2, [r7, #15]	@ zero_extendqisi2
+ 278 002c FB79     		ldrb	r3, [r7, #7]
+ 279 002e 1343     		orrs	r3, r3, r2
+ 280 0030 DBB2     		uxtb	r3, r3
+ 281 0032 FB73     		strb	r3, [r7, #15]
+ 184:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 185:src/stm32f3_discovery_lsm303dlhc.c ****   /* Write value to ACC MEMS CTRL_REG2 regsister */
+ 186:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Write(ACC_I2C_ADDRESS, LSM303DLHC_CTRL_REG2_A, &tmpreg);
+ 282              		.loc 1 186 0
+ 283 0034 07F10F03 		add	r3, r7, #15
+ 284 0038 4FF03200 		mov	r0, #50
+ 285 003c 4FF02101 		mov	r1, #33
+ 286 0040 1A46     		mov	r2, r3
+ 287 0042 FFF7FEFF 		bl	LSM303DLHC_Write
+ 187:src/stm32f3_discovery_lsm303dlhc.c **** }
+ 288              		.loc 1 187 0
+ 289 0046 07F11007 		add	r7, r7, #16
+ 290 004a BD46     		mov	sp, r7
+ 291 004c 80BD     		pop	{r7, pc}
+ 292              		.cfi_endproc
+ 293              	.LFE113:
+ 295 004e 00BF     		.section	.text.LSM303DLHC_AccFilterClickCmd,"ax",%progbits
+ 296              		.align	2
+ 297              		.global	LSM303DLHC_AccFilterClickCmd
+ 298              		.thumb
+ 299              		.thumb_func
+ 301              	LSM303DLHC_AccFilterClickCmd:
+ 302              	.LFB114:
+ 188:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 189:src/stm32f3_discovery_lsm303dlhc.c **** /**
+ 190:src/stm32f3_discovery_lsm303dlhc.c ****   * @brief  Enable or Disable High Pass Filter on CLick
+ 191:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  HighPassFilterState: new state of the High Pass Filter feature.
+ 192:src/stm32f3_discovery_lsm303dlhc.c ****   *      This parameter can be: 
+ 193:src/stm32f3_discovery_lsm303dlhc.c ****   *         @arg: LSM303DLHC_HighPassFilter_DISABLE 
+ 194:src/stm32f3_discovery_lsm303dlhc.c ****   *         @arg: LSM303DLHC_HighPassFilter_ENABLE          
+ 195:src/stm32f3_discovery_lsm303dlhc.c ****   * @retval None
+ 196:src/stm32f3_discovery_lsm303dlhc.c ****   */
+ 197:src/stm32f3_discovery_lsm303dlhc.c **** void LSM303DLHC_AccFilterClickCmd(uint8_t HighPassFilterClickState)
+ 198:src/stm32f3_discovery_lsm303dlhc.c ****  {
+ 303              		.loc 1 198 0
+ 304              		.cfi_startproc
+ 305              		@ args = 0, pretend = 0, frame = 16
+ 306              		@ frame_needed = 1, uses_anonymous_args = 0
+ 307 0000 80B5     		push	{r7, lr}
+ 308              	.LCFI12:
+ 309              		.cfi_def_cfa_offset 8
+ 310              		.cfi_offset 7, -8
+ 311              		.cfi_offset 14, -4
+ 312 0002 84B0     		sub	sp, sp, #16
+ 313              	.LCFI13:
+ 314              		.cfi_def_cfa_offset 24
+ 315 0004 00AF     		add	r7, sp, #0
+ 316              	.LCFI14:
+ 317              		.cfi_def_cfa_register 7
+ 318 0006 0346     		mov	r3, r0
+ 319 0008 FB71     		strb	r3, [r7, #7]
+ 199:src/stm32f3_discovery_lsm303dlhc.c ****   uint8_t tmpreg;
+ 200:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 201:src/stm32f3_discovery_lsm303dlhc.c ****   /* Read CTRL_REG2 register */
+ 202:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Read(ACC_I2C_ADDRESS, LSM303DLHC_CTRL_REG2_A, &tmpreg, 1);
+ 320              		.loc 1 202 0
+ 321 000a 07F10F03 		add	r3, r7, #15
+ 322 000e 4FF03200 		mov	r0, #50
+ 323 0012 4FF02101 		mov	r1, #33
+ 324 0016 1A46     		mov	r2, r3
+ 325 0018 4FF00103 		mov	r3, #1
+ 326 001c FFF7FEFF 		bl	LSM303DLHC_Read
+ 203:src/stm32f3_discovery_lsm303dlhc.c ****                   
+ 204:src/stm32f3_discovery_lsm303dlhc.c ****   tmpreg &= 0xFB;
+ 327              		.loc 1 204 0
+ 328 0020 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 329 0022 23F00403 		bic	r3, r3, #4
+ 330 0026 DBB2     		uxtb	r3, r3
+ 331 0028 FB73     		strb	r3, [r7, #15]
+ 205:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 206:src/stm32f3_discovery_lsm303dlhc.c ****   tmpreg |= HighPassFilterClickState;
+ 332              		.loc 1 206 0
+ 333 002a FA7B     		ldrb	r2, [r7, #15]	@ zero_extendqisi2
+ 334 002c FB79     		ldrb	r3, [r7, #7]
+ 335 002e 1343     		orrs	r3, r3, r2
+ 336 0030 DBB2     		uxtb	r3, r3
+ 337 0032 FB73     		strb	r3, [r7, #15]
+ 207:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 208:src/stm32f3_discovery_lsm303dlhc.c ****   /* Write value to ACC MEMS CTRL_REG2 regsister */
+ 209:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Write(ACC_I2C_ADDRESS, LSM303DLHC_CTRL_REG2_A, &tmpreg);
+ 338              		.loc 1 209 0
+ 339 0034 07F10F03 		add	r3, r7, #15
+ 340 0038 4FF03200 		mov	r0, #50
+ 341 003c 4FF02101 		mov	r1, #33
+ 342 0040 1A46     		mov	r2, r3
+ 343 0042 FFF7FEFF 		bl	LSM303DLHC_Write
+ 210:src/stm32f3_discovery_lsm303dlhc.c **** }
+ 344              		.loc 1 210 0
+ 345 0046 07F11007 		add	r7, r7, #16
+ 346 004a BD46     		mov	sp, r7
+ 347 004c 80BD     		pop	{r7, pc}
+ 348              		.cfi_endproc
+ 349              	.LFE114:
+ 351 004e 00BF     		.section	.text.LSM303DLHC_AccIT1Config,"ax",%progbits
+ 352              		.align	2
+ 353              		.global	LSM303DLHC_AccIT1Config
+ 354              		.thumb
+ 355              		.thumb_func
+ 357              	LSM303DLHC_AccIT1Config:
+ 358              	.LFB115:
+ 211:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 212:src/stm32f3_discovery_lsm303dlhc.c **** /**
+ 213:src/stm32f3_discovery_lsm303dlhc.c ****   * @brief Set LSM303DLHC Interrupt1 configuration
+ 214:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  LSM303DLHC_IT: specifies the LSM303DLHC interrupt source to be enabled.
+ 215:src/stm32f3_discovery_lsm303dlhc.c ****   *           This parameter can be any combination of the following values: 
+ 216:src/stm32f3_discovery_lsm303dlhc.c ****   *         @arg   LSM303DLHC_IT1_CLICK
+ 217:src/stm32f3_discovery_lsm303dlhc.c ****   *         @arg   LSM303DLHC_IT1_AOI1
+ 218:src/stm32f3_discovery_lsm303dlhc.c ****   *         @arg   LSM303DLHC_IT1_AOI2
+ 219:src/stm32f3_discovery_lsm303dlhc.c ****   *         @arg   LSM303DLHC_IT1_DRY1
+ 220:src/stm32f3_discovery_lsm303dlhc.c ****   *         @arg   LSM303DLHC_IT1_WTM
+ 221:src/stm32f3_discovery_lsm303dlhc.c ****   *         @arg   LSM303DLHC_IT1_OVERRUN              
+ 222:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  NewState: new state of the selected LSM303DLHC interrupts.
+ 223:src/stm32f3_discovery_lsm303dlhc.c ****   *          This parameter can be: ENABLE or DISABLE.
+ 224:src/stm32f3_discovery_lsm303dlhc.c ****   * @retval None
+ 225:src/stm32f3_discovery_lsm303dlhc.c ****   */
+ 226:src/stm32f3_discovery_lsm303dlhc.c **** void LSM303DLHC_AccIT1Config(uint8_t LSM303DLHC_IT, FunctionalState NewState)
+ 227:src/stm32f3_discovery_lsm303dlhc.c **** {
+ 359              		.loc 1 227 0
+ 360              		.cfi_startproc
+ 361              		@ args = 0, pretend = 0, frame = 16
+ 362              		@ frame_needed = 1, uses_anonymous_args = 0
+ 363 0000 80B5     		push	{r7, lr}
+ 364              	.LCFI15:
+ 365              		.cfi_def_cfa_offset 8
+ 366              		.cfi_offset 7, -8
+ 367              		.cfi_offset 14, -4
+ 368 0002 84B0     		sub	sp, sp, #16
+ 369              	.LCFI16:
+ 370              		.cfi_def_cfa_offset 24
+ 371 0004 00AF     		add	r7, sp, #0
+ 372              	.LCFI17:
+ 373              		.cfi_def_cfa_register 7
+ 374 0006 0246     		mov	r2, r0
+ 375 0008 0B46     		mov	r3, r1
+ 376 000a FA71     		strb	r2, [r7, #7]
+ 377 000c BB71     		strb	r3, [r7, #6]
+ 228:src/stm32f3_discovery_lsm303dlhc.c ****   uint8_t tmpval = 0x00;
+ 378              		.loc 1 228 0
+ 379 000e 4FF00003 		mov	r3, #0
+ 380 0012 FB73     		strb	r3, [r7, #15]
+ 229:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 230:src/stm32f3_discovery_lsm303dlhc.c ****   /* Read CTRL_REG3 register */
+ 231:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Read(ACC_I2C_ADDRESS, LSM303DLHC_CTRL_REG3_A, &tmpval, 1 );
+ 381              		.loc 1 231 0
+ 382 0014 07F10F03 		add	r3, r7, #15
+ 383 0018 4FF03200 		mov	r0, #50
+ 384 001c 4FF02201 		mov	r1, #34
+ 385 0020 1A46     		mov	r2, r3
+ 386 0022 4FF00103 		mov	r3, #1
+ 387 0026 FFF7FEFF 		bl	LSM303DLHC_Read
+ 232:src/stm32f3_discovery_lsm303dlhc.c ****     
+ 233:src/stm32f3_discovery_lsm303dlhc.c ****   tmpval &= ~LSM303DLHC_IT;
+ 388              		.loc 1 233 0
+ 389 002a FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 390 002c 6FEA0303 		mvn	r3, r3
+ 391 0030 DAB2     		uxtb	r2, r3
+ 392 0032 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 393 0034 DBB2     		uxtb	r3, r3
+ 394 0036 1340     		ands	r3, r3, r2
+ 395 0038 DBB2     		uxtb	r3, r3
+ 396 003a DBB2     		uxtb	r3, r3
+ 397 003c FB73     		strb	r3, [r7, #15]
+ 234:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 235:src/stm32f3_discovery_lsm303dlhc.c ****   if (NewState != DISABLE)
+ 398              		.loc 1 235 0
+ 399 003e BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 400 0040 002B     		cmp	r3, #0
+ 401 0042 05D0     		beq	.L7
+ 236:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 237:src/stm32f3_discovery_lsm303dlhc.c ****     tmpval |= LSM303DLHC_IT;
+ 402              		.loc 1 237 0
+ 403 0044 FA7B     		ldrb	r2, [r7, #15]	@ zero_extendqisi2
+ 404 0046 FB79     		ldrb	r3, [r7, #7]
+ 405 0048 1343     		orrs	r3, r3, r2
+ 406 004a DBB2     		uxtb	r3, r3
+ 407 004c FB73     		strb	r3, [r7, #15]
+ 408 004e 04E0     		b	.L8
+ 409              	.L7:
+ 238:src/stm32f3_discovery_lsm303dlhc.c ****   }
+ 239:src/stm32f3_discovery_lsm303dlhc.c ****   else
+ 240:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 241:src/stm32f3_discovery_lsm303dlhc.c ****     /* Disable the selected interrupt */
+ 242:src/stm32f3_discovery_lsm303dlhc.c ****     tmpval =~ LSM303DLHC_IT;
+ 410              		.loc 1 242 0
+ 411 0050 FB79     		ldrb	r3, [r7, #7]
+ 412 0052 6FEA0303 		mvn	r3, r3
+ 413 0056 DBB2     		uxtb	r3, r3
+ 414 0058 FB73     		strb	r3, [r7, #15]
+ 415              	.L8:
+ 243:src/stm32f3_discovery_lsm303dlhc.c ****   }
+ 244:src/stm32f3_discovery_lsm303dlhc.c ****       
+ 245:src/stm32f3_discovery_lsm303dlhc.c ****   /* Write value to MEMS CTRL_REG3 register */
+ 246:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Write(ACC_I2C_ADDRESS, LSM303DLHC_CTRL_REG3_A, &tmpval);  
+ 416              		.loc 1 246 0
+ 417 005a 07F10F03 		add	r3, r7, #15
+ 418 005e 4FF03200 		mov	r0, #50
+ 419 0062 4FF02201 		mov	r1, #34
+ 420 0066 1A46     		mov	r2, r3
+ 421 0068 FFF7FEFF 		bl	LSM303DLHC_Write
+ 247:src/stm32f3_discovery_lsm303dlhc.c **** }
+ 422              		.loc 1 247 0
+ 423 006c 07F11007 		add	r7, r7, #16
+ 424 0070 BD46     		mov	sp, r7
+ 425 0072 80BD     		pop	{r7, pc}
+ 426              		.cfi_endproc
+ 427              	.LFE115:
+ 429              		.section	.text.LSM303DLHC_AccIT2Config,"ax",%progbits
+ 430              		.align	2
+ 431              		.global	LSM303DLHC_AccIT2Config
+ 432              		.thumb
+ 433              		.thumb_func
+ 435              	LSM303DLHC_AccIT2Config:
+ 436              	.LFB116:
+ 248:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 249:src/stm32f3_discovery_lsm303dlhc.c **** /**
+ 250:src/stm32f3_discovery_lsm303dlhc.c ****   * @brief Set LSM303DLHC Interrupt2 configuration
+ 251:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  LSM303DLHC_IT: specifies the LSM303DLHC interrupt source to be enabled.
+ 252:src/stm32f3_discovery_lsm303dlhc.c ****   *           This parameter can be any combination of the following values: 
+ 253:src/stm32f3_discovery_lsm303dlhc.c ****   *         @arg   LSM303DLHC_IT2_CLICK2
+ 254:src/stm32f3_discovery_lsm303dlhc.c ****   *         @arg   LSM303DLHC_IT2_INT1
+ 255:src/stm32f3_discovery_lsm303dlhc.c ****   *         @arg   LSM303DLHC_IT2_INT2
+ 256:src/stm32f3_discovery_lsm303dlhc.c ****   *         @arg   LSM303DLHC_IT2_BOOT
+ 257:src/stm32f3_discovery_lsm303dlhc.c ****   *         @arg   LSM303DLHC_IT2_ACT
+ 258:src/stm32f3_discovery_lsm303dlhc.c ****   *         @arg   LSM303DLHC_IT2_HLACTIVE              
+ 259:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  NewState: new state of the selected LSM303DLHC interrupts.
+ 260:src/stm32f3_discovery_lsm303dlhc.c ****   *          This parameter can be: ENABLE or DISABLE.
+ 261:src/stm32f3_discovery_lsm303dlhc.c ****   * @retval None
+ 262:src/stm32f3_discovery_lsm303dlhc.c ****   */
+ 263:src/stm32f3_discovery_lsm303dlhc.c **** void LSM303DLHC_AccIT2Config(uint8_t LSM303DLHC_IT, FunctionalState NewState)
+ 264:src/stm32f3_discovery_lsm303dlhc.c **** {
+ 437              		.loc 1 264 0
+ 438              		.cfi_startproc
+ 439              		@ args = 0, pretend = 0, frame = 16
+ 440              		@ frame_needed = 1, uses_anonymous_args = 0
+ 441 0000 80B5     		push	{r7, lr}
+ 442              	.LCFI18:
+ 443              		.cfi_def_cfa_offset 8
+ 444              		.cfi_offset 7, -8
+ 445              		.cfi_offset 14, -4
+ 446 0002 84B0     		sub	sp, sp, #16
+ 447              	.LCFI19:
+ 448              		.cfi_def_cfa_offset 24
+ 449 0004 00AF     		add	r7, sp, #0
+ 450              	.LCFI20:
+ 451              		.cfi_def_cfa_register 7
+ 452 0006 0246     		mov	r2, r0
+ 453 0008 0B46     		mov	r3, r1
+ 454 000a FA71     		strb	r2, [r7, #7]
+ 455 000c BB71     		strb	r3, [r7, #6]
+ 265:src/stm32f3_discovery_lsm303dlhc.c ****   uint8_t tmpval = 0x00;
+ 456              		.loc 1 265 0
+ 457 000e 4FF00003 		mov	r3, #0
+ 458 0012 FB73     		strb	r3, [r7, #15]
+ 266:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 267:src/stm32f3_discovery_lsm303dlhc.c ****   /* Read CTRL_REG3 register */
+ 268:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Read(ACC_I2C_ADDRESS, LSM303DLHC_CTRL_REG6_A, &tmpval, 1);
+ 459              		.loc 1 268 0
+ 460 0014 07F10F03 		add	r3, r7, #15
+ 461 0018 4FF03200 		mov	r0, #50
+ 462 001c 4FF02501 		mov	r1, #37
+ 463 0020 1A46     		mov	r2, r3
+ 464 0022 4FF00103 		mov	r3, #1
+ 465 0026 FFF7FEFF 		bl	LSM303DLHC_Read
+ 269:src/stm32f3_discovery_lsm303dlhc.c ****     
+ 270:src/stm32f3_discovery_lsm303dlhc.c ****   tmpval &= ~LSM303DLHC_IT;
+ 466              		.loc 1 270 0
+ 467 002a FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 468 002c 6FEA0303 		mvn	r3, r3
+ 469 0030 DAB2     		uxtb	r2, r3
+ 470 0032 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 471 0034 DBB2     		uxtb	r3, r3
+ 472 0036 1340     		ands	r3, r3, r2
+ 473 0038 DBB2     		uxtb	r3, r3
+ 474 003a DBB2     		uxtb	r3, r3
+ 475 003c FB73     		strb	r3, [r7, #15]
+ 271:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 272:src/stm32f3_discovery_lsm303dlhc.c ****   if (NewState != DISABLE)
+ 476              		.loc 1 272 0
+ 477 003e BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 478 0040 002B     		cmp	r3, #0
+ 479 0042 05D0     		beq	.L10
+ 273:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 274:src/stm32f3_discovery_lsm303dlhc.c ****     tmpval |= LSM303DLHC_IT;
+ 480              		.loc 1 274 0
+ 481 0044 FA7B     		ldrb	r2, [r7, #15]	@ zero_extendqisi2
+ 482 0046 FB79     		ldrb	r3, [r7, #7]
+ 483 0048 1343     		orrs	r3, r3, r2
+ 484 004a DBB2     		uxtb	r3, r3
+ 485 004c FB73     		strb	r3, [r7, #15]
+ 486 004e 04E0     		b	.L11
+ 487              	.L10:
+ 275:src/stm32f3_discovery_lsm303dlhc.c ****   }
+ 276:src/stm32f3_discovery_lsm303dlhc.c ****   else
+ 277:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 278:src/stm32f3_discovery_lsm303dlhc.c ****     /* Disable the selected interrupt */
+ 279:src/stm32f3_discovery_lsm303dlhc.c ****     tmpval =~ LSM303DLHC_IT;
+ 488              		.loc 1 279 0
+ 489 0050 FB79     		ldrb	r3, [r7, #7]
+ 490 0052 6FEA0303 		mvn	r3, r3
+ 491 0056 DBB2     		uxtb	r3, r3
+ 492 0058 FB73     		strb	r3, [r7, #15]
+ 493              	.L11:
+ 280:src/stm32f3_discovery_lsm303dlhc.c ****   }
+ 281:src/stm32f3_discovery_lsm303dlhc.c ****       
+ 282:src/stm32f3_discovery_lsm303dlhc.c ****   /* Write value to MEMS CTRL_REG3 register */
+ 283:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Write(ACC_I2C_ADDRESS, LSM303DLHC_CTRL_REG6_A, &tmpval);  
+ 494              		.loc 1 283 0
+ 495 005a 07F10F03 		add	r3, r7, #15
+ 496 005e 4FF03200 		mov	r0, #50
+ 497 0062 4FF02501 		mov	r1, #37
+ 498 0066 1A46     		mov	r2, r3
+ 499 0068 FFF7FEFF 		bl	LSM303DLHC_Write
+ 284:src/stm32f3_discovery_lsm303dlhc.c **** }
+ 500              		.loc 1 284 0
+ 501 006c 07F11007 		add	r7, r7, #16
+ 502 0070 BD46     		mov	sp, r7
+ 503 0072 80BD     		pop	{r7, pc}
+ 504              		.cfi_endproc
+ 505              	.LFE116:
+ 507              		.section	.text.LSM303DLHC_AccINT1InterruptConfig,"ax",%progbits
+ 508              		.align	2
+ 509              		.global	LSM303DLHC_AccINT1InterruptConfig
+ 510              		.thumb
+ 511              		.thumb_func
+ 513              	LSM303DLHC_AccINT1InterruptConfig:
+ 514              	.LFB117:
+ 285:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 286:src/stm32f3_discovery_lsm303dlhc.c **** /**
+ 287:src/stm32f3_discovery_lsm303dlhc.c ****   * @brief  INT1 interrupt config
+ 288:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  ITCombination: Or or And combination
+ 289:src/stm32f3_discovery_lsm303dlhc.c ****   *         ITAxes: axes to be enabled 
+ 290:src/stm32f3_discovery_lsm303dlhc.c ****   *         NewState: Enable or Disable    
+ 291:src/stm32f3_discovery_lsm303dlhc.c ****   * @retval None
+ 292:src/stm32f3_discovery_lsm303dlhc.c ****   */
+ 293:src/stm32f3_discovery_lsm303dlhc.c **** void LSM303DLHC_AccINT1InterruptConfig(uint8_t ITCombination, uint8_t ITAxes, FunctionalState NewSt
+ 294:src/stm32f3_discovery_lsm303dlhc.c **** {  
+ 515              		.loc 1 294 0
+ 516              		.cfi_startproc
+ 517              		@ args = 0, pretend = 0, frame = 16
+ 518              		@ frame_needed = 1, uses_anonymous_args = 0
+ 519 0000 80B5     		push	{r7, lr}
+ 520              	.LCFI21:
+ 521              		.cfi_def_cfa_offset 8
+ 522              		.cfi_offset 7, -8
+ 523              		.cfi_offset 14, -4
+ 524 0002 84B0     		sub	sp, sp, #16
+ 525              	.LCFI22:
+ 526              		.cfi_def_cfa_offset 24
+ 527 0004 00AF     		add	r7, sp, #0
+ 528              	.LCFI23:
+ 529              		.cfi_def_cfa_register 7
+ 530 0006 1346     		mov	r3, r2
+ 531 0008 0246     		mov	r2, r0
+ 532 000a FA71     		strb	r2, [r7, #7]
+ 533 000c 0A46     		mov	r2, r1
+ 534 000e BA71     		strb	r2, [r7, #6]
+ 535 0010 7B71     		strb	r3, [r7, #5]
+ 295:src/stm32f3_discovery_lsm303dlhc.c ****   uint8_t tmpval = ITCombination;
+ 536              		.loc 1 295 0
+ 537 0012 FB79     		ldrb	r3, [r7, #7]
+ 538 0014 FB73     		strb	r3, [r7, #15]
+ 296:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 297:src/stm32f3_discovery_lsm303dlhc.c ****   /* Read INT1_CFR register */
+ 298:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Read(ACC_I2C_ADDRESS, LSM303DLHC_INT1_CFG_A, &tmpval, 1);
+ 539              		.loc 1 298 0
+ 540 0016 07F10F03 		add	r3, r7, #15
+ 541 001a 4FF03200 		mov	r0, #50
+ 542 001e 4FF03001 		mov	r1, #48
+ 543 0022 1A46     		mov	r2, r3
+ 544 0024 4FF00103 		mov	r3, #1
+ 545 0028 FFF7FEFF 		bl	LSM303DLHC_Read
+ 299:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 300:src/stm32f3_discovery_lsm303dlhc.c ****   if (NewState != DISABLE)
+ 546              		.loc 1 300 0
+ 547 002c 7B79     		ldrb	r3, [r7, #5]	@ zero_extendqisi2
+ 548 002e 002B     		cmp	r3, #0
+ 549 0030 05D0     		beq	.L13
+ 301:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 302:src/stm32f3_discovery_lsm303dlhc.c ****     tmpval |= ITAxes;
+ 550              		.loc 1 302 0
+ 551 0032 FA7B     		ldrb	r2, [r7, #15]	@ zero_extendqisi2
+ 552 0034 BB79     		ldrb	r3, [r7, #6]
+ 553 0036 1343     		orrs	r3, r3, r2
+ 554 0038 DBB2     		uxtb	r3, r3
+ 555 003a FB73     		strb	r3, [r7, #15]
+ 556 003c 08E0     		b	.L14
+ 557              	.L13:
+ 303:src/stm32f3_discovery_lsm303dlhc.c ****   }
+ 304:src/stm32f3_discovery_lsm303dlhc.c ****   else
+ 305:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 306:src/stm32f3_discovery_lsm303dlhc.c ****     /* Disable the selected interrupt */
+ 307:src/stm32f3_discovery_lsm303dlhc.c ****     tmpval =(~ITAxes)|ITCombination;
+ 558              		.loc 1 307 0
+ 559 003e BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 560 0040 6FEA0303 		mvn	r3, r3
+ 561 0044 DAB2     		uxtb	r2, r3
+ 562 0046 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 563 0048 1343     		orrs	r3, r3, r2
+ 564 004a DBB2     		uxtb	r3, r3
+ 565 004c DBB2     		uxtb	r3, r3
+ 566 004e FB73     		strb	r3, [r7, #15]
+ 567              	.L14:
+ 308:src/stm32f3_discovery_lsm303dlhc.c ****   }
+ 309:src/stm32f3_discovery_lsm303dlhc.c ****       
+ 310:src/stm32f3_discovery_lsm303dlhc.c ****   /* Write value to MEMS INT1_CFR register */
+ 311:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Write(ACC_I2C_ADDRESS, LSM303DLHC_INT1_CFG_A, &tmpval);  
+ 568              		.loc 1 311 0
+ 569 0050 07F10F03 		add	r3, r7, #15
+ 570 0054 4FF03200 		mov	r0, #50
+ 571 0058 4FF03001 		mov	r1, #48
+ 572 005c 1A46     		mov	r2, r3
+ 573 005e FFF7FEFF 		bl	LSM303DLHC_Write
+ 312:src/stm32f3_discovery_lsm303dlhc.c **** }
+ 574              		.loc 1 312 0
+ 575 0062 07F11007 		add	r7, r7, #16
+ 576 0066 BD46     		mov	sp, r7
+ 577 0068 80BD     		pop	{r7, pc}
+ 578              		.cfi_endproc
+ 579              	.LFE117:
+ 581 006a 00BF     		.section	.text.LSM303DLHC_AccINT2InterruptConfig,"ax",%progbits
+ 582              		.align	2
+ 583              		.global	LSM303DLHC_AccINT2InterruptConfig
+ 584              		.thumb
+ 585              		.thumb_func
+ 587              	LSM303DLHC_AccINT2InterruptConfig:
+ 588              	.LFB118:
+ 313:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 314:src/stm32f3_discovery_lsm303dlhc.c **** /**
+ 315:src/stm32f3_discovery_lsm303dlhc.c ****   * @brief  INT1 interrupt config
+ 316:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  ITCombination: Or or And combination
+ 317:src/stm32f3_discovery_lsm303dlhc.c ****   *         ITAxes: axes to be enabled 
+ 318:src/stm32f3_discovery_lsm303dlhc.c ****   *         NewState: Enable or Disable    
+ 319:src/stm32f3_discovery_lsm303dlhc.c ****   * @retval None
+ 320:src/stm32f3_discovery_lsm303dlhc.c ****   */
+ 321:src/stm32f3_discovery_lsm303dlhc.c **** void LSM303DLHC_AccINT2InterruptConfig(uint8_t ITCombination, uint8_t ITAxes, FunctionalState NewSt
+ 322:src/stm32f3_discovery_lsm303dlhc.c **** {  
+ 589              		.loc 1 322 0
+ 590              		.cfi_startproc
+ 591              		@ args = 0, pretend = 0, frame = 16
+ 592              		@ frame_needed = 1, uses_anonymous_args = 0
+ 593 0000 80B5     		push	{r7, lr}
+ 594              	.LCFI24:
+ 595              		.cfi_def_cfa_offset 8
+ 596              		.cfi_offset 7, -8
+ 597              		.cfi_offset 14, -4
+ 598 0002 84B0     		sub	sp, sp, #16
+ 599              	.LCFI25:
+ 600              		.cfi_def_cfa_offset 24
+ 601 0004 00AF     		add	r7, sp, #0
+ 602              	.LCFI26:
+ 603              		.cfi_def_cfa_register 7
+ 604 0006 1346     		mov	r3, r2
+ 605 0008 0246     		mov	r2, r0
+ 606 000a FA71     		strb	r2, [r7, #7]
+ 607 000c 0A46     		mov	r2, r1
+ 608 000e BA71     		strb	r2, [r7, #6]
+ 609 0010 7B71     		strb	r3, [r7, #5]
+ 323:src/stm32f3_discovery_lsm303dlhc.c ****   uint8_t tmpval = ITCombination;
+ 610              		.loc 1 323 0
+ 611 0012 FB79     		ldrb	r3, [r7, #7]
+ 612 0014 FB73     		strb	r3, [r7, #15]
+ 324:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 325:src/stm32f3_discovery_lsm303dlhc.c ****   /* Read INT2_CFR register */
+ 326:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Read(ACC_I2C_ADDRESS, LSM303DLHC_INT2_CFG_A, &tmpval, 1);
+ 613              		.loc 1 326 0
+ 614 0016 07F10F03 		add	r3, r7, #15
+ 615 001a 4FF03200 		mov	r0, #50
+ 616 001e 4FF03401 		mov	r1, #52
+ 617 0022 1A46     		mov	r2, r3
+ 618 0024 4FF00103 		mov	r3, #1
+ 619 0028 FFF7FEFF 		bl	LSM303DLHC_Read
+ 327:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 328:src/stm32f3_discovery_lsm303dlhc.c ****   if (NewState != DISABLE)
+ 620              		.loc 1 328 0
+ 621 002c 7B79     		ldrb	r3, [r7, #5]	@ zero_extendqisi2
+ 622 002e 002B     		cmp	r3, #0
+ 623 0030 05D0     		beq	.L16
+ 329:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 330:src/stm32f3_discovery_lsm303dlhc.c ****     tmpval |= ITAxes;
+ 624              		.loc 1 330 0
+ 625 0032 FA7B     		ldrb	r2, [r7, #15]	@ zero_extendqisi2
+ 626 0034 BB79     		ldrb	r3, [r7, #6]
+ 627 0036 1343     		orrs	r3, r3, r2
+ 628 0038 DBB2     		uxtb	r3, r3
+ 629 003a FB73     		strb	r3, [r7, #15]
+ 630 003c 08E0     		b	.L17
+ 631              	.L16:
+ 331:src/stm32f3_discovery_lsm303dlhc.c ****   }
+ 332:src/stm32f3_discovery_lsm303dlhc.c ****   else
+ 333:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 334:src/stm32f3_discovery_lsm303dlhc.c ****     /* Disable the selected interrupt */
+ 335:src/stm32f3_discovery_lsm303dlhc.c ****     tmpval =(~ITAxes)|ITCombination;
+ 632              		.loc 1 335 0
+ 633 003e BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 634 0040 6FEA0303 		mvn	r3, r3
+ 635 0044 DAB2     		uxtb	r2, r3
+ 636 0046 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 637 0048 1343     		orrs	r3, r3, r2
+ 638 004a DBB2     		uxtb	r3, r3
+ 639 004c DBB2     		uxtb	r3, r3
+ 640 004e FB73     		strb	r3, [r7, #15]
+ 641              	.L17:
+ 336:src/stm32f3_discovery_lsm303dlhc.c ****   }
+ 337:src/stm32f3_discovery_lsm303dlhc.c ****       
+ 338:src/stm32f3_discovery_lsm303dlhc.c ****   /* Write value to MEMS INT2_CFR register */
+ 339:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Write(ACC_I2C_ADDRESS, LSM303DLHC_INT2_CFG_A, &tmpval);  
+ 642              		.loc 1 339 0
+ 643 0050 07F10F03 		add	r3, r7, #15
+ 644 0054 4FF03200 		mov	r0, #50
+ 645 0058 4FF03401 		mov	r1, #52
+ 646 005c 1A46     		mov	r2, r3
+ 647 005e FFF7FEFF 		bl	LSM303DLHC_Write
+ 340:src/stm32f3_discovery_lsm303dlhc.c **** }
+ 648              		.loc 1 340 0
+ 649 0062 07F11007 		add	r7, r7, #16
+ 650 0066 BD46     		mov	sp, r7
+ 651 0068 80BD     		pop	{r7, pc}
+ 652              		.cfi_endproc
+ 653              	.LFE118:
+ 655 006a 00BF     		.section	.text.LSM303DLHC_AccClickITConfig,"ax",%progbits
+ 656              		.align	2
+ 657              		.global	LSM303DLHC_AccClickITConfig
+ 658              		.thumb
+ 659              		.thumb_func
+ 661              	LSM303DLHC_AccClickITConfig:
+ 662              	.LFB119:
+ 341:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 342:src/stm32f3_discovery_lsm303dlhc.c **** /**
+ 343:src/stm32f3_discovery_lsm303dlhc.c ****   * @brief  INT1 interrupt config
+ 344:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  ITCombination: Or or And combination
+ 345:src/stm32f3_discovery_lsm303dlhc.c ****   *         ITAxes: axes to be enabled 
+ 346:src/stm32f3_discovery_lsm303dlhc.c ****   *         NewState: Enable or Disable    
+ 347:src/stm32f3_discovery_lsm303dlhc.c ****   * @retval None
+ 348:src/stm32f3_discovery_lsm303dlhc.c ****   */
+ 349:src/stm32f3_discovery_lsm303dlhc.c **** void LSM303DLHC_AccClickITConfig(uint8_t ITClick, FunctionalState NewState)
+ 350:src/stm32f3_discovery_lsm303dlhc.c **** {  
+ 663              		.loc 1 350 0
+ 664              		.cfi_startproc
+ 665              		@ args = 0, pretend = 0, frame = 16
+ 666              		@ frame_needed = 1, uses_anonymous_args = 0
+ 667 0000 80B5     		push	{r7, lr}
+ 668              	.LCFI27:
+ 669              		.cfi_def_cfa_offset 8
+ 670              		.cfi_offset 7, -8
+ 671              		.cfi_offset 14, -4
+ 672 0002 84B0     		sub	sp, sp, #16
+ 673              	.LCFI28:
+ 674              		.cfi_def_cfa_offset 24
+ 675 0004 00AF     		add	r7, sp, #0
+ 676              	.LCFI29:
+ 677              		.cfi_def_cfa_register 7
+ 678 0006 0246     		mov	r2, r0
+ 679 0008 0B46     		mov	r3, r1
+ 680 000a FA71     		strb	r2, [r7, #7]
+ 681 000c BB71     		strb	r3, [r7, #6]
+ 351:src/stm32f3_discovery_lsm303dlhc.c ****   uint8_t tmpval;
+ 352:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 353:src/stm32f3_discovery_lsm303dlhc.c ****   /* Read CLICK_CFR register */
+ 354:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Read(ACC_I2C_ADDRESS, LSM303DLHC_CLICK_CFG_A, &tmpval, 1);
+ 682              		.loc 1 354 0
+ 683 000e 07F10F03 		add	r3, r7, #15
+ 684 0012 4FF03200 		mov	r0, #50
+ 685 0016 4FF03801 		mov	r1, #56
+ 686 001a 1A46     		mov	r2, r3
+ 687 001c 4FF00103 		mov	r3, #1
+ 688 0020 FFF7FEFF 		bl	LSM303DLHC_Read
+ 355:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 356:src/stm32f3_discovery_lsm303dlhc.c ****   if (NewState != DISABLE)
+ 689              		.loc 1 356 0
+ 690 0024 BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 691 0026 002B     		cmp	r3, #0
+ 692 0028 05D0     		beq	.L19
+ 357:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 358:src/stm32f3_discovery_lsm303dlhc.c ****     tmpval |= ITClick;
+ 693              		.loc 1 358 0
+ 694 002a FA7B     		ldrb	r2, [r7, #15]	@ zero_extendqisi2
+ 695 002c FB79     		ldrb	r3, [r7, #7]
+ 696 002e 1343     		orrs	r3, r3, r2
+ 697 0030 DBB2     		uxtb	r3, r3
+ 698 0032 FB73     		strb	r3, [r7, #15]
+ 699 0034 04E0     		b	.L20
+ 700              	.L19:
+ 359:src/stm32f3_discovery_lsm303dlhc.c ****   }
+ 360:src/stm32f3_discovery_lsm303dlhc.c ****   else
+ 361:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 362:src/stm32f3_discovery_lsm303dlhc.c ****     /* Disable the selected interrupt */
+ 363:src/stm32f3_discovery_lsm303dlhc.c ****     tmpval =~ITClick;
+ 701              		.loc 1 363 0
+ 702 0036 FB79     		ldrb	r3, [r7, #7]
+ 703 0038 6FEA0303 		mvn	r3, r3
+ 704 003c DBB2     		uxtb	r3, r3
+ 705 003e FB73     		strb	r3, [r7, #15]
+ 706              	.L20:
+ 364:src/stm32f3_discovery_lsm303dlhc.c ****   }
+ 365:src/stm32f3_discovery_lsm303dlhc.c ****       
+ 366:src/stm32f3_discovery_lsm303dlhc.c ****   /* Write value to MEMS CLICK_CFR register */
+ 367:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Write(ACC_I2C_ADDRESS, LSM303DLHC_CLICK_CFG_A, &tmpval);  
+ 707              		.loc 1 367 0
+ 708 0040 07F10F03 		add	r3, r7, #15
+ 709 0044 4FF03200 		mov	r0, #50
+ 710 0048 4FF03801 		mov	r1, #56
+ 711 004c 1A46     		mov	r2, r3
+ 712 004e FFF7FEFF 		bl	LSM303DLHC_Write
+ 368:src/stm32f3_discovery_lsm303dlhc.c **** }
+ 713              		.loc 1 368 0
+ 714 0052 07F11007 		add	r7, r7, #16
+ 715 0056 BD46     		mov	sp, r7
+ 716 0058 80BD     		pop	{r7, pc}
+ 717              		.cfi_endproc
+ 718              	.LFE119:
+ 720 005a 00BF     		.section	.text.LSM303DLHC_AccGetDataStatus,"ax",%progbits
+ 721              		.align	2
+ 722              		.global	LSM303DLHC_AccGetDataStatus
+ 723              		.thumb
+ 724              		.thumb_func
+ 726              	LSM303DLHC_AccGetDataStatus:
+ 727              	.LFB120:
+ 369:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 370:src/stm32f3_discovery_lsm303dlhc.c **** /**
+ 371:src/stm32f3_discovery_lsm303dlhc.c ****   * @brief  Get status for Acc LSM303DLHC data
+ 372:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  None         
+ 373:src/stm32f3_discovery_lsm303dlhc.c ****   * @retval Data status in a LSM303DLHC Data register
+ 374:src/stm32f3_discovery_lsm303dlhc.c ****   */
+ 375:src/stm32f3_discovery_lsm303dlhc.c **** uint8_t LSM303DLHC_AccGetDataStatus(void)
+ 376:src/stm32f3_discovery_lsm303dlhc.c **** {
+ 728              		.loc 1 376 0
+ 729              		.cfi_startproc
+ 730              		@ args = 0, pretend = 0, frame = 8
+ 731              		@ frame_needed = 1, uses_anonymous_args = 0
+ 732 0000 80B5     		push	{r7, lr}
+ 733              	.LCFI30:
+ 734              		.cfi_def_cfa_offset 8
+ 735              		.cfi_offset 7, -8
+ 736              		.cfi_offset 14, -4
+ 737 0002 82B0     		sub	sp, sp, #8
+ 738              	.LCFI31:
+ 739              		.cfi_def_cfa_offset 16
+ 740 0004 00AF     		add	r7, sp, #0
+ 741              	.LCFI32:
+ 742              		.cfi_def_cfa_register 7
+ 377:src/stm32f3_discovery_lsm303dlhc.c ****   uint8_t tmpreg;
+ 378:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 379:src/stm32f3_discovery_lsm303dlhc.c ****   /* Read Mag STATUS register */
+ 380:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Read(ACC_I2C_ADDRESS, LSM303DLHC_STATUS_REG_A, &tmpreg, 1);
+ 743              		.loc 1 380 0
+ 744 0006 07F10703 		add	r3, r7, #7
+ 745 000a 4FF03200 		mov	r0, #50
+ 746 000e 4FF02701 		mov	r1, #39
+ 747 0012 1A46     		mov	r2, r3
+ 748 0014 4FF00103 		mov	r3, #1
+ 749 0018 FFF7FEFF 		bl	LSM303DLHC_Read
+ 381:src/stm32f3_discovery_lsm303dlhc.c ****                   
+ 382:src/stm32f3_discovery_lsm303dlhc.c ****   return tmpreg;
+ 750              		.loc 1 382 0
+ 751 001c FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 383:src/stm32f3_discovery_lsm303dlhc.c **** }
+ 752              		.loc 1 383 0
+ 753 001e 1846     		mov	r0, r3
+ 754 0020 07F10807 		add	r7, r7, #8
+ 755 0024 BD46     		mov	sp, r7
+ 756 0026 80BD     		pop	{r7, pc}
+ 757              		.cfi_endproc
+ 758              	.LFE120:
+ 760              		.section	.text.LSM303DLHC_MagInit,"ax",%progbits
+ 761              		.align	2
+ 762              		.global	LSM303DLHC_MagInit
+ 763              		.thumb
+ 764              		.thumb_func
+ 766              	LSM303DLHC_MagInit:
+ 767              	.LFB121:
+ 384:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 385:src/stm32f3_discovery_lsm303dlhc.c **** /**
+ 386:src/stm32f3_discovery_lsm303dlhc.c ****   * @brief  Set LSM303DLHC Mag Initialization.
+ 387:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  LSM303DLHC_InitStruct: pointer to a LSM303DLHC_MagInitTypeDef structure 
+ 388:src/stm32f3_discovery_lsm303dlhc.c ****   *         that contains the configuration setting for the LSM303DLHC.
+ 389:src/stm32f3_discovery_lsm303dlhc.c ****   * @retval None
+ 390:src/stm32f3_discovery_lsm303dlhc.c ****   */
+ 391:src/stm32f3_discovery_lsm303dlhc.c **** void LSM303DLHC_MagInit(LSM303DLHCMag_InitTypeDef *LSM303DLHC_InitStruct)
+ 392:src/stm32f3_discovery_lsm303dlhc.c **** {  
+ 768              		.loc 1 392 0
+ 769              		.cfi_startproc
+ 770              		@ args = 0, pretend = 0, frame = 16
+ 771              		@ frame_needed = 1, uses_anonymous_args = 0
+ 772 0000 80B5     		push	{r7, lr}
+ 773              	.LCFI33:
+ 774              		.cfi_def_cfa_offset 8
+ 775              		.cfi_offset 7, -8
+ 776              		.cfi_offset 14, -4
+ 777 0002 84B0     		sub	sp, sp, #16
+ 778              	.LCFI34:
+ 779              		.cfi_def_cfa_offset 24
+ 780 0004 00AF     		add	r7, sp, #0
+ 781              	.LCFI35:
+ 782              		.cfi_def_cfa_register 7
+ 783 0006 7860     		str	r0, [r7, #4]
+ 393:src/stm32f3_discovery_lsm303dlhc.c ****   uint8_t cra_regm = 0x00, crb_regm = 0x00, mr_regm = 0x00;
+ 784              		.loc 1 393 0
+ 785 0008 4FF00003 		mov	r3, #0
+ 786 000c FB73     		strb	r3, [r7, #15]
+ 787 000e 4FF00003 		mov	r3, #0
+ 788 0012 BB73     		strb	r3, [r7, #14]
+ 789 0014 4FF00003 		mov	r3, #0
+ 790 0018 7B73     		strb	r3, [r7, #13]
+ 394:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 395:src/stm32f3_discovery_lsm303dlhc.c ****   /* Configure the low level interface ---------------------------------------*/
+ 396:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_LowLevel_Init();
+ 791              		.loc 1 396 0
+ 792 001a FFF7FEFF 		bl	LSM303DLHC_LowLevel_Init
+ 397:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 398:src/stm32f3_discovery_lsm303dlhc.c ****   /* Configure MEMS: temp and Data rate */
+ 399:src/stm32f3_discovery_lsm303dlhc.c ****   cra_regm |= (uint8_t) (LSM303DLHC_InitStruct->Temperature_Sensor | LSM303DLHC_InitStruct->MagOutp
+ 793              		.loc 1 399 0
+ 794 001e 7B68     		ldr	r3, [r7, #4]
+ 795 0020 1A78     		ldrb	r2, [r3, #0]	@ zero_extendqisi2
+ 796 0022 7B68     		ldr	r3, [r7, #4]
+ 797 0024 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 798 0026 1343     		orrs	r3, r3, r2
+ 799 0028 DAB2     		uxtb	r2, r3
+ 800 002a FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 801 002c 1343     		orrs	r3, r3, r2
+ 802 002e DBB2     		uxtb	r3, r3
+ 803 0030 FB73     		strb	r3, [r7, #15]
+ 400:src/stm32f3_discovery_lsm303dlhc.c ****     
+ 401:src/stm32f3_discovery_lsm303dlhc.c ****   /* Configure MEMS: full Scale */
+ 402:src/stm32f3_discovery_lsm303dlhc.c ****   crb_regm |= (uint8_t) (LSM303DLHC_InitStruct->MagFull_Scale);
+ 804              		.loc 1 402 0
+ 805 0032 7B68     		ldr	r3, [r7, #4]
+ 806 0034 DA78     		ldrb	r2, [r3, #3]	@ zero_extendqisi2
+ 807 0036 BB7B     		ldrb	r3, [r7, #14]	@ zero_extendqisi2
+ 808 0038 1343     		orrs	r3, r3, r2
+ 809 003a DBB2     		uxtb	r3, r3
+ 810 003c BB73     		strb	r3, [r7, #14]
+ 403:src/stm32f3_discovery_lsm303dlhc.c ****       
+ 404:src/stm32f3_discovery_lsm303dlhc.c ****   /* Configure MEMS: working mode */
+ 405:src/stm32f3_discovery_lsm303dlhc.c ****   mr_regm |= (uint8_t) (LSM303DLHC_InitStruct->Working_Mode);
+ 811              		.loc 1 405 0
+ 812 003e 7B68     		ldr	r3, [r7, #4]
+ 813 0040 9A78     		ldrb	r2, [r3, #2]	@ zero_extendqisi2
+ 814 0042 7B7B     		ldrb	r3, [r7, #13]	@ zero_extendqisi2
+ 815 0044 1343     		orrs	r3, r3, r2
+ 816 0046 DBB2     		uxtb	r3, r3
+ 817 0048 7B73     		strb	r3, [r7, #13]
+ 406:src/stm32f3_discovery_lsm303dlhc.c ****                     
+ 407:src/stm32f3_discovery_lsm303dlhc.c ****   /* Write value to Mag MEMS CRA_REG regsister */
+ 408:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Write(MAG_I2C_ADDRESS, LSM303DLHC_CRA_REG_M, &cra_regm);
+ 818              		.loc 1 408 0
+ 819 004a 07F10F03 		add	r3, r7, #15
+ 820 004e 4FF03C00 		mov	r0, #60
+ 821 0052 4FF00001 		mov	r1, #0
+ 822 0056 1A46     		mov	r2, r3
+ 823 0058 FFF7FEFF 		bl	LSM303DLHC_Write
+ 409:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 410:src/stm32f3_discovery_lsm303dlhc.c ****   /* Write value to Mag MEMS CRB_REG regsister */
+ 411:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Write(MAG_I2C_ADDRESS, LSM303DLHC_CRB_REG_M, &crb_regm);
+ 824              		.loc 1 411 0
+ 825 005c 07F10E03 		add	r3, r7, #14
+ 826 0060 4FF03C00 		mov	r0, #60
+ 827 0064 4FF00101 		mov	r1, #1
+ 828 0068 1A46     		mov	r2, r3
+ 829 006a FFF7FEFF 		bl	LSM303DLHC_Write
+ 412:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 413:src/stm32f3_discovery_lsm303dlhc.c ****   /* Write value to Mag MEMS MR_REG regsister */
+ 414:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Write(MAG_I2C_ADDRESS, LSM303DLHC_MR_REG_M, &mr_regm);
+ 830              		.loc 1 414 0
+ 831 006e 07F10D03 		add	r3, r7, #13
+ 832 0072 4FF03C00 		mov	r0, #60
+ 833 0076 4FF00201 		mov	r1, #2
+ 834 007a 1A46     		mov	r2, r3
+ 835 007c FFF7FEFF 		bl	LSM303DLHC_Write
+ 415:src/stm32f3_discovery_lsm303dlhc.c **** }
+ 836              		.loc 1 415 0
+ 837 0080 07F11007 		add	r7, r7, #16
+ 838 0084 BD46     		mov	sp, r7
+ 839 0086 80BD     		pop	{r7, pc}
+ 840              		.cfi_endproc
+ 841              	.LFE121:
+ 843              		.section	.text.LSM303DLHC_MagGetDataStatus,"ax",%progbits
+ 844              		.align	2
+ 845              		.global	LSM303DLHC_MagGetDataStatus
+ 846              		.thumb
+ 847              		.thumb_func
+ 849              	LSM303DLHC_MagGetDataStatus:
+ 850              	.LFB122:
+ 416:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 417:src/stm32f3_discovery_lsm303dlhc.c **** /**
+ 418:src/stm32f3_discovery_lsm303dlhc.c ****   * @brief  Get status for Mag LSM303DLHC data
+ 419:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  None         
+ 420:src/stm32f3_discovery_lsm303dlhc.c ****   * @retval Data status in a LSM303DLHC Data register
+ 421:src/stm32f3_discovery_lsm303dlhc.c ****   */
+ 422:src/stm32f3_discovery_lsm303dlhc.c **** uint8_t LSM303DLHC_MagGetDataStatus(void)
+ 423:src/stm32f3_discovery_lsm303dlhc.c **** {
+ 851              		.loc 1 423 0
+ 852              		.cfi_startproc
+ 853              		@ args = 0, pretend = 0, frame = 8
+ 854              		@ frame_needed = 1, uses_anonymous_args = 0
+ 855 0000 80B5     		push	{r7, lr}
+ 856              	.LCFI36:
+ 857              		.cfi_def_cfa_offset 8
+ 858              		.cfi_offset 7, -8
+ 859              		.cfi_offset 14, -4
+ 860 0002 82B0     		sub	sp, sp, #8
+ 861              	.LCFI37:
+ 862              		.cfi_def_cfa_offset 16
+ 863 0004 00AF     		add	r7, sp, #0
+ 864              	.LCFI38:
+ 865              		.cfi_def_cfa_register 7
+ 424:src/stm32f3_discovery_lsm303dlhc.c ****   uint8_t tmpreg;
+ 425:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 426:src/stm32f3_discovery_lsm303dlhc.c ****   /* Read Mag STATUS register */
+ 427:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Read(MAG_I2C_ADDRESS, LSM303DLHC_SR_REG_M, &tmpreg, 1 );
+ 866              		.loc 1 427 0
+ 867 0006 07F10703 		add	r3, r7, #7
+ 868 000a 4FF03C00 		mov	r0, #60
+ 869 000e 4FF00901 		mov	r1, #9
+ 870 0012 1A46     		mov	r2, r3
+ 871 0014 4FF00103 		mov	r3, #1
+ 872 0018 FFF7FEFF 		bl	LSM303DLHC_Read
+ 428:src/stm32f3_discovery_lsm303dlhc.c ****                   
+ 429:src/stm32f3_discovery_lsm303dlhc.c ****   return tmpreg;
+ 873              		.loc 1 429 0
+ 874 001c FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 430:src/stm32f3_discovery_lsm303dlhc.c **** }
+ 875              		.loc 1 430 0
+ 876 001e 1846     		mov	r0, r3
+ 877 0020 07F10807 		add	r7, r7, #8
+ 878 0024 BD46     		mov	sp, r7
+ 879 0026 80BD     		pop	{r7, pc}
+ 880              		.cfi_endproc
+ 881              	.LFE122:
+ 883              		.section	.text.LSM303DLHC_Write,"ax",%progbits
+ 884              		.align	2
+ 885              		.global	LSM303DLHC_Write
+ 886              		.thumb
+ 887              		.thumb_func
+ 889              	LSM303DLHC_Write:
+ 890              	.LFB123:
+ 431:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 432:src/stm32f3_discovery_lsm303dlhc.c **** /**
+ 433:src/stm32f3_discovery_lsm303dlhc.c ****   * @brief  Writes one byte to the LSM303DLHC.
+ 434:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  DeviceAddr : specifies the slave address to be programmed.
+ 435:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  RegAddr : specifies the LSM303DLHC register to be written.
+ 436:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  pBuffer : pointer to the buffer  containing the data to be written to the LSM303DLH.
+ 437:src/stm32f3_discovery_lsm303dlhc.c ****   * @retval LSM303DLHC Status
+ 438:src/stm32f3_discovery_lsm303dlhc.c ****   */
+ 439:src/stm32f3_discovery_lsm303dlhc.c **** uint16_t LSM303DLHC_Write(uint8_t DeviceAddr, uint8_t RegAddr, uint8_t* pBuffer)
+ 440:src/stm32f3_discovery_lsm303dlhc.c **** {  
+ 891              		.loc 1 440 0
+ 892              		.cfi_startproc
+ 893              		@ args = 0, pretend = 0, frame = 8
+ 894              		@ frame_needed = 1, uses_anonymous_args = 0
+ 895 0000 80B5     		push	{r7, lr}
+ 896              	.LCFI39:
+ 897              		.cfi_def_cfa_offset 8
+ 898              		.cfi_offset 7, -8
+ 899              		.cfi_offset 14, -4
+ 900 0002 84B0     		sub	sp, sp, #16
+ 901              	.LCFI40:
+ 902              		.cfi_def_cfa_offset 24
+ 903 0004 02AF     		add	r7, sp, #8
+ 904              	.LCFI41:
+ 905              		.cfi_def_cfa 7, 16
+ 906 0006 0B46     		mov	r3, r1
+ 907 0008 3A60     		str	r2, [r7, #0]
+ 908 000a 0246     		mov	r2, r0
+ 909 000c FA71     		strb	r2, [r7, #7]
+ 910 000e BB71     		strb	r3, [r7, #6]
+ 441:src/stm32f3_discovery_lsm303dlhc.c ****   /* Test on BUSY Flag */
+ 442:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Timeout = LSM303DLHC_LONG_TIMEOUT;
+ 911              		.loc 1 442 0
+ 912 0010 654B     		ldr	r3, .L38
+ 913 0012 4FF42042 		mov	r2, #40960
+ 914 0016 1A60     		str	r2, [r3, #0]
+ 443:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_BUSY) != RESET)
+ 915              		.loc 1 443 0
+ 916 0018 11E0     		b	.L27
+ 917              	.L29:
+ 444:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 445:src/stm32f3_discovery_lsm303dlhc.c ****     if((LSM303DLHC_Timeout--) == 0) return LSM303DLHC_TIMEOUT_UserCallback();
+ 918              		.loc 1 445 0
+ 919 001a 634B     		ldr	r3, .L38
+ 920 001c 1B68     		ldr	r3, [r3, #0]
+ 921 001e 002B     		cmp	r3, #0
+ 922 0020 14BF     		ite	ne
+ 923 0022 0022     		movne	r2, #0
+ 924 0024 0122     		moveq	r2, #1
+ 925 0026 D2B2     		uxtb	r2, r2
+ 926 0028 03F1FF31 		add	r1, r3, #-1
+ 927 002c 5E4B     		ldr	r3, .L38
+ 928 002e 1960     		str	r1, [r3, #0]
+ 929 0030 002A     		cmp	r2, #0
+ 930 0032 04D0     		beq	.L27
+ 931              		.loc 1 445 0 is_stmt 0 discriminator 1
+ 932 0034 FFF7FEFF 		bl	LSM303DLHC_TIMEOUT_UserCallback
+ 933 0038 0346     		mov	r3, r0
+ 934 003a 9BB2     		uxth	r3, r3
+ 935 003c AFE0     		b	.L28
+ 936              	.L27:
+ 443:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_BUSY) != RESET)
+ 937              		.loc 1 443 0 is_stmt 1 discriminator 1
+ 938 003e 5B48     		ldr	r0, .L38+4
+ 939 0040 4FF40041 		mov	r1, #32768
+ 940 0044 FFF7FEFF 		bl	I2C_GetFlagStatus
+ 941 0048 0346     		mov	r3, r0
+ 942 004a 002B     		cmp	r3, #0
+ 943 004c E5D1     		bne	.L29
+ 446:src/stm32f3_discovery_lsm303dlhc.c ****   }
+ 447:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 448:src/stm32f3_discovery_lsm303dlhc.c ****   /* Configure slave address, nbytes, reload, end mode and start or stop generation */
+ 449:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_TransferHandling(LSM303DLHC_I2C, DeviceAddr, 1, I2C_Reload_Mode, I2C_Generate_Start_Write);
+ 944              		.loc 1 449 0
+ 945 004e FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 946 0050 9BB2     		uxth	r3, r3
+ 947 0052 4FF40052 		mov	r2, #8192
+ 948 0056 0092     		str	r2, [sp, #0]
+ 949 0058 5448     		ldr	r0, .L38+4
+ 950 005a 1946     		mov	r1, r3
+ 951 005c 4FF00102 		mov	r2, #1
+ 952 0060 4FF08073 		mov	r3, #16777216
+ 953 0064 FFF7FEFF 		bl	I2C_TransferHandling
+ 450:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 451:src/stm32f3_discovery_lsm303dlhc.c ****   /* Wait until TXIS flag is set */
+ 452:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Timeout = LSM303DLHC_LONG_TIMEOUT;  
+ 954              		.loc 1 452 0
+ 955 0068 4F4B     		ldr	r3, .L38
+ 956 006a 4FF42042 		mov	r2, #40960
+ 957 006e 1A60     		str	r2, [r3, #0]
+ 453:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_TXIS) == RESET)   
+ 958              		.loc 1 453 0
+ 959 0070 11E0     		b	.L30
+ 960              	.L31:
+ 454:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 455:src/stm32f3_discovery_lsm303dlhc.c ****     if((LSM303DLHC_Timeout--) == 0) return LSM303DLHC_TIMEOUT_UserCallback();
+ 961              		.loc 1 455 0
+ 962 0072 4D4B     		ldr	r3, .L38
+ 963 0074 1B68     		ldr	r3, [r3, #0]
+ 964 0076 002B     		cmp	r3, #0
+ 965 0078 14BF     		ite	ne
+ 966 007a 0022     		movne	r2, #0
+ 967 007c 0122     		moveq	r2, #1
+ 968 007e D2B2     		uxtb	r2, r2
+ 969 0080 03F1FF31 		add	r1, r3, #-1
+ 970 0084 484B     		ldr	r3, .L38
+ 971 0086 1960     		str	r1, [r3, #0]
+ 972 0088 002A     		cmp	r2, #0
+ 973 008a 04D0     		beq	.L30
+ 974              		.loc 1 455 0 is_stmt 0 discriminator 1
+ 975 008c FFF7FEFF 		bl	LSM303DLHC_TIMEOUT_UserCallback
+ 976 0090 0346     		mov	r3, r0
+ 977 0092 9BB2     		uxth	r3, r3
+ 978 0094 83E0     		b	.L28
+ 979              	.L30:
+ 453:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_TXIS) == RESET)   
+ 980              		.loc 1 453 0 is_stmt 1 discriminator 1
+ 981 0096 4548     		ldr	r0, .L38+4
+ 982 0098 4FF00201 		mov	r1, #2
+ 983 009c FFF7FEFF 		bl	I2C_GetFlagStatus
+ 984 00a0 0346     		mov	r3, r0
+ 985 00a2 002B     		cmp	r3, #0
+ 986 00a4 E5D0     		beq	.L31
+ 456:src/stm32f3_discovery_lsm303dlhc.c ****   }
+ 457:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 458:src/stm32f3_discovery_lsm303dlhc.c ****   /* Send Register address */
+ 459:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_SendData(LSM303DLHC_I2C, (uint8_t) RegAddr);
+ 987              		.loc 1 459 0
+ 988 00a6 BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 989 00a8 4048     		ldr	r0, .L38+4
+ 990 00aa 1946     		mov	r1, r3
+ 991 00ac FFF7FEFF 		bl	I2C_SendData
+ 460:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 461:src/stm32f3_discovery_lsm303dlhc.c ****   /* Wait until TCR flag is set */
+ 462:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Timeout = LSM303DLHC_LONG_TIMEOUT;
+ 992              		.loc 1 462 0
+ 993 00b0 3D4B     		ldr	r3, .L38
+ 994 00b2 4FF42042 		mov	r2, #40960
+ 995 00b6 1A60     		str	r2, [r3, #0]
+ 463:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_TCR) == RESET)
+ 996              		.loc 1 463 0
+ 997 00b8 11E0     		b	.L32
+ 998              	.L33:
+ 464:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 465:src/stm32f3_discovery_lsm303dlhc.c ****     if((LSM303DLHC_Timeout--) == 0) return LSM303DLHC_TIMEOUT_UserCallback();
+ 999              		.loc 1 465 0
+ 1000 00ba 3B4B     		ldr	r3, .L38
+ 1001 00bc 1B68     		ldr	r3, [r3, #0]
+ 1002 00be 002B     		cmp	r3, #0
+ 1003 00c0 14BF     		ite	ne
+ 1004 00c2 0022     		movne	r2, #0
+ 1005 00c4 0122     		moveq	r2, #1
+ 1006 00c6 D2B2     		uxtb	r2, r2
+ 1007 00c8 03F1FF31 		add	r1, r3, #-1
+ 1008 00cc 364B     		ldr	r3, .L38
+ 1009 00ce 1960     		str	r1, [r3, #0]
+ 1010 00d0 002A     		cmp	r2, #0
+ 1011 00d2 04D0     		beq	.L32
+ 1012              		.loc 1 465 0 is_stmt 0 discriminator 1
+ 1013 00d4 FFF7FEFF 		bl	LSM303DLHC_TIMEOUT_UserCallback
+ 1014 00d8 0346     		mov	r3, r0
+ 1015 00da 9BB2     		uxth	r3, r3
+ 1016 00dc 5FE0     		b	.L28
+ 1017              	.L32:
+ 463:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_TCR) == RESET)
+ 1018              		.loc 1 463 0 is_stmt 1 discriminator 1
+ 1019 00de 3348     		ldr	r0, .L38+4
+ 1020 00e0 4FF08001 		mov	r1, #128
+ 1021 00e4 FFF7FEFF 		bl	I2C_GetFlagStatus
+ 1022 00e8 0346     		mov	r3, r0
+ 1023 00ea 002B     		cmp	r3, #0
+ 1024 00ec E5D0     		beq	.L33
+ 466:src/stm32f3_discovery_lsm303dlhc.c ****   }
+ 467:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 468:src/stm32f3_discovery_lsm303dlhc.c ****   /* Configure slave address, nbytes, reload, end mode and start or stop generation */
+ 469:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_TransferHandling(LSM303DLHC_I2C, DeviceAddr, 1, I2C_AutoEnd_Mode, I2C_No_StartStop);
+ 1025              		.loc 1 469 0
+ 1026 00ee FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 1027 00f0 9BB2     		uxth	r3, r3
+ 1028 00f2 4FF00002 		mov	r2, #0
+ 1029 00f6 0092     		str	r2, [sp, #0]
+ 1030 00f8 2C48     		ldr	r0, .L38+4
+ 1031 00fa 1946     		mov	r1, r3
+ 1032 00fc 4FF00102 		mov	r2, #1
+ 1033 0100 4FF00073 		mov	r3, #33554432
+ 1034 0104 FFF7FEFF 		bl	I2C_TransferHandling
+ 470:src/stm32f3_discovery_lsm303dlhc.c ****        
+ 471:src/stm32f3_discovery_lsm303dlhc.c ****   /* Wait until TXIS flag is set */
+ 472:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Timeout = LSM303DLHC_LONG_TIMEOUT;
+ 1035              		.loc 1 472 0
+ 1036 0108 274B     		ldr	r3, .L38
+ 1037 010a 4FF42042 		mov	r2, #40960
+ 1038 010e 1A60     		str	r2, [r3, #0]
+ 473:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_TXIS) == RESET)
+ 1039              		.loc 1 473 0
+ 1040 0110 11E0     		b	.L34
+ 1041              	.L35:
+ 474:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 475:src/stm32f3_discovery_lsm303dlhc.c ****     if((LSM303DLHC_Timeout--) == 0) return LSM303DLHC_TIMEOUT_UserCallback();
+ 1042              		.loc 1 475 0
+ 1043 0112 254B     		ldr	r3, .L38
+ 1044 0114 1B68     		ldr	r3, [r3, #0]
+ 1045 0116 002B     		cmp	r3, #0
+ 1046 0118 14BF     		ite	ne
+ 1047 011a 0022     		movne	r2, #0
+ 1048 011c 0122     		moveq	r2, #1
+ 1049 011e D2B2     		uxtb	r2, r2
+ 1050 0120 03F1FF31 		add	r1, r3, #-1
+ 1051 0124 204B     		ldr	r3, .L38
+ 1052 0126 1960     		str	r1, [r3, #0]
+ 1053 0128 002A     		cmp	r2, #0
+ 1054 012a 04D0     		beq	.L34
+ 1055              		.loc 1 475 0 is_stmt 0 discriminator 1
+ 1056 012c FFF7FEFF 		bl	LSM303DLHC_TIMEOUT_UserCallback
+ 1057 0130 0346     		mov	r3, r0
+ 1058 0132 9BB2     		uxth	r3, r3
+ 1059 0134 33E0     		b	.L28
+ 1060              	.L34:
+ 473:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_TXIS) == RESET)
+ 1061              		.loc 1 473 0 is_stmt 1 discriminator 1
+ 1062 0136 1D48     		ldr	r0, .L38+4
+ 1063 0138 4FF00201 		mov	r1, #2
+ 1064 013c FFF7FEFF 		bl	I2C_GetFlagStatus
+ 1065 0140 0346     		mov	r3, r0
+ 1066 0142 002B     		cmp	r3, #0
+ 1067 0144 E5D0     		beq	.L35
+ 476:src/stm32f3_discovery_lsm303dlhc.c ****   }  
+ 477:src/stm32f3_discovery_lsm303dlhc.c ****     
+ 478:src/stm32f3_discovery_lsm303dlhc.c ****   /* Write data to TXDR */
+ 479:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_SendData(LSM303DLHC_I2C, *pBuffer);
+ 1068              		.loc 1 479 0
+ 1069 0146 3B68     		ldr	r3, [r7, #0]
+ 1070 0148 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 1071 014a 1848     		ldr	r0, .L38+4
+ 1072 014c 1946     		mov	r1, r3
+ 1073 014e FFF7FEFF 		bl	I2C_SendData
+ 480:src/stm32f3_discovery_lsm303dlhc.c ****       
+ 481:src/stm32f3_discovery_lsm303dlhc.c ****   /* Wait until STOPF flag is set */
+ 482:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Timeout = LSM303DLHC_LONG_TIMEOUT;
+ 1074              		.loc 1 482 0
+ 1075 0152 154B     		ldr	r3, .L38
+ 1076 0154 4FF42042 		mov	r2, #40960
+ 1077 0158 1A60     		str	r2, [r3, #0]
+ 483:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_STOPF) == RESET)
+ 1078              		.loc 1 483 0
+ 1079 015a 11E0     		b	.L36
+ 1080              	.L37:
+ 484:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 485:src/stm32f3_discovery_lsm303dlhc.c ****     if((LSM303DLHC_Timeout--) == 0) return LSM303DLHC_TIMEOUT_UserCallback();
+ 1081              		.loc 1 485 0
+ 1082 015c 124B     		ldr	r3, .L38
+ 1083 015e 1B68     		ldr	r3, [r3, #0]
+ 1084 0160 002B     		cmp	r3, #0
+ 1085 0162 14BF     		ite	ne
+ 1086 0164 0022     		movne	r2, #0
+ 1087 0166 0122     		moveq	r2, #1
+ 1088 0168 D2B2     		uxtb	r2, r2
+ 1089 016a 03F1FF31 		add	r1, r3, #-1
+ 1090 016e 0E4B     		ldr	r3, .L38
+ 1091 0170 1960     		str	r1, [r3, #0]
+ 1092 0172 002A     		cmp	r2, #0
+ 1093 0174 04D0     		beq	.L36
+ 1094              		.loc 1 485 0 is_stmt 0 discriminator 1
+ 1095 0176 FFF7FEFF 		bl	LSM303DLHC_TIMEOUT_UserCallback
+ 1096 017a 0346     		mov	r3, r0
+ 1097 017c 9BB2     		uxth	r3, r3
+ 1098 017e 0EE0     		b	.L28
+ 1099              	.L36:
+ 483:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_STOPF) == RESET)
+ 1100              		.loc 1 483 0 is_stmt 1 discriminator 1
+ 1101 0180 0A48     		ldr	r0, .L38+4
+ 1102 0182 4FF02001 		mov	r1, #32
+ 1103 0186 FFF7FEFF 		bl	I2C_GetFlagStatus
+ 1104 018a 0346     		mov	r3, r0
+ 1105 018c 002B     		cmp	r3, #0
+ 1106 018e E5D0     		beq	.L37
+ 486:src/stm32f3_discovery_lsm303dlhc.c ****   }   
+ 487:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 488:src/stm32f3_discovery_lsm303dlhc.c ****   /* Clear STOPF flag */
+ 489:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_ClearFlag(LSM303DLHC_I2C, I2C_ICR_STOPCF);
+ 1107              		.loc 1 489 0
+ 1108 0190 0648     		ldr	r0, .L38+4
+ 1109 0192 4FF02001 		mov	r1, #32
+ 1110 0196 FFF7FEFF 		bl	I2C_ClearFlag
+ 490:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 491:src/stm32f3_discovery_lsm303dlhc.c ****   return LSM303DLHC_OK;
+ 1111              		.loc 1 491 0
+ 1112 019a 4FF00003 		mov	r3, #0
+ 1113              	.L28:
+ 492:src/stm32f3_discovery_lsm303dlhc.c **** }
+ 1114              		.loc 1 492 0
+ 1115 019e 1846     		mov	r0, r3
+ 1116 01a0 07F10807 		add	r7, r7, #8
+ 1117 01a4 BD46     		mov	sp, r7
+ 1118 01a6 80BD     		pop	{r7, pc}
+ 1119              	.L39:
+ 1120              		.align	2
+ 1121              	.L38:
+ 1122 01a8 00000000 		.word	LSM303DLHC_Timeout
+ 1123 01ac 00540040 		.word	1073763328
+ 1124              		.cfi_endproc
+ 1125              	.LFE123:
+ 1127              		.section	.text.LSM303DLHC_Read,"ax",%progbits
+ 1128              		.align	2
+ 1129              		.global	LSM303DLHC_Read
+ 1130              		.thumb
+ 1131              		.thumb_func
+ 1133              	LSM303DLHC_Read:
+ 1134              	.LFB124:
+ 493:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 494:src/stm32f3_discovery_lsm303dlhc.c **** /**
+ 495:src/stm32f3_discovery_lsm303dlhc.c ****   * @brief  Reads a block of data from the LSM303DLHC.
+ 496:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  DeviceAddr : specifies the slave address to be programmed(ACC_I2C_ADDRESS or MAG_I2C_AD
+ 497:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  RegAddr : specifies the LSM303DLHC internal address register to read from.
+ 498:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  pBuffer : pointer to the buffer that receives the data read from the LSM303DLH.
+ 499:src/stm32f3_discovery_lsm303dlhc.c ****   * @param  NumByteToRead : number of bytes to read from the LSM303DLH ( NumByteToRead >1  only for
+ 500:src/stm32f3_discovery_lsm303dlhc.c ****   * @retval LSM303DLHC register value
+ 501:src/stm32f3_discovery_lsm303dlhc.c ****   */
+ 502:src/stm32f3_discovery_lsm303dlhc.c **** uint16_t LSM303DLHC_Read(uint8_t DeviceAddr, uint8_t RegAddr, uint8_t* pBuffer, uint16_t NumByteToR
+ 503:src/stm32f3_discovery_lsm303dlhc.c **** {    
+ 1135              		.loc 1 503 0
+ 1136              		.cfi_startproc
+ 1137              		@ args = 0, pretend = 0, frame = 8
+ 1138              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1139 0000 80B5     		push	{r7, lr}
+ 1140              	.LCFI42:
+ 1141              		.cfi_def_cfa_offset 8
+ 1142              		.cfi_offset 7, -8
+ 1143              		.cfi_offset 14, -4
+ 1144 0002 84B0     		sub	sp, sp, #16
+ 1145              	.LCFI43:
+ 1146              		.cfi_def_cfa_offset 24
+ 1147 0004 02AF     		add	r7, sp, #8
+ 1148              	.LCFI44:
+ 1149              		.cfi_def_cfa 7, 16
+ 1150 0006 3A60     		str	r2, [r7, #0]
+ 1151 0008 0246     		mov	r2, r0
+ 1152 000a FA71     		strb	r2, [r7, #7]
+ 1153 000c 0A46     		mov	r2, r1
+ 1154 000e BA71     		strb	r2, [r7, #6]
+ 1155 0010 BB80     		strh	r3, [r7, #4]	@ movhi
+ 504:src/stm32f3_discovery_lsm303dlhc.c ****   /* Test on BUSY Flag */
+ 505:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Timeout = LSM303DLHC_LONG_TIMEOUT;
+ 1156              		.loc 1 505 0
+ 1157 0012 704B     		ldr	r3, .L55
+ 1158 0014 4FF42042 		mov	r2, #40960
+ 1159 0018 1A60     		str	r2, [r3, #0]
+ 506:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_BUSY) != RESET)
+ 1160              		.loc 1 506 0
+ 1161 001a 11E0     		b	.L41
+ 1162              	.L43:
+ 507:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 508:src/stm32f3_discovery_lsm303dlhc.c ****     if((LSM303DLHC_Timeout--) == 0) return LSM303DLHC_TIMEOUT_UserCallback();
+ 1163              		.loc 1 508 0
+ 1164 001c 6D4B     		ldr	r3, .L55
+ 1165 001e 1B68     		ldr	r3, [r3, #0]
+ 1166 0020 002B     		cmp	r3, #0
+ 1167 0022 14BF     		ite	ne
+ 1168 0024 0022     		movne	r2, #0
+ 1169 0026 0122     		moveq	r2, #1
+ 1170 0028 D2B2     		uxtb	r2, r2
+ 1171 002a 03F1FF31 		add	r1, r3, #-1
+ 1172 002e 694B     		ldr	r3, .L55
+ 1173 0030 1960     		str	r1, [r3, #0]
+ 1174 0032 002A     		cmp	r2, #0
+ 1175 0034 04D0     		beq	.L41
+ 1176              		.loc 1 508 0 is_stmt 0 discriminator 1
+ 1177 0036 FFF7FEFF 		bl	LSM303DLHC_TIMEOUT_UserCallback
+ 1178 003a 0346     		mov	r3, r0
+ 1179 003c 9BB2     		uxth	r3, r3
+ 1180 003e C4E0     		b	.L42
+ 1181              	.L41:
+ 506:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_BUSY) != RESET)
+ 1182              		.loc 1 506 0 is_stmt 1 discriminator 1
+ 1183 0040 6548     		ldr	r0, .L55+4
+ 1184 0042 4FF40041 		mov	r1, #32768
+ 1185 0046 FFF7FEFF 		bl	I2C_GetFlagStatus
+ 1186 004a 0346     		mov	r3, r0
+ 1187 004c 002B     		cmp	r3, #0
+ 1188 004e E5D1     		bne	.L43
+ 509:src/stm32f3_discovery_lsm303dlhc.c ****   }
+ 510:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 511:src/stm32f3_discovery_lsm303dlhc.c ****   /* Configure slave address, nbytes, reload, end mode and start or stop generation */
+ 512:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_TransferHandling(LSM303DLHC_I2C, DeviceAddr, 1, I2C_SoftEnd_Mode, I2C_Generate_Start_Write);
+ 1189              		.loc 1 512 0
+ 1190 0050 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 1191 0052 9BB2     		uxth	r3, r3
+ 1192 0054 4FF40052 		mov	r2, #8192
+ 1193 0058 0092     		str	r2, [sp, #0]
+ 1194 005a 5F48     		ldr	r0, .L55+4
+ 1195 005c 1946     		mov	r1, r3
+ 1196 005e 4FF00102 		mov	r2, #1
+ 1197 0062 4FF00003 		mov	r3, #0
+ 1198 0066 FFF7FEFF 		bl	I2C_TransferHandling
+ 513:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 514:src/stm32f3_discovery_lsm303dlhc.c ****   /* Wait until TXIS flag is set */
+ 515:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Timeout = LSM303DLHC_LONG_TIMEOUT;
+ 1199              		.loc 1 515 0
+ 1200 006a 5A4B     		ldr	r3, .L55
+ 1201 006c 4FF42042 		mov	r2, #40960
+ 1202 0070 1A60     		str	r2, [r3, #0]
+ 516:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_TXIS) == RESET)
+ 1203              		.loc 1 516 0
+ 1204 0072 11E0     		b	.L44
+ 1205              	.L45:
+ 517:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 518:src/stm32f3_discovery_lsm303dlhc.c ****     if((LSM303DLHC_Timeout--) == 0) return LSM303DLHC_TIMEOUT_UserCallback();
+ 1206              		.loc 1 518 0
+ 1207 0074 574B     		ldr	r3, .L55
+ 1208 0076 1B68     		ldr	r3, [r3, #0]
+ 1209 0078 002B     		cmp	r3, #0
+ 1210 007a 14BF     		ite	ne
+ 1211 007c 0022     		movne	r2, #0
+ 1212 007e 0122     		moveq	r2, #1
+ 1213 0080 D2B2     		uxtb	r2, r2
+ 1214 0082 03F1FF31 		add	r1, r3, #-1
+ 1215 0086 534B     		ldr	r3, .L55
+ 1216 0088 1960     		str	r1, [r3, #0]
+ 1217 008a 002A     		cmp	r2, #0
+ 1218 008c 04D0     		beq	.L44
+ 1219              		.loc 1 518 0 is_stmt 0 discriminator 1
+ 1220 008e FFF7FEFF 		bl	LSM303DLHC_TIMEOUT_UserCallback
+ 1221 0092 0346     		mov	r3, r0
+ 1222 0094 9BB2     		uxth	r3, r3
+ 1223 0096 98E0     		b	.L42
+ 1224              	.L44:
+ 516:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_TXIS) == RESET)
+ 1225              		.loc 1 516 0 is_stmt 1 discriminator 1
+ 1226 0098 4F48     		ldr	r0, .L55+4
+ 1227 009a 4FF00201 		mov	r1, #2
+ 1228 009e FFF7FEFF 		bl	I2C_GetFlagStatus
+ 1229 00a2 0346     		mov	r3, r0
+ 1230 00a4 002B     		cmp	r3, #0
+ 1231 00a6 E5D0     		beq	.L45
+ 519:src/stm32f3_discovery_lsm303dlhc.c ****   }
+ 520:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 521:src/stm32f3_discovery_lsm303dlhc.c ****   if(NumByteToRead>1)
+ 1232              		.loc 1 521 0
+ 1233 00a8 BB88     		ldrh	r3, [r7, #4]
+ 1234 00aa 012B     		cmp	r3, #1
+ 1235 00ac 03D9     		bls	.L46
+ 522:src/stm32f3_discovery_lsm303dlhc.c ****       RegAddr |= 0x80;
+ 1236              		.loc 1 522 0
+ 1237 00ae BB79     		ldrb	r3, [r7, #6]
+ 1238 00b0 63F07F03 		orn	r3, r3, #127
+ 1239 00b4 BB71     		strb	r3, [r7, #6]
+ 1240              	.L46:
+ 523:src/stm32f3_discovery_lsm303dlhc.c **** 
+ 524:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 525:src/stm32f3_discovery_lsm303dlhc.c ****   /* Send Register address */
+ 526:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_SendData(LSM303DLHC_I2C, (uint8_t)RegAddr);
+ 1241              		.loc 1 526 0
+ 1242 00b6 BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 1243 00b8 4748     		ldr	r0, .L55+4
+ 1244 00ba 1946     		mov	r1, r3
+ 1245 00bc FFF7FEFF 		bl	I2C_SendData
+ 527:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 528:src/stm32f3_discovery_lsm303dlhc.c ****   /* Wait until TC flag is set */
+ 529:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Timeout = LSM303DLHC_LONG_TIMEOUT;
+ 1246              		.loc 1 529 0
+ 1247 00c0 444B     		ldr	r3, .L55
+ 1248 00c2 4FF42042 		mov	r2, #40960
+ 1249 00c6 1A60     		str	r2, [r3, #0]
+ 530:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_TC) == RESET)
+ 1250              		.loc 1 530 0
+ 1251 00c8 11E0     		b	.L47
+ 1252              	.L48:
+ 531:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 532:src/stm32f3_discovery_lsm303dlhc.c ****     if((LSM303DLHC_Timeout--) == 0) return LSM303DLHC_TIMEOUT_UserCallback();
+ 1253              		.loc 1 532 0
+ 1254 00ca 424B     		ldr	r3, .L55
+ 1255 00cc 1B68     		ldr	r3, [r3, #0]
+ 1256 00ce 002B     		cmp	r3, #0
+ 1257 00d0 14BF     		ite	ne
+ 1258 00d2 0022     		movne	r2, #0
+ 1259 00d4 0122     		moveq	r2, #1
+ 1260 00d6 D2B2     		uxtb	r2, r2
+ 1261 00d8 03F1FF31 		add	r1, r3, #-1
+ 1262 00dc 3D4B     		ldr	r3, .L55
+ 1263 00de 1960     		str	r1, [r3, #0]
+ 1264 00e0 002A     		cmp	r2, #0
+ 1265 00e2 04D0     		beq	.L47
+ 1266              		.loc 1 532 0 is_stmt 0 discriminator 1
+ 1267 00e4 FFF7FEFF 		bl	LSM303DLHC_TIMEOUT_UserCallback
+ 1268 00e8 0346     		mov	r3, r0
+ 1269 00ea 9BB2     		uxth	r3, r3
+ 1270 00ec 6DE0     		b	.L42
+ 1271              	.L47:
+ 530:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_TC) == RESET)
+ 1272              		.loc 1 530 0 is_stmt 1 discriminator 1
+ 1273 00ee 3A48     		ldr	r0, .L55+4
+ 1274 00f0 4FF04001 		mov	r1, #64
+ 1275 00f4 FFF7FEFF 		bl	I2C_GetFlagStatus
+ 1276 00f8 0346     		mov	r3, r0
+ 1277 00fa 002B     		cmp	r3, #0
+ 1278 00fc E5D0     		beq	.L48
+ 533:src/stm32f3_discovery_lsm303dlhc.c ****   }  
+ 534:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 535:src/stm32f3_discovery_lsm303dlhc.c ****   /* Configure slave address, nbytes, reload, end mode and start or stop generation */
+ 536:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_TransferHandling(LSM303DLHC_I2C, DeviceAddr, NumByteToRead, I2C_AutoEnd_Mode, I2C_Generate_St
+ 1279              		.loc 1 536 0
+ 1280 00fe FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 1281 0100 9AB2     		uxth	r2, r3
+ 1282 0102 BB88     		ldrh	r3, [r7, #4]	@ movhi
+ 1283 0104 DBB2     		uxtb	r3, r3
+ 1284 0106 4FF41051 		mov	r1, #9216
+ 1285 010a 0091     		str	r1, [sp, #0]
+ 1286 010c 3248     		ldr	r0, .L55+4
+ 1287 010e 1146     		mov	r1, r2
+ 1288 0110 1A46     		mov	r2, r3
+ 1289 0112 4FF00073 		mov	r3, #33554432
+ 1290 0116 FFF7FEFF 		bl	I2C_TransferHandling
+ 537:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 538:src/stm32f3_discovery_lsm303dlhc.c ****   /* Wait until all data are received */
+ 539:src/stm32f3_discovery_lsm303dlhc.c ****   while (NumByteToRead)
+ 1291              		.loc 1 539 0
+ 1292 011a 2DE0     		b	.L49
+ 1293              	.L52:
+ 540:src/stm32f3_discovery_lsm303dlhc.c ****   {   
+ 541:src/stm32f3_discovery_lsm303dlhc.c ****     /* Wait until RXNE flag is set */
+ 542:src/stm32f3_discovery_lsm303dlhc.c ****     LSM303DLHC_Timeout = LSM303DLHC_LONG_TIMEOUT;
+ 1294              		.loc 1 542 0
+ 1295 011c 2D4B     		ldr	r3, .L55
+ 1296 011e 4FF42042 		mov	r2, #40960
+ 1297 0122 1A60     		str	r2, [r3, #0]
+ 543:src/stm32f3_discovery_lsm303dlhc.c ****     while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_RXNE) == RESET)    
+ 1298              		.loc 1 543 0
+ 1299 0124 11E0     		b	.L50
+ 1300              	.L51:
+ 544:src/stm32f3_discovery_lsm303dlhc.c ****     {
+ 545:src/stm32f3_discovery_lsm303dlhc.c ****       if((LSM303DLHC_Timeout--) == 0) return LSM303DLHC_TIMEOUT_UserCallback();
+ 1301              		.loc 1 545 0
+ 1302 0126 2B4B     		ldr	r3, .L55
+ 1303 0128 1B68     		ldr	r3, [r3, #0]
+ 1304 012a 002B     		cmp	r3, #0
+ 1305 012c 14BF     		ite	ne
+ 1306 012e 0022     		movne	r2, #0
+ 1307 0130 0122     		moveq	r2, #1
+ 1308 0132 D2B2     		uxtb	r2, r2
+ 1309 0134 03F1FF31 		add	r1, r3, #-1
+ 1310 0138 264B     		ldr	r3, .L55
+ 1311 013a 1960     		str	r1, [r3, #0]
+ 1312 013c 002A     		cmp	r2, #0
+ 1313 013e 04D0     		beq	.L50
+ 1314              		.loc 1 545 0 is_stmt 0 discriminator 1
+ 1315 0140 FFF7FEFF 		bl	LSM303DLHC_TIMEOUT_UserCallback
+ 1316 0144 0346     		mov	r3, r0
+ 1317 0146 9BB2     		uxth	r3, r3
+ 1318 0148 3FE0     		b	.L42
+ 1319              	.L50:
+ 543:src/stm32f3_discovery_lsm303dlhc.c ****     while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_RXNE) == RESET)    
+ 1320              		.loc 1 543 0 is_stmt 1 discriminator 1
+ 1321 014a 2348     		ldr	r0, .L55+4
+ 1322 014c 4FF00401 		mov	r1, #4
+ 1323 0150 FFF7FEFF 		bl	I2C_GetFlagStatus
+ 1324 0154 0346     		mov	r3, r0
+ 1325 0156 002B     		cmp	r3, #0
+ 1326 0158 E5D0     		beq	.L51
+ 546:src/stm32f3_discovery_lsm303dlhc.c ****     }
+ 547:src/stm32f3_discovery_lsm303dlhc.c ****     
+ 548:src/stm32f3_discovery_lsm303dlhc.c ****     /* Read data from RXDR */
+ 549:src/stm32f3_discovery_lsm303dlhc.c ****     *pBuffer = I2C_ReceiveData(LSM303DLHC_I2C);
+ 1327              		.loc 1 549 0
+ 1328 015a 1F48     		ldr	r0, .L55+4
+ 1329 015c FFF7FEFF 		bl	I2C_ReceiveData
+ 1330 0160 0346     		mov	r3, r0
+ 1331 0162 1A46     		mov	r2, r3
+ 1332 0164 3B68     		ldr	r3, [r7, #0]
+ 1333 0166 1A70     		strb	r2, [r3, #0]
+ 550:src/stm32f3_discovery_lsm303dlhc.c ****     /* Point to the next location where the byte read will be saved */
+ 551:src/stm32f3_discovery_lsm303dlhc.c ****     pBuffer++;
+ 1334              		.loc 1 551 0
+ 1335 0168 3B68     		ldr	r3, [r7, #0]
+ 1336 016a 03F10103 		add	r3, r3, #1
+ 1337 016e 3B60     		str	r3, [r7, #0]
+ 552:src/stm32f3_discovery_lsm303dlhc.c ****     
+ 553:src/stm32f3_discovery_lsm303dlhc.c ****     /* Decrement the read bytes counter */
+ 554:src/stm32f3_discovery_lsm303dlhc.c ****     NumByteToRead--;
+ 1338              		.loc 1 554 0
+ 1339 0170 BB88     		ldrh	r3, [r7, #4]	@ movhi
+ 1340 0172 03F1FF33 		add	r3, r3, #-1
+ 1341 0176 BB80     		strh	r3, [r7, #4]	@ movhi
+ 1342              	.L49:
+ 539:src/stm32f3_discovery_lsm303dlhc.c ****   while (NumByteToRead)
+ 1343              		.loc 1 539 0 discriminator 1
+ 1344 0178 BB88     		ldrh	r3, [r7, #4]
+ 1345 017a 002B     		cmp	r3, #0
+ 1346 017c CED1     		bne	.L52
+ 555:src/stm32f3_discovery_lsm303dlhc.c ****   } 
+ 556:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 557:src/stm32f3_discovery_lsm303dlhc.c ****   /* Wait until STOPF flag is set */
+ 558:src/stm32f3_discovery_lsm303dlhc.c ****   LSM303DLHC_Timeout = LSM303DLHC_LONG_TIMEOUT;
+ 1347              		.loc 1 558 0
+ 1348 017e 154B     		ldr	r3, .L55
+ 1349 0180 4FF42042 		mov	r2, #40960
+ 1350 0184 1A60     		str	r2, [r3, #0]
+ 559:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_STOPF) == RESET)   
+ 1351              		.loc 1 559 0
+ 1352 0186 11E0     		b	.L53
+ 1353              	.L54:
+ 560:src/stm32f3_discovery_lsm303dlhc.c ****   {
+ 561:src/stm32f3_discovery_lsm303dlhc.c ****     if((LSM303DLHC_Timeout--) == 0) return LSM303DLHC_TIMEOUT_UserCallback();
+ 1354              		.loc 1 561 0
+ 1355 0188 124B     		ldr	r3, .L55
+ 1356 018a 1B68     		ldr	r3, [r3, #0]
+ 1357 018c 002B     		cmp	r3, #0
+ 1358 018e 14BF     		ite	ne
+ 1359 0190 0022     		movne	r2, #0
+ 1360 0192 0122     		moveq	r2, #1
+ 1361 0194 D2B2     		uxtb	r2, r2
+ 1362 0196 03F1FF31 		add	r1, r3, #-1
+ 1363 019a 0E4B     		ldr	r3, .L55
+ 1364 019c 1960     		str	r1, [r3, #0]
+ 1365 019e 002A     		cmp	r2, #0
+ 1366 01a0 04D0     		beq	.L53
+ 1367              		.loc 1 561 0 is_stmt 0 discriminator 1
+ 1368 01a2 FFF7FEFF 		bl	LSM303DLHC_TIMEOUT_UserCallback
+ 1369 01a6 0346     		mov	r3, r0
+ 1370 01a8 9BB2     		uxth	r3, r3
+ 1371 01aa 0EE0     		b	.L42
+ 1372              	.L53:
+ 559:src/stm32f3_discovery_lsm303dlhc.c ****   while(I2C_GetFlagStatus(LSM303DLHC_I2C, I2C_ISR_STOPF) == RESET)   
+ 1373              		.loc 1 559 0 is_stmt 1 discriminator 1
+ 1374 01ac 0A48     		ldr	r0, .L55+4
+ 1375 01ae 4FF02001 		mov	r1, #32
+ 1376 01b2 FFF7FEFF 		bl	I2C_GetFlagStatus
+ 1377 01b6 0346     		mov	r3, r0
+ 1378 01b8 002B     		cmp	r3, #0
+ 1379 01ba E5D0     		beq	.L54
+ 562:src/stm32f3_discovery_lsm303dlhc.c ****   }
+ 563:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 564:src/stm32f3_discovery_lsm303dlhc.c ****   /* Clear STOPF flag */
+ 565:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_ClearFlag(LSM303DLHC_I2C, I2C_ICR_STOPCF);
+ 1380              		.loc 1 565 0
+ 1381 01bc 0648     		ldr	r0, .L55+4
+ 1382 01be 4FF02001 		mov	r1, #32
+ 1383 01c2 FFF7FEFF 		bl	I2C_ClearFlag
+ 566:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 567:src/stm32f3_discovery_lsm303dlhc.c ****   /* If all operations OK */
+ 568:src/stm32f3_discovery_lsm303dlhc.c ****   return LSM303DLHC_OK;  
+ 1384              		.loc 1 568 0
+ 1385 01c6 4FF00003 		mov	r3, #0
+ 1386              	.L42:
+ 569:src/stm32f3_discovery_lsm303dlhc.c **** }  
+ 1387              		.loc 1 569 0
+ 1388 01ca 1846     		mov	r0, r3
+ 1389 01cc 07F10807 		add	r7, r7, #8
+ 1390 01d0 BD46     		mov	sp, r7
+ 1391 01d2 80BD     		pop	{r7, pc}
+ 1392              	.L56:
+ 1393              		.align	2
+ 1394              	.L55:
+ 1395 01d4 00000000 		.word	LSM303DLHC_Timeout
+ 1396 01d8 00540040 		.word	1073763328
+ 1397              		.cfi_endproc
+ 1398              	.LFE124:
+ 1400              		.section	.text.LSM303DLHC_LowLevel_Init,"ax",%progbits
+ 1401              		.align	2
+ 1402              		.thumb
+ 1403              		.thumb_func
+ 1405              	LSM303DLHC_LowLevel_Init:
+ 1406              	.LFB125:
+ 570:src/stm32f3_discovery_lsm303dlhc.c **** /**
+ 571:src/stm32f3_discovery_lsm303dlhc.c **** * @brief  Initializes the low level interface used to drive the LSM303DLHC
+ 572:src/stm32f3_discovery_lsm303dlhc.c **** * @param  None
+ 573:src/stm32f3_discovery_lsm303dlhc.c **** * @retval None
+ 574:src/stm32f3_discovery_lsm303dlhc.c **** */
+ 575:src/stm32f3_discovery_lsm303dlhc.c **** static void LSM303DLHC_LowLevel_Init(void)
+ 576:src/stm32f3_discovery_lsm303dlhc.c **** {
+ 1407              		.loc 1 576 0
+ 1408              		.cfi_startproc
+ 1409              		@ args = 0, pretend = 0, frame = 48
+ 1410              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1411 0000 80B5     		push	{r7, lr}
+ 1412              	.LCFI45:
+ 1413              		.cfi_def_cfa_offset 8
+ 1414              		.cfi_offset 7, -8
+ 1415              		.cfi_offset 14, -4
+ 1416 0002 8CB0     		sub	sp, sp, #48
+ 1417              	.LCFI46:
+ 1418              		.cfi_def_cfa_offset 56
+ 1419 0004 00AF     		add	r7, sp, #0
+ 1420              	.LCFI47:
+ 1421              		.cfi_def_cfa_register 7
+ 577:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitTypeDef GPIO_InitStructure;
+ 578:src/stm32f3_discovery_lsm303dlhc.c ****   EXTI_InitTypeDef EXTI_InitStructure;
+ 579:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_InitTypeDef  I2C_InitStructure;
+ 580:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 581:src/stm32f3_discovery_lsm303dlhc.c ****   /* Enable the I2C periph */
+ 582:src/stm32f3_discovery_lsm303dlhc.c ****   RCC_APB1PeriphClockCmd(LSM303DLHC_I2C_CLK, ENABLE);
+ 1422              		.loc 1 582 0
+ 1423 0006 4FF40010 		mov	r0, #2097152
+ 1424 000a 4FF00101 		mov	r1, #1
+ 1425 000e FFF7FEFF 		bl	RCC_APB1PeriphClockCmd
+ 583:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 584:src/stm32f3_discovery_lsm303dlhc.c ****   /* Enable SCK and SDA GPIO clocks */
+ 585:src/stm32f3_discovery_lsm303dlhc.c ****   RCC_AHBPeriphClockCmd(LSM303DLHC_I2C_SCK_GPIO_CLK | LSM303DLHC_I2C_SDA_GPIO_CLK , ENABLE);
+ 1426              		.loc 1 585 0
+ 1427 0012 4FF48020 		mov	r0, #262144
+ 1428 0016 4FF00101 		mov	r1, #1
+ 1429 001a FFF7FEFF 		bl	RCC_AHBPeriphClockCmd
+ 586:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 587:src/stm32f3_discovery_lsm303dlhc.c ****   /* Enable INT1 GPIO clock */
+ 588:src/stm32f3_discovery_lsm303dlhc.c ****   RCC_AHBPeriphClockCmd(LSM303DLHC_I2C_INT1_GPIO_CLK, ENABLE);
+ 1430              		.loc 1 588 0
+ 1431 001e 4FF40010 		mov	r0, #2097152
+ 1432 0022 4FF00101 		mov	r1, #1
+ 1433 0026 FFF7FEFF 		bl	RCC_AHBPeriphClockCmd
+ 589:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 590:src/stm32f3_discovery_lsm303dlhc.c ****   /* Enable INT2 GPIO clock */
+ 591:src/stm32f3_discovery_lsm303dlhc.c ****   RCC_AHBPeriphClockCmd(LSM303DLHC_I2C_INT2_GPIO_CLK, ENABLE);
+ 1434              		.loc 1 591 0
+ 1435 002a 4FF40010 		mov	r0, #2097152
+ 1436 002e 4FF00101 		mov	r1, #1
+ 1437 0032 FFF7FEFF 		bl	RCC_AHBPeriphClockCmd
+ 592:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 593:src/stm32f3_discovery_lsm303dlhc.c ****   /* Enable DRDY clock */
+ 594:src/stm32f3_discovery_lsm303dlhc.c ****   RCC_AHBPeriphClockCmd(LSM303DLHC_DRDY_GPIO_CLK, ENABLE);
+ 1438              		.loc 1 594 0
+ 1439 0036 4FF40010 		mov	r0, #2097152
+ 1440 003a 4FF00101 		mov	r1, #1
+ 1441 003e FFF7FEFF 		bl	RCC_AHBPeriphClockCmd
+ 595:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 596:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_PinAFConfig(LSM303DLHC_I2C_SCK_GPIO_PORT, LSM303DLHC_I2C_SCK_SOURCE, LSM303DLHC_I2C_SCK_AF);
+ 1442              		.loc 1 596 0
+ 1443 0042 5448     		ldr	r0, .L58
+ 1444 0044 4FF00601 		mov	r1, #6
+ 1445 0048 4FF00402 		mov	r2, #4
+ 1446 004c FFF7FEFF 		bl	GPIO_PinAFConfig
+ 597:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_PinAFConfig(LSM303DLHC_I2C_SDA_GPIO_PORT, LSM303DLHC_I2C_SDA_SOURCE, LSM303DLHC_I2C_SDA_AF);
+ 1447              		.loc 1 597 0
+ 1448 0050 5048     		ldr	r0, .L58
+ 1449 0052 4FF00701 		mov	r1, #7
+ 1450 0056 4FF00402 		mov	r2, #4
+ 1451 005a FFF7FEFF 		bl	GPIO_PinAFConfig
+ 598:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 599:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+ 1452              		.loc 1 599 0
+ 1453 005e 4FF00203 		mov	r3, #2
+ 1454 0062 87F82C30 		strb	r3, [r7, #44]
+ 600:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+ 1455              		.loc 1 600 0
+ 1456 0066 4FF00003 		mov	r3, #0
+ 1457 006a 87F82E30 		strb	r3, [r7, #46]
+ 601:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN;
+ 1458              		.loc 1 601 0
+ 1459 006e 4FF00203 		mov	r3, #2
+ 1460 0072 87F82F30 		strb	r3, [r7, #47]
+ 602:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+ 1461              		.loc 1 602 0
+ 1462 0076 4FF00303 		mov	r3, #3
+ 1463 007a 87F82D30 		strb	r3, [r7, #45]
+ 603:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 604:src/stm32f3_discovery_lsm303dlhc.c ****   /* I2C SCK pin configuration */
+ 605:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitStructure.GPIO_Pin = LSM303DLHC_I2C_SCK_PIN;
+ 1464              		.loc 1 605 0
+ 1465 007e 4FF04003 		mov	r3, #64
+ 1466 0082 BB62     		str	r3, [r7, #40]
+ 606:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_Init(LSM303DLHC_I2C_SCK_GPIO_PORT, &GPIO_InitStructure);
+ 1467              		.loc 1 606 0
+ 1468 0084 07F12803 		add	r3, r7, #40
+ 1469 0088 4248     		ldr	r0, .L58
+ 1470 008a 1946     		mov	r1, r3
+ 1471 008c FFF7FEFF 		bl	GPIO_Init
+ 607:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 608:src/stm32f3_discovery_lsm303dlhc.c ****   /* I2C SDA pin configuration */
+ 609:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitStructure.GPIO_Pin =  LSM303DLHC_I2C_SDA_PIN;
+ 1472              		.loc 1 609 0
+ 1473 0090 4FF08003 		mov	r3, #128
+ 1474 0094 BB62     		str	r3, [r7, #40]
+ 610:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_Init(LSM303DLHC_I2C_SDA_GPIO_PORT, &GPIO_InitStructure);
+ 1475              		.loc 1 610 0
+ 1476 0096 07F12803 		add	r3, r7, #40
+ 1477 009a 3E48     		ldr	r0, .L58
+ 1478 009c 1946     		mov	r1, r3
+ 1479 009e FFF7FEFF 		bl	GPIO_Init
+ 611:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 612:src/stm32f3_discovery_lsm303dlhc.c ****   /* Mems DRDY */
+ 613:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+ 1480              		.loc 1 613 0
+ 1481 00a2 4FF00003 		mov	r3, #0
+ 1482 00a6 87F82C30 		strb	r3, [r7, #44]
+ 614:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+ 1483              		.loc 1 614 0
+ 1484 00aa 4FF00003 		mov	r3, #0
+ 1485 00ae 87F82E30 		strb	r3, [r7, #46]
+ 615:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+ 1486              		.loc 1 615 0
+ 1487 00b2 4FF00003 		mov	r3, #0
+ 1488 00b6 87F82F30 		strb	r3, [r7, #47]
+ 616:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+ 1489              		.loc 1 616 0
+ 1490 00ba 4FF00303 		mov	r3, #3
+ 1491 00be 87F82D30 		strb	r3, [r7, #45]
+ 617:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 618:src/stm32f3_discovery_lsm303dlhc.c ****   /* Mems DRDY pin configuration */
+ 619:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitStructure.GPIO_Pin = LSM303DLHC_DRDY_PIN;
+ 1492              		.loc 1 619 0
+ 1493 00c2 4FF00403 		mov	r3, #4
+ 1494 00c6 BB62     		str	r3, [r7, #40]
+ 620:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_Init(LSM303DLHC_DRDY_GPIO_PORT, &GPIO_InitStructure);
+ 1495              		.loc 1 620 0
+ 1496 00c8 07F12803 		add	r3, r7, #40
+ 1497 00cc 3248     		ldr	r0, .L58+4
+ 1498 00ce 1946     		mov	r1, r3
+ 1499 00d0 FFF7FEFF 		bl	GPIO_Init
+ 621:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 622:src/stm32f3_discovery_lsm303dlhc.c ****   /* Connect EXTI Line to Mems DRDY Pin */
+ 623:src/stm32f3_discovery_lsm303dlhc.c ****   SYSCFG_EXTILineConfig(LSM303DLHC_DRDY_EXTI_PORT_SOURCE, LSM303DLHC_DRDY_EXTI_PIN_SOURCE);
+ 1500              		.loc 1 623 0
+ 1501 00d4 4FF00400 		mov	r0, #4
+ 1502 00d8 4FF00201 		mov	r1, #2
+ 1503 00dc FFF7FEFF 		bl	SYSCFG_EXTILineConfig
+ 624:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 625:src/stm32f3_discovery_lsm303dlhc.c ****   EXTI_InitStructure.EXTI_Line = LSM303DLHC_DRDY_EXTI_LINE;
+ 1504              		.loc 1 625 0
+ 1505 00e0 4FF00203 		mov	r3, #2
+ 1506 00e4 3B62     		str	r3, [r7, #32]
+ 626:src/stm32f3_discovery_lsm303dlhc.c ****   EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+ 1507              		.loc 1 626 0
+ 1508 00e6 4FF00003 		mov	r3, #0
+ 1509 00ea 87F82430 		strb	r3, [r7, #36]
+ 627:src/stm32f3_discovery_lsm303dlhc.c ****   EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
+ 1510              		.loc 1 627 0
+ 1511 00ee 4FF00803 		mov	r3, #8
+ 1512 00f2 87F82530 		strb	r3, [r7, #37]
+ 628:src/stm32f3_discovery_lsm303dlhc.c ****   EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+ 1513              		.loc 1 628 0
+ 1514 00f6 4FF00103 		mov	r3, #1
+ 1515 00fa 87F82630 		strb	r3, [r7, #38]
+ 629:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 630:src/stm32f3_discovery_lsm303dlhc.c ****   EXTI_Init(&EXTI_InitStructure);
+ 1516              		.loc 1 630 0
+ 1517 00fe 07F12003 		add	r3, r7, #32
+ 1518 0102 1846     		mov	r0, r3
+ 1519 0104 FFF7FEFF 		bl	EXTI_Init
+ 631:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 632:src/stm32f3_discovery_lsm303dlhc.c ****   /* I2C configuration -------------------------------------------------------*/
+ 633:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_InitStructure.I2C_Mode = I2C_Mode_I2C;
+ 1520              		.loc 1 633 0
+ 1521 0108 4FF00003 		mov	r3, #0
+ 1522 010c 3B61     		str	r3, [r7, #16]
+ 634:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_InitStructure.I2C_AnalogFilter = I2C_AnalogFilter_Enable;
+ 1523              		.loc 1 634 0
+ 1524 010e 4FF00003 		mov	r3, #0
+ 1525 0112 BB60     		str	r3, [r7, #8]
+ 635:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_InitStructure.I2C_DigitalFilter = 0x00;
+ 1526              		.loc 1 635 0
+ 1527 0114 4FF00003 		mov	r3, #0
+ 1528 0118 FB60     		str	r3, [r7, #12]
+ 636:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_InitStructure.I2C_OwnAddress1 = 0x00;
+ 1529              		.loc 1 636 0
+ 1530 011a 4FF00003 		mov	r3, #0
+ 1531 011e 7B61     		str	r3, [r7, #20]
+ 637:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_InitStructure.I2C_Ack = I2C_Ack_Enable;
+ 1532              		.loc 1 637 0
+ 1533 0120 4FF00003 		mov	r3, #0
+ 1534 0124 BB61     		str	r3, [r7, #24]
+ 638:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
+ 1535              		.loc 1 638 0
+ 1536 0126 4FF00003 		mov	r3, #0
+ 1537 012a FB61     		str	r3, [r7, #28]
+ 639:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_InitStructure.I2C_Timing = 0x00902025;
+ 1538              		.loc 1 639 0
+ 1539 012c 1B4B     		ldr	r3, .L58+8
+ 1540 012e 7B60     		str	r3, [r7, #4]
+ 640:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 641:src/stm32f3_discovery_lsm303dlhc.c ****   /* Apply LSM303DLHC_I2C configuration after enabling it */
+ 642:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_Init(LSM303DLHC_I2C, &I2C_InitStructure);
+ 1541              		.loc 1 642 0
+ 1542 0130 07F10403 		add	r3, r7, #4
+ 1543 0134 1A48     		ldr	r0, .L58+12
+ 1544 0136 1946     		mov	r1, r3
+ 1545 0138 FFF7FEFF 		bl	I2C_Init
+ 643:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 644:src/stm32f3_discovery_lsm303dlhc.c ****   /* LSM303DLHC_I2C Peripheral Enable */
+ 645:src/stm32f3_discovery_lsm303dlhc.c ****   I2C_Cmd(LSM303DLHC_I2C, ENABLE);
+ 1546              		.loc 1 645 0
+ 1547 013c 1848     		ldr	r0, .L58+12
+ 1548 013e 4FF00101 		mov	r1, #1
+ 1549 0142 FFF7FEFF 		bl	I2C_Cmd
+ 646:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 647:src/stm32f3_discovery_lsm303dlhc.c ****   /* Configure GPIO PINs to detect Interrupts */
+ 648:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitStructure.GPIO_Pin = LSM303DLHC_I2C_INT1_PIN;
+ 1550              		.loc 1 648 0
+ 1551 0146 4FF01003 		mov	r3, #16
+ 1552 014a BB62     		str	r3, [r7, #40]
+ 649:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+ 1553              		.loc 1 649 0
+ 1554 014c 4FF00003 		mov	r3, #0
+ 1555 0150 87F82C30 		strb	r3, [r7, #44]
+ 650:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+ 1556              		.loc 1 650 0
+ 1557 0154 4FF00003 		mov	r3, #0
+ 1558 0158 87F82E30 		strb	r3, [r7, #46]
+ 651:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+ 1559              		.loc 1 651 0
+ 1560 015c 4FF00303 		mov	r3, #3
+ 1561 0160 87F82D30 		strb	r3, [r7, #45]
+ 652:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+ 1562              		.loc 1 652 0
+ 1563 0164 4FF00003 		mov	r3, #0
+ 1564 0168 87F82F30 		strb	r3, [r7, #47]
+ 653:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_Init(LSM303DLHC_I2C_INT1_GPIO_PORT, &GPIO_InitStructure);
+ 1565              		.loc 1 653 0
+ 1566 016c 07F12803 		add	r3, r7, #40
+ 1567 0170 0948     		ldr	r0, .L58+4
+ 1568 0172 1946     		mov	r1, r3
+ 1569 0174 FFF7FEFF 		bl	GPIO_Init
+ 654:src/stm32f3_discovery_lsm303dlhc.c ****   
+ 655:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_InitStructure.GPIO_Pin = LSM303DLHC_I2C_INT2_PIN;
+ 1570              		.loc 1 655 0
+ 1571 0178 4FF02003 		mov	r3, #32
+ 1572 017c BB62     		str	r3, [r7, #40]
+ 656:src/stm32f3_discovery_lsm303dlhc.c ****   GPIO_Init(LSM303DLHC_I2C_INT2_GPIO_PORT, &GPIO_InitStructure);
+ 1573              		.loc 1 656 0
+ 1574 017e 07F12803 		add	r3, r7, #40
+ 1575 0182 0548     		ldr	r0, .L58+4
+ 1576 0184 1946     		mov	r1, r3
+ 1577 0186 FFF7FEFF 		bl	GPIO_Init
+ 657:src/stm32f3_discovery_lsm303dlhc.c **** }  
+ 1578              		.loc 1 657 0
+ 1579 018a 07F13007 		add	r7, r7, #48
+ 1580 018e BD46     		mov	sp, r7
+ 1581 0190 80BD     		pop	{r7, pc}
+ 1582              	.L59:
+ 1583 0192 00BF     		.align	2
+ 1584              	.L58:
+ 1585 0194 00040048 		.word	1207960576
+ 1586 0198 00100048 		.word	1207963648
+ 1587 019c 25209000 		.word	9445413
+ 1588 01a0 00540040 		.word	1073763328
+ 1589              		.cfi_endproc
+ 1590              	.LFE125:
+ 1592              		.text
+ 1593              	.Letext0:
+ 1594              		.file 2 "/home/chaitannya/CodeSourcery/bin/../lib/gcc/arm-none-eabi/4.7.3/../../../../arm-none-eab
+ 1595              		.file 3 "inc/stm32f30x.h"
+ 1596              		.file 4 "src/stm32f3_discovery_lsm303dlhc.h"
+ 1597              		.file 5 "/home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_gpio.h"
+ 1598              		.file 6 "/home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_i2c.h"
+ 1599              		.file 7 "/home/manish/VTS/MEMS-stm32f3/libs/STM32F30x_StdPeriph_Driver/inc/stm32f30x_exti.h"
+ 1600              		.file 8 "inc/core_cm4.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 stm32f3_discovery_lsm303dlhc.c
+     /tmp/ccAOtZdF.s:24     .data.LSM303DLHC_Timeout:00000000 LSM303DLHC_Timeout
+     /tmp/ccAOtZdF.s:21     .data.LSM303DLHC_Timeout:00000000 $d
+     /tmp/ccAOtZdF.s:27     .text.LSM303DLHC_AccInit:00000000 $t
+     /tmp/ccAOtZdF.s:32     .text.LSM303DLHC_AccInit:00000000 LSM303DLHC_AccInit
+     /tmp/ccAOtZdF.s:1405   .text.LSM303DLHC_LowLevel_Init:00000000 LSM303DLHC_LowLevel_Init
+     /tmp/ccAOtZdF.s:889    .text.LSM303DLHC_Write:00000000 LSM303DLHC_Write
+     /tmp/ccAOtZdF.s:118    .text.LSM303DLHC_AccRebootCmd:00000000 $t
+     /tmp/ccAOtZdF.s:123    .text.LSM303DLHC_AccRebootCmd:00000000 LSM303DLHC_AccRebootCmd
+     /tmp/ccAOtZdF.s:1133   .text.LSM303DLHC_Read:00000000 LSM303DLHC_Read
+     /tmp/ccAOtZdF.s:166    .text.LSM303DLHC_AccFilterConfig:00000000 $t
+     /tmp/ccAOtZdF.s:171    .text.LSM303DLHC_AccFilterConfig:00000000 LSM303DLHC_AccFilterConfig
+     /tmp/ccAOtZdF.s:240    .text.LSM303DLHC_AccFilterCmd:00000000 $t
+     /tmp/ccAOtZdF.s:245    .text.LSM303DLHC_AccFilterCmd:00000000 LSM303DLHC_AccFilterCmd
+     /tmp/ccAOtZdF.s:296    .text.LSM303DLHC_AccFilterClickCmd:00000000 $t
+     /tmp/ccAOtZdF.s:301    .text.LSM303DLHC_AccFilterClickCmd:00000000 LSM303DLHC_AccFilterClickCmd
+     /tmp/ccAOtZdF.s:352    .text.LSM303DLHC_AccIT1Config:00000000 $t
+     /tmp/ccAOtZdF.s:357    .text.LSM303DLHC_AccIT1Config:00000000 LSM303DLHC_AccIT1Config
+     /tmp/ccAOtZdF.s:430    .text.LSM303DLHC_AccIT2Config:00000000 $t
+     /tmp/ccAOtZdF.s:435    .text.LSM303DLHC_AccIT2Config:00000000 LSM303DLHC_AccIT2Config
+     /tmp/ccAOtZdF.s:508    .text.LSM303DLHC_AccINT1InterruptConfig:00000000 $t
+     /tmp/ccAOtZdF.s:513    .text.LSM303DLHC_AccINT1InterruptConfig:00000000 LSM303DLHC_AccINT1InterruptConfig
+     /tmp/ccAOtZdF.s:582    .text.LSM303DLHC_AccINT2InterruptConfig:00000000 $t
+     /tmp/ccAOtZdF.s:587    .text.LSM303DLHC_AccINT2InterruptConfig:00000000 LSM303DLHC_AccINT2InterruptConfig
+     /tmp/ccAOtZdF.s:656    .text.LSM303DLHC_AccClickITConfig:00000000 $t
+     /tmp/ccAOtZdF.s:661    .text.LSM303DLHC_AccClickITConfig:00000000 LSM303DLHC_AccClickITConfig
+     /tmp/ccAOtZdF.s:721    .text.LSM303DLHC_AccGetDataStatus:00000000 $t
+     /tmp/ccAOtZdF.s:726    .text.LSM303DLHC_AccGetDataStatus:00000000 LSM303DLHC_AccGetDataStatus
+     /tmp/ccAOtZdF.s:761    .text.LSM303DLHC_MagInit:00000000 $t
+     /tmp/ccAOtZdF.s:766    .text.LSM303DLHC_MagInit:00000000 LSM303DLHC_MagInit
+     /tmp/ccAOtZdF.s:844    .text.LSM303DLHC_MagGetDataStatus:00000000 $t
+     /tmp/ccAOtZdF.s:849    .text.LSM303DLHC_MagGetDataStatus:00000000 LSM303DLHC_MagGetDataStatus
+     /tmp/ccAOtZdF.s:884    .text.LSM303DLHC_Write:00000000 $t
+     /tmp/ccAOtZdF.s:1122   .text.LSM303DLHC_Write:000001a8 $d
+     /tmp/ccAOtZdF.s:1128   .text.LSM303DLHC_Read:00000000 $t
+     /tmp/ccAOtZdF.s:1395   .text.LSM303DLHC_Read:000001d4 $d
+     /tmp/ccAOtZdF.s:1401   .text.LSM303DLHC_LowLevel_Init:00000000 $t
+     /tmp/ccAOtZdF.s:1585   .text.LSM303DLHC_LowLevel_Init:00000194 $d
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+LSM303DLHC_TIMEOUT_UserCallback
+I2C_GetFlagStatus
+I2C_TransferHandling
+I2C_SendData
+I2C_ClearFlag
+I2C_ReceiveData
+RCC_APB1PeriphClockCmd
+RCC_AHBPeriphClockCmd
+GPIO_PinAFConfig
+GPIO_Init
+SYSCFG_EXTILineConfig
+EXTI_Init
+I2C_Init
+I2C_Cmd

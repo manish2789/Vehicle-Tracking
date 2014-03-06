@@ -136,7 +136,7 @@ void SYSCFG_MemoryRemapConfig(uint32_t SYSCFG_MemoryRemap)
   uint32_t tmpcfgr1 = 0;
 
   /* Check the parameter */
-  assert_param(IS_SYSCFG_MEMORY_REMAP(SYSCFG_MemoryRemap));
+  //assert_param(IS_SYSCFG_MEMORY_REMAP(SYSCFG_MemoryRemap));
 
   /* Get CFGR1 register value */
   tmpcfgr1 = SYSCFG->CFGR1;
@@ -175,8 +175,8 @@ void SYSCFG_MemoryRemapConfig(uint32_t SYSCFG_MemoryRemap)
 void SYSCFG_DMAChannelRemapConfig(uint32_t SYSCFG_DMARemap, FunctionalState NewState)
 {
   /* Check the parameters */
-  assert_param(IS_SYSCFG_DMA_REMAP(SYSCFG_DMARemap));
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
+  //assert_param(IS_SYSCFG_DMA_REMAP(SYSCFG_DMARemap));
+  //assert_param(IS_FUNCTIONAL_STATE(NewState));
 
   if (NewState != DISABLE)
   {
@@ -205,8 +205,8 @@ void SYSCFG_DMAChannelRemapConfig(uint32_t SYSCFG_DMARemap, FunctionalState NewS
 void SYSCFG_TriggerRemapConfig(uint32_t SYSCFG_TriggerRemap, FunctionalState NewState)
 {
   /* Check the parameters */
-  assert_param(IS_SYSCFG_TRIGGER_REMAP(SYSCFG_TriggerRemap));
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
+  //assert_param(IS_SYSCFG_TRIGGER_REMAP(SYSCFG_TriggerRemap));
+  //assert_param(IS_FUNCTIONAL_STATE(NewState));
 
   if (NewState != DISABLE)
   {
@@ -235,7 +235,7 @@ void SYSCFG_TriggerRemapConfig(uint32_t SYSCFG_TriggerRemap, FunctionalState New
 void SYSCFG_EncoderRemapConfig(uint32_t SYSCFG_EncoderRemap)
 {
   /* Check the parameter */
-  assert_param(IS_SYSCFG_ENCODER_REMAP(SYSCFG_EncoderRemap));
+  //assert_param(IS_SYSCFG_ENCODER_REMAP(SYSCFG_EncoderRemap));
 
   /* Reset the encoder mode remapping bits */
   SYSCFG->CFGR1 &= (uint32_t)(~SYSCFG_CFGR1_ENCODER_MODE);
@@ -261,7 +261,7 @@ void SYSCFG_EncoderRemapConfig(uint32_t SYSCFG_EncoderRemap)
 void SYSCFG_USBInterruptLineRemapCmd(FunctionalState NewState)
 {
   /* Check the parameter */
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
+  //assert_param(IS_FUNCTIONAL_STATE(NewState));
 
   /* Remap the USB interupt lines */
   *(__IO uint32_t *) CFGR1_USBITRMP_BB = (uint32_t)NewState;
@@ -293,8 +293,8 @@ void SYSCFG_USBInterruptLineRemapCmd(FunctionalState NewState)
 void SYSCFG_I2CFastModePlusConfig(uint32_t SYSCFG_I2CFastModePlus, FunctionalState NewState)
 {
   /* Check the parameters */
-  assert_param(IS_SYSCFG_I2C_FMP(SYSCFG_I2CFastModePlus));
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
+  //assert_param(IS_SYSCFG_I2C_FMP(SYSCFG_I2CFastModePlus));
+  //assert_param(IS_FUNCTIONAL_STATE(NewState));
 
   if (NewState != DISABLE)
   {
@@ -325,8 +325,8 @@ void SYSCFG_I2CFastModePlusConfig(uint32_t SYSCFG_I2CFastModePlus, FunctionalSta
 void SYSCFG_ITConfig(uint32_t SYSCFG_IT, FunctionalState NewState)  
 {
   /* Check the parameters */
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
-  assert_param(IS_SYSCFG_IT(SYSCFG_IT)); 
+  //assert_param(IS_FUNCTIONAL_STATE(NewState));
+  //assert_param(IS_SYSCFG_IT(SYSCFG_IT)); 
 
   if (NewState != DISABLE)
   {
@@ -353,8 +353,8 @@ void SYSCFG_EXTILineConfig(uint8_t EXTI_PortSourceGPIOx, uint8_t EXTI_PinSourcex
   uint32_t tmp = 0x00;
 
   /* Check the parameters */
-  assert_param(IS_EXTI_PORT_SOURCE(EXTI_PortSourceGPIOx));
-  assert_param(IS_EXTI_PIN_SOURCE(EXTI_PinSourcex));
+  //assert_param(IS_EXTI_PORT_SOURCE(EXTI_PortSourceGPIOx));
+  //assert_param(IS_EXTI_PIN_SOURCE(EXTI_PinSourcex));
   
   tmp = ((uint32_t)0x0F) << (0x04 * (EXTI_PinSourcex & (uint8_t)0x03));
   SYSCFG->EXTICR[EXTI_PinSourcex >> 0x02] &= ~tmp;
@@ -375,7 +375,7 @@ void SYSCFG_EXTILineConfig(uint8_t EXTI_PortSourceGPIOx, uint8_t EXTI_PinSourcex
 void SYSCFG_BreakConfig(uint32_t SYSCFG_Break)
 {
   /* Check the parameter */
-  assert_param(IS_SYSCFG_LOCK_CONFIG(SYSCFG_Break));
+  //assert_param(IS_SYSCFG_LOCK_CONFIG(SYSCFG_Break));
 
   SYSCFG->CFGR2 |= (uint32_t) SYSCFG_Break;
 }
@@ -403,7 +403,7 @@ void SYSCFG_BypassParityCheckDisable(void)
 void SYSCFG_SRAMWRPEnable(uint32_t SYSCFG_SRAMWRP)
 {
   /* Check the parameter */
-  assert_param(IS_SYSCFG_PAGE(SYSCFG_SRAMWRP));
+  //assert_param(IS_SYSCFG_PAGE(SYSCFG_SRAMWRP));
 
   /* Enable the write-protection on the selected ICODE SRAM page */
   SYSCFG->RCR |= (uint32_t)SYSCFG_SRAMWRP;
@@ -421,7 +421,7 @@ FlagStatus SYSCFG_GetFlagStatus(uint32_t SYSCFG_Flag)
   FlagStatus bitstatus = RESET;
 
   /* Check the parameter */
-  assert_param(IS_SYSCFG_FLAG(SYSCFG_Flag));
+  //assert_param(IS_SYSCFG_FLAG(SYSCFG_Flag));
 
   /* Check the status of the specified SPI flag */
   if ((SYSCFG->CFGR2 & SYSCFG_CFGR2_SRAM_PE) != (uint32_t)RESET)
@@ -448,7 +448,7 @@ FlagStatus SYSCFG_GetFlagStatus(uint32_t SYSCFG_Flag)
 void SYSCFG_ClearFlag(uint32_t SYSCFG_Flag)
 {
   /* Check the parameter */
-  assert_param(IS_SYSCFG_FLAG(SYSCFG_Flag));
+  //assert_param(IS_SYSCFG_FLAG(SYSCFG_Flag));
 
   SYSCFG->CFGR2 |= (uint32_t) SYSCFG_Flag;
 }
